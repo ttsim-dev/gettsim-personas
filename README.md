@@ -1,2 +1,3 @@
-# gettsim-personas
-Personas to use as example inputs for GETTSIM.
+# GETTSIM Personas
+
+Personas to use as example data when calling GETTSIM.
