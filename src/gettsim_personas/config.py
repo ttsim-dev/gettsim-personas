@@ -4,3 +4,5 @@ from pathlib import Path
 
 SRC = Path(__file__).parent.resolve()
 ROOT = SRC.joinpath("..", "..").resolve()
+
+PERSONAS_DIR = SRC / "personas"
