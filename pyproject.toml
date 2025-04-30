@@ -87,6 +87,7 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 python = "~=3.13"
 jupyterlab = "*"
 pre-commit = "*"
+pygraphviz = "*"
 pytask  = ">=0.5.0"
 pytask-latex = ">=0.4.2"
 pytask-parallel = ">=0.5.0"
@@ -99,6 +100,7 @@ plotly = ">=5.2.0,<6"
 
 [tool.pixi.pypi-dependencies]
 gettsim_personas = {path = ".", editable = true}
+gettsim = {git = "https://github.com/iza-institute-of-labor-economics/gettsim", rev = "da62dfd4a619eecf98a15d44560938a8e59e61d0"}
 pdbp = "*"
 
 [tool.pixi.target.unix.pypi-dependencies]
