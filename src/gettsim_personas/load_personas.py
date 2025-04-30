@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 from typing import TYPE_CHECKING
 
 import yaml
@@ -15,8 +16,18 @@ if TYPE_CHECKING:
 def load_personas() -> PersonaCollection:
     personas: list[Persona] = []
     for persona_file in PERSONAS_DIR.glob("*.yaml"):
-        persona_dict = read_persona_yaml(persona_file)
-        _fail_if_invalid_persona_dict(persona_dict)
+        raw_persona_dict = read_persona_yaml(persona_file)
+        _fail_if_invalid_persona_dict(raw_persona_dict)
+
+        persona_dict = {
+            "name": raw_persona_dict["name"],
+            "description": raw_persona_dict["description"],
+            "policy_inputs": raw_persona_dict["policy_inputs"],
+            "inputs_to_override_nodes": raw_persona_dict["inputs_to_override_nodes"],
+            "targets": raw_persona_dict["targets"],
+            "start_date": datetime.date.fromisoformat(raw_persona_dict["start_date"]),
+            "end_date": datetime.date.fromisoformat(raw_persona_dict["end_date"]),
+        }
         persona = Persona(**persona_dict)
         personas.append(persona)
     return PersonaCollection(personas)
@@ -35,6 +46,8 @@ def _fail_if_invalid_persona_dict(persona_dict: dict[str, Any]) -> None:
     required_keys = [
         "name",
         "description",
+        "start_date",
+        "end_date",
         "policy_inputs",
         "inputs_to_override_nodes",
         "targets",

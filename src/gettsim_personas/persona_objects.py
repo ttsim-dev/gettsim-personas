@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 import dags.tree as dt
 
 if TYPE_CHECKING:
+    import datetime
+
     from ttsim.typing import NestedDataDict, NestedTargetDict
 
 
@@ -16,6 +18,8 @@ class Persona:
     policy_inputs: NestedDataDict
     inputs_to_override_nodes: NestedDataDict
     targets: NestedTargetDict
+    start_date: datetime.date
+    end_date: datetime.date
 
     @property
     def input_data(self) -> NestedDataDict:

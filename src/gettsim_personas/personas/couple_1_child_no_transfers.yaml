@@ -1,6 +1,8 @@
 ---
 name: couple_1_child
 description: Married couple with one child. Family receives no transfers.
+start_date: '1800-01-01'
+end_date: '2100-12-31'
 policy_inputs:
   alter: [30, 30, 10]
   arbeitsstunden_w: [35, 35, 0]
