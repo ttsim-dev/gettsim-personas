@@ -1,0 +1,58 @@
+---
+name: couple_1_child
+description: Married couple with one child. Family receives no transfers.
+inputs:
+  policy_inputs:
+    alter: [30, 30, 10]
+    arbeitsstunden_w: [35, 35, 0]
+    geburtsjahr: [1995, 1995, 2015]
+    geburtsmonat: [1, 1, 1]
+    geburtstag: [1, 1, 1]
+    schwerbehindert_grad_g: [0, 0, 0]
+    vermögen: [100000, 30000, 0]
+    weiblich: [false, true, true]
+    hh_id: [1, 1, 1]
+    p_id: [1, 2, 3]
+    wohnstufe: [1, 1, 1]
+    einkommensteuer__einkünfte__ist_selbstständig: [false, false, false]
+    einkommensteuer__einkünfte__aus_gewerbebetrieb__betrag_m: [0, 0, 0]
+    einkommensteuer__einkünfte__aus_vermietung_und_verpachtung__betrag_m:
+      - 0
+      - 0
+      - 0
+    einkommensteuer__einkünfte__aus_nichtselbstständiger_arbeit__bruttolohn_m:
+      - 5000.0
+      - 4000.0
+      - 0
+    einkommensteuer__einkünfte__aus_forst_und_landwirtschaft__betrag_m: [0, 0, 0]
+    einkommensteuer__einkünfte__aus_selbstständiger_arbeit__betrag_m: [0, 0, 0]
+    einkommensteuer__einkünfte__aus_kapitalvermögen__kapitalerträge_m:
+      - 500.0
+      - 0.0
+      - 0
+    einkommensteuer__abzüge__beitrag_private_rentenversicherung_m: [0, 0, 0]
+    einkommensteuer__abzüge__betreuungskosten_m: [100.0, 0, 0]
+    einkommensteuer__abzüge__p_id_betreuungskostenträger: [0, -1, -1]
+    sozialversicherung__kranken__beitrag__privat_versichert: [false, false, false]
+    sozialversicherung__pflege__beitrag__hat_kinder: [true, true, false]
+    familie__alleinerziehend: [false, false, false]
+    familie__kind: [false, false, true]
+    familie__p_id_ehepartner: [2, 1, -1]
+    familie__p_id_elternteil_1: [-1, -1, 1]
+    familie__p_id_elternteil_2: [-1, -1, 2]
+    unterhalt__anspruch_m: [0, 0, 0]
+    unterhalt__tatsächlich_erhaltener_betrag_m: [0, 0, 0]
+    kindergeld__in_ausbildung: [false, false, false]
+    kindergeld__p_id_empfänger: [-1, -1, 1]
+    lohnsteuer__steuerklasse: [4, 4, 1]
+  inputs_to_override_nodes:
+    wohngeld__betrag_wthh: [0, 0, 0]
+    sozialversicherung__arbeitslosen__betrag_m: [0.0, 0.0, 0.0]
+    sozialversicherung__rente__betrag_m: [0.0, 0.0, 0.0]
+    arbeitslosengeld_2__betrag_m_bg: [0, 0, 0]
+targets:
+  - einkommensteuer__betrag_m
+  - sozialversicherung__pflege__beitrag__betrag_versicherter_m
+  - sozialversicherung__kranken__beitrag__betrag_versicherter_m
+  - sozialversicherung__rente__beitrag__betrag_versicherter_m
+  - sozialversicherung__arbeitslosen__beitrag__betrag_versicherter_m
