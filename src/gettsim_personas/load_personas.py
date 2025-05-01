@@ -18,6 +18,14 @@ if TYPE_CHECKING:
 
 
 def load_personas() -> PersonaCollection:
+    """Load all personas from YAML files and create a collection for the given date.
+
+    Args:
+        date: The date for which to create the persona collection
+
+    Returns:
+        PersonaCollection containing all personas, filtered by the given date
+    """
     personas: list[Persona] = []
     for persona_path in PERSONAS_DIR.glob("*.yaml"):
         raw_persona_dict = read_persona_yaml(persona_path)
@@ -43,7 +51,7 @@ def build_persona_object(
     Args:
         raw_persona_dict: Dictionary containing persona data from YAML file.
             Expected keys: name, description, policy_inputs, inputs_to_override_nodes,
-            targets, start_date (optional), end_date (optional)
+            targets_tree, start_date (optional), end_date (optional)
         persona_path: Path to the persona file
     Returns:
         Persona object with validated data
@@ -64,7 +72,7 @@ def build_persona_object(
         "description": raw_persona_dict["description"],
         "policy_inputs": raw_persona_dict["policy_inputs"],
         "inputs_to_override_nodes": raw_persona_dict["inputs_to_override_nodes"],
-        "targets": raw_persona_dict["targets"],
+        "targets_tree": raw_persona_dict["targets_tree"],
         "start_date": start_date,
         "end_date": end_date,
     }
@@ -89,7 +97,7 @@ def _fail_if_invalid_persona_dict(
         "description",
         "policy_inputs",
         "inputs_to_override_nodes",
-        "targets",
+        "targets_tree",
     ]
     for key in required_keys:
         if key not in persona_dict:

@@ -1,7 +1,5 @@
-from gettsim_personas.load_personas import load_personas
+"""Personas to use as example data when calling GETTSIM."""
 
-gettsim_personas = load_personas()
+from gettsim_personas.interface import personas_for_date
 
-# Expose each persona as an attribute
-for persona in gettsim_personas.personas:
-    setattr(gettsim_personas, persona.name, persona)
+__all__ = ["personas_for_date"]

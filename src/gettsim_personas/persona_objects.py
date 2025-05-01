@@ -17,7 +17,7 @@ class Persona:
     description: str
     policy_inputs: NestedDataDict
     inputs_to_override_nodes: NestedDataDict
-    targets: NestedTargetDict
+    targets_tree: NestedTargetDict
     start_date: datetime.date
     end_date: datetime.date
 
@@ -38,7 +38,9 @@ class PersonaCollection:
 
     @property
     def AllNames(self) -> list[str]:  # noqa: N802
-        return [p.name for p in self.personas]
+        """Return names of personas that are active at the collection's date."""
+        return [p.name for p in self.active_personas]
 
-    def get_persona(self, name: str) -> Persona:
-        return {p.name: p for p in self.personas}[name]
+    def active_personas(self, date: datetime.date) -> list[Persona]:
+        """Return personas that are active at the collection's date."""
+        return [p for p in self.personas if p.start_date <= date <= p.end_date]

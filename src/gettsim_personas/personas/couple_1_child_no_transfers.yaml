@@ -63,7 +63,7 @@ inputs_to_override_nodes:
       betrag_m: [0.0, 0.0, 0.0]
   arbeitslosengeld_2:
     betrag_m_bg: [0, 0, 0]
-targets:
+targets_tree:
   einkommensteuer:
     betrag_m: None
   sozialversicherung:
