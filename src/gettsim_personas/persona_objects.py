@@ -56,8 +56,5 @@ class PersonaCollection:
 
         Returns:
             The requested persona
-
-        Raises:
-            KeyError: If no persona with the given name exists
         """
         return self.personas[name]
