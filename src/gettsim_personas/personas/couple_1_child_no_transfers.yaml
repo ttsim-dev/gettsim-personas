@@ -4,6 +4,7 @@ description: Married couple with one child. Family receives no transfers.
 policy_inputs:
   alter: [30, 30, 10]
   arbeitsstunden_w: [35, 35, 0]
+  behinderungsgrad: [0, 0, 0]
   geburtsjahr: [1995, 1995, 2015]
   geburtsmonat: [1, 1, 1]
   geburtstag: [1, 1, 1]
@@ -13,6 +14,7 @@ policy_inputs:
   hh_id: [1, 1, 1]
   p_id: [1, 2, 3]
   wohnstufe: [1, 1, 1]
+  wohnort_ost: [false, false, false]
   einkommensteuer:
     einkünfte:
       ist_selbstständig: [false, false, false]
@@ -28,11 +30,17 @@ policy_inputs:
         betrag_m: [0, 0, 0]
       aus_kapitalvermögen:
         kapitalerträge_m: [500.0, 0.0, 0]
+      sonstige:
+        ohne_renten_m: [0, 0, 0]
+        renteneinkünfte_m: [0, 0, 0]
     abzüge:
       beitrag_private_rentenversicherung_m: [0, 0, 0]
-      betreuungskosten_m: [100.0, 0, 0]
-      p_id_betreuungskostenträger: [0, -1, -1]
+      betreuungskosten_m: [0.0, 0.0, 100.0]
+      p_id_betreuungskostenträger: [-1, -1, 1]
+    gemeinsam_veranlagt: [true, true, false]
   sozialversicherung:
+    rente:
+      private_rente_betrag_m: [0, 0, 0]
     kranken:
       beitrag:
         privat_versichert: [false, false, false]
@@ -55,27 +63,28 @@ policy_inputs:
     steuerklasse: [4, 4, 1]
 inputs_to_override_nodes:
   wohngeld:
-    betrag_wthh: [0, 0, 0]
+    betrag_m_wthh: [0, 0, 0]
   sozialversicherung:
     arbeitslosen:
       betrag_m: [0.0, 0.0, 0.0]
     rente:
-      betrag_m: [0.0, 0.0, 0.0]
+      altersrente:
+        betrag_m: [0.0, 0.0, 0.0]
   arbeitslosengeld_2:
     betrag_m_bg: [0, 0, 0]
 targets_tree:
   einkommensteuer:
-    betrag_m: None
+    betrag_m_sn: null
   sozialversicherung:
     pflege:
       beitrag:
-        betrag_versicherter_m: None
+        betrag_versicherter_m: null
     kranken:
       beitrag:
-        betrag_versicherter_m: None
+        betrag_versicherter_m: null
     rente:
       beitrag:
-        betrag_versicherter_m: None
+        betrag_versicherter_m: null
     arbeitslosen:
       beitrag:
-        betrag_versicherter_m: None
+        betrag_versicherter_m: null

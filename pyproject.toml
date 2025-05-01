@@ -145,7 +145,9 @@ convention = "google"
 
 [tool.pytest.ini_options]
 addopts = "--pdbcls=pdbp:Pdb"
-filterwarnings = []
+filterwarnings = [
+    "ignore::ttsim.compute_taxes_and_transfers.FunctionsAndColumnsOverlapWarning"
+]
 markers = [
     "wip: Tests that are work-in-progress.",
     "unit: Flag for unit tests which target mainly a single function.",

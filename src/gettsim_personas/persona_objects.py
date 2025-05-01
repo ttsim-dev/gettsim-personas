@@ -34,13 +34,30 @@ class Persona:
 
 @dataclass
 class PersonaCollection:
-    personas: list[Persona]
+    """A collection of personas that are active at a specific date.
+
+    This class provides access to personas that are active at a specific date.
+    Personas can be accessed by name as attributes.
+    """
+
+    personas: dict[str, Persona]
+    date: datetime.date
 
     @property
-    def AllNames(self) -> list[str]:  # noqa: N802
-        """Return names of personas that are active at the collection's date."""
-        return [p.name for p in self.active_personas]
+    def all_names(self) -> list[str]:
+        """Return names of all personas in the collection."""
+        return list(self.personas.keys())
 
-    def active_personas(self, date: datetime.date) -> list[Persona]:
-        """Return personas that are active at the collection's date."""
-        return [p for p in self.personas if p.start_date <= date <= p.end_date]
+    def get_persona(self, name: str) -> Persona:
+        """Get a persona by name.
+
+        Args:
+            name: Name of the persona to retrieve
+
+        Returns:
+            The requested persona
+
+        Raises:
+            KeyError: If no persona with the given name exists
+        """
+        return self.personas[name]

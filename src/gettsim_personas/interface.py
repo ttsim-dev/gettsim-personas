@@ -7,7 +7,7 @@ from gettsim_personas.persona_objects import PersonaCollection
 
 
 def personas_for_date(date_str: str) -> PersonaCollection:
-    """Get personas that are active at a given date.
+    """Collection of personas that are active at a given date.
 
     Args:
         date_str: Date in ISO format (YYYY-MM-DD)
@@ -15,10 +15,16 @@ def personas_for_date(date_str: str) -> PersonaCollection:
     Returns:
         PersonaCollection containing only personas active at the given date
     """
-    collection = load_personas()
+    all_personas = load_personas()
     target_date = date.fromisoformat(date_str)
 
-    for persona in collection.active_personas(target_date):
-        setattr(collection, persona.name, persona)
+    active_personas = {
+        p.name: p for p in all_personas if p.start_date <= target_date <= p.end_date
+    }
+
+    collection = PersonaCollection(personas=active_personas, date=target_date)
+
+    for name, persona in active_personas.items():
+        setattr(collection, name, persona)
 
     return collection
