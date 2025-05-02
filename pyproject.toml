@@ -84,7 +84,7 @@ channels = ["conda-forge"]
 platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 
 [tool.pixi.dependencies]
-python = ">=3.11,<3.13"
+python = ">=3.11,<=3.13"
 jupyterlab = "*"
 pre-commit = "*"
 pytask  = ">=0.5.0"
@@ -116,6 +116,9 @@ python = "3.11.*"
 [tool.pixi.feature.py312.dependencies]
 python = "3.12.*"
 
+[tool.pixi.feature.py313.dependencies]
+python = "3.13.*"
+
 [tool.pixi.feature.mypy.pypi-dependencies]
 mypy = "==1.15.0"
 types-PyYAML = "*"
@@ -138,6 +141,7 @@ mypy = "mypy --ignore-missing-imports"
 mypy = ["mypy"]
 py311 = ["test", "py311"]
 py312 = ["test", "py312"]
+py313 = ["test", "py313"]
 
 # ======================================================================================
 # Ruff configuration
