@@ -84,7 +84,7 @@ channels = ["conda-forge"]
 platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 
 [tool.pixi.dependencies]
-python = "~=3.13"
+python = ">=3.11,<3.13"
 jupyterlab = "*"
 pre-commit = "*"
 pytask  = ">=0.5.0"
@@ -106,6 +106,38 @@ kaleido = "*"
 
 [tool.pixi.target.win-64.pypi-dependencies]
 kaleido = "==0.1.0.post1"
+
+# Features
+# --------------------------------------------------------------------------------------
+
+[tool.pixi.feature.py311.dependencies]
+python = "3.11.*"
+
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+
+[tool.pixi.feature.mypy.pypi-dependencies]
+mypy = "==1.15.0"
+types-PyYAML = "*"
+types-pytz = "*"
+
+
+# Tasks
+# --------------------------------------------------------------------------------------
+
+[tool.pixi.feature.test.tasks]
+tests = "pytest"
+
+[tool.pixi.feature.mypy.tasks]
+mypy = "mypy --ignore-missing-imports"
+
+# Environments
+# --------------------------------------------------------------------------------------
+
+[tool.pixi.environments]
+mypy = ["mypy"]
+py311 = ["test", "py311"]
+py312 = ["test", "py312"]
 
 # ======================================================================================
 # Ruff configuration
