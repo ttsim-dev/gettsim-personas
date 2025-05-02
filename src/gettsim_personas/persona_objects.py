@@ -8,7 +8,7 @@ import dags.tree as dt
 if TYPE_CHECKING:
     import datetime
 
-    from ttsim.typing import NestedDataDict, NestedTargetDict
+    from gettsim_personas.typing import NestedDataDict, NestedTargetDict
 
 
 @dataclass(frozen=True)

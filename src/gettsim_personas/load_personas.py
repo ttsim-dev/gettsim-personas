@@ -15,8 +15,13 @@ from gettsim_personas.config import (
 from gettsim_personas.persona_objects import Persona
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
     from pathlib import Path
-    from typing import Any
+    from typing import TypeVar
+
+    from gettsim_personas.typing import GETTSIMScalar, RawPersonaSpec
+
+    T = TypeVar("T", bound=GETTSIMScalar)
 
 
 def load_personas() -> list[Persona]:
@@ -27,23 +32,23 @@ def load_personas() -> list[Persona]:
     """
     personas: list[Persona] = []
     for persona_path in PERSONAS_DIR.glob("*.yaml"):
-        raw_persona_dict = read_persona_yaml(persona_path)
-        persona = build_persona_object(raw_persona_dict)
+        raw_persona_spec = read_persona_yaml(persona_path)
+        persona = build_persona_object(raw_persona_spec)
         personas.append(persona)
     return personas
 
 
-def read_persona_yaml(persona_file: Path) -> dict[str, Any]:
+def read_persona_yaml(persona_file: Path) -> RawPersonaSpec:
     with persona_file.open("r", encoding="utf-8") as f:
-        persona_dict = yaml.safe_load(f)
-    return persona_dict
+        persona_spec = yaml.safe_load(f)
+    return persona_spec
 
 
-def build_persona_object(raw_persona_dict: dict[str, Any]) -> Persona:
+def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
     """Build a Persona object from a raw dictionary.
 
     Args:
-        raw_persona_dict: Dictionary containing persona data from YAML file.
+        raw_persona_spec: Dictionary containing persona data from YAML file.
             Expected keys: name, description, policy_inputs, inputs_to_override_nodes,
             targets_tree, start_date (optional), end_date (optional)
 
@@ -54,28 +59,28 @@ def build_persona_object(raw_persona_dict: dict[str, Any]) -> Persona:
         ValueError: If dates are invalid or start_date is after end_date
     """
     start_date = datetime.date.fromisoformat(
-        raw_persona_dict.get("start_date", DEFAULT_PERSONA_START_DATE)
+        raw_persona_spec.get("start_date", DEFAULT_PERSONA_START_DATE)
     )
     end_date = datetime.date.fromisoformat(
-        raw_persona_dict.get("end_date", DEFAULT_PERSONA_END_DATE)
+        raw_persona_spec.get("end_date", DEFAULT_PERSONA_END_DATE)
     )
 
-    persona_dict = {
-        "name": raw_persona_dict["name"],
-        "description": raw_persona_dict["description"],
-        "policy_inputs": convert_leaf_to_series(raw_persona_dict["policy_inputs"]),
-        "inputs_to_override_nodes": convert_leaf_to_series(
-            raw_persona_dict["inputs_to_override_nodes"]
+    persona_spec = {
+        "name": raw_persona_spec["name"],
+        "description": raw_persona_spec["description"],
+        "policy_inputs": convert_lists_to_series(raw_persona_spec["policy_inputs"]),
+        "inputs_to_override_nodes": convert_lists_to_series(
+            raw_persona_spec["inputs_to_override_nodes"]
         ),
-        "targets_tree": raw_persona_dict["targets_tree"],
+        "targets_tree": raw_persona_spec["targets_tree"],
         "start_date": start_date,
         "end_date": end_date,
     }
 
-    return Persona(**persona_dict)
+    return Persona(**persona_spec)
 
 
-def convert_leaf_to_series(data: dict[str, Any]) -> dict[str, Any]:
+def convert_lists_to_series(data: Mapping[str, list[T]]) -> Mapping[str, pd.Series]:
     """Convert leaf nodes to pandas Series.
 
     Args:
