@@ -37,6 +37,9 @@ jobs:
         if: runner.os == 'Linux'
         run: pixi run -e ${{ matrix.environment }} pytest --cov=./ --cov-report=xml
         shell: bash -el {0}
+      - name: Install Graphviz on macOS
+        if: runner.os == 'macOS'
+        run: brew install graphviz
       - name: Configure dot on macOS
         if: runner.os == 'macOS'
         run: pixi run -e ${{ matrix.environment }} dot -c
