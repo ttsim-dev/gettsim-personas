@@ -15,8 +15,9 @@ if TYPE_CHECKING:
 class Persona:
     name: str
     description: str
+    purpose: str
     policy_inputs: NestedDataDict
-    inputs_to_override_nodes: NestedDataDict
+    policy_inputs_overriding_functions: NestedDataDict
     targets_tree: NestedTargetDict
     start_date: datetime.date
     end_date: datetime.date
@@ -24,11 +25,11 @@ class Persona:
     @property
     def input_data(self) -> NestedDataDict:
         flat_policy_inputs = dt.flatten_to_qual_names(self.policy_inputs)
-        flat_inputs_to_override_nodes = dt.flatten_to_qual_names(
-            self.inputs_to_override_nodes
+        flat_policy_inputs_overriding_functions = dt.flatten_to_qual_names(
+            self.policy_inputs_overriding_functions
         )
         return dt.unflatten_from_qual_names(
-            {**flat_policy_inputs, **flat_inputs_to_override_nodes}
+            {**flat_policy_inputs, **flat_policy_inputs_overriding_functions}
         )
 
 

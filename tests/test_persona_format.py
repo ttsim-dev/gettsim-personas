@@ -8,7 +8,7 @@ REQUIRED_KEYS = [
     "name",
     "description",
     "policy_inputs",
-    "inputs_to_override_nodes",
+    "policy_inputs_overriding_functions",
     "targets_tree",
 ]
 

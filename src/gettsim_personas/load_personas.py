@@ -49,8 +49,9 @@ def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
 
     Args:
         raw_persona_spec: Dictionary containing persona data from YAML file.
-            Expected keys: name, description, policy_inputs, inputs_to_override_nodes,
-            targets_tree, start_date (optional), end_date (optional)
+            Expected keys: name, description, purpose, policy_inputs,
+            policy_inputs_overriding_functions, targets_tree, start_date (optional),
+            end_date (optional)
 
     Returns:
         Persona object with validated data
@@ -68,9 +69,10 @@ def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
     persona_spec = {
         "name": raw_persona_spec["name"],
         "description": raw_persona_spec["description"],
+        "purpose": raw_persona_spec["purpose"],
         "policy_inputs": convert_lists_to_series(raw_persona_spec["policy_inputs"]),
-        "inputs_to_override_nodes": convert_lists_to_series(
-            raw_persona_spec["inputs_to_override_nodes"]
+        "policy_inputs_overriding_functions": convert_lists_to_series(
+            raw_persona_spec["policy_inputs_overriding_functions"]
         ),
         "targets_tree": raw_persona_spec["targets_tree"],
         "start_date": start_date,
