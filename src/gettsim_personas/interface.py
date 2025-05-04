@@ -12,8 +12,9 @@ import pandas as pd
 from gettsim_personas.broadcasting import (
     _fail_if_data_lengths_are_incompatible,
     _fail_if_data_to_upsert_is_not_dict_with_series_leafs,
+    broadcast_foreign_keys,
+    broadcast_group_ids,
     broadcast_p_id,
-    broadcast_series_with_group_or_foreign_keys,
 )
 from gettsim_personas.load_personas import load_personas
 from gettsim_personas.persona_objects import PersonaCollection
@@ -87,8 +88,13 @@ def upsert_input_data(
                 original_series=series,
                 expected_length=expected_length,
             )
-        elif "p_id_" in name or name.endswith("_id"):
-            broadcasted_series = broadcast_series_with_group_or_foreign_keys(
+        elif "p_id_" in name:
+            broadcasted_series = broadcast_foreign_keys(
+                original_series=series,
+                expected_length=expected_length,
+            )
+        elif name.endswith("_id"):
+            broadcasted_series = broadcast_group_ids(
                 original_series=series, expected_length=expected_length
             )
         else:
@@ -96,8 +102,8 @@ def upsert_input_data(
                 np.tile(series.values, number_of_new_personas)
             )
 
-        upserted_data.name = dt.tree_path_from_qual_name(name)[-1]
-        upserted_data.index = pd.RangeIndex(expected_length)
+        broadcasted_series.name = dt.tree_path_from_qual_name(name)[-1]
+        broadcasted_series.index = pd.RangeIndex(expected_length)
         upserted_data[name] = broadcasted_series
 
     return dt.unflatten_from_qual_names(upserted_data)
