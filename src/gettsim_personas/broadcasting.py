@@ -37,18 +37,8 @@ def broadcast_group_ids(original_series: pd.Series, expected_length: int) -> pd.
     >>> 1    1
     >>> 2    1
     >>> 3    2
-    >>> 4    2
-    >>> 5    3
-
-    >>> original_series = pd.Series([-1, 0, 2])
-    >>> expected_length = 6
-    >>> broadcast_group_ids(original_series, expected_length)
-    >>> 0    -1
-    >>> 1    0
-    >>> 2    2
-    >>> 3    -1
     >>> 4    3
-    >>> 5    5
+    >>> 5    3
     """
     number_of_personas = expected_length // len(original_series)
 
@@ -56,16 +46,13 @@ def broadcast_group_ids(original_series: pd.Series, expected_length: int) -> pd.
         np.tile(original_series.values, reps=number_of_personas)
     )
 
-    original_ids = original_series[original_series >= 0].unique()
-
-    max_original_id = max(original_ids) if len(original_ids) > 0 else 0
-    to_add_if_not_minus_one = np.repeat(
+    max_original_id = original_series.max()
+    to_add = np.repeat(
         np.arange(number_of_personas) * (max_original_id + 1),
         repeats=len(original_series),
     )
 
-    is_valid_id = repeated_series >= 0
-    repeated_series[is_valid_id] += to_add_if_not_minus_one[is_valid_id]
+    repeated_series += to_add
 
     return repeated_series
 
@@ -76,7 +63,6 @@ def broadcast_foreign_keys(
     """Broadcast series with foreign keys.
 
     Foreign keys are used to reference specific rows in another table.
-    The values must be preserved exactly to maintain the correct relationships.
 
     Example:
     -------

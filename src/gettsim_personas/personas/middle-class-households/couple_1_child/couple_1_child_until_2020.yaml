@@ -16,7 +16,7 @@ policy_inputs:
   vermögen: [100000, 30000, 0]
   weiblich: [false, true, true]
   hh_id: [1, 1, 1]
-  p_id: [1, 2, 3]
+  p_id: [0, 1, 2]
   wohnstufe: [1, 1, 1]
   wohnort_ost: [false, false, false]
   einkommensteuer:
