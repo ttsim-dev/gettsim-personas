@@ -4,14 +4,17 @@ This repository provides example personas to use as input data for GETTSIM. Pers
 depict typical household constellation GETTSIM's users might be interested in.
 
 Personas are date-specific and provide targets and input data for GETTSIM. Each persona
-has the following structure: - `name`: the name of the persona - `description`: a
-description of the persona constellation - `purpose`: the purpose of this persona, i.e.
-what exactly it is trying to depict - `start_date`: (Optional) the date from which the
-persona is valid - `end_date`: (Optional) the date until which the persona is valid -
-`policy_inputs`: the policy inputs that are used to calculate the targets -
-`policy_inputs_overriding_functions`: a dictionary of functions that are used to
-override GETTSIM's policy functions - `targets_tree`: the targets that can be computed
-for this persona
+has the following structure:
+
+- `name`: the name of the persona
+- `description`: a description of the persona constellation
+- `purpose`: the purpose of this persona, i.e. what exactly it is trying to depict
+- `start_date`: (Optional) the date from which the persona is valid
+- `end_date`: (Optional) the date until which the persona is valid
+- `policy_inputs`: the policy inputs that are used to calculate the targets
+- `policy_inputs_overriding_functions`: a dictionary of functions that are used to
+  override GETTSIM's policy functions
+- `targets_tree`: the targets that can be computed for this persona
 
 > [!WARNING]
 > Be careful when using personas in a different context than intended. Many personas
