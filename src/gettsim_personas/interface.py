@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     from gettsim_personas.typing import NestedDataDict
 
 
-def personas_for_date(date_str: str) -> PersonaCollection:
+def get_personas(date_str: str) -> PersonaCollection:
     """Collection of personas that are active at a given date.
 
     Args:
@@ -54,7 +54,7 @@ def upsert_input_data(
     """Upsert GETTSIM input data.
 
     Updates and inserts new values into a NestedDataDict with input data for GETTSIM,
-    e.g. created from a persona via `personas_for_date`. Data not in `data_to_upsert` is
+    e.g. created from a persona via `get_personas`. Data not in `data_to_upsert` is
     broadcasted to match the length of `data_to_upsert`.
 
     The length of data in `data_to_upsert` must be a multiple of the length of data in
@@ -63,7 +63,7 @@ def upsert_input_data(
     Args:
         data_from_persona:
             NestedDataDict with input data for GETTSIM. Typically created from a persona
-            object via `personas_for_date`.
+            object via `get_personas`.
         data_to_upsert:
             NestedDataDict with data to be upserted
 

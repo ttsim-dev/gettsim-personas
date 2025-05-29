@@ -1,7 +1,7 @@
 # GETTSIM Personas
 
 This repository provides example personas to use as input data for GETTSIM. Personas
-depict typical household constellation GETTSIM's users might be interested in.
+depict typical households, which GETTSIM's users might be interested in.
 
 Personas are date-specific and provide targets and input data for GETTSIM. Each persona
 has the following structure:
@@ -33,15 +33,18 @@ As personas are date-specific, we first need to load the personas for the date w
 interested in.
 
 ```python
-from gettsim_personas import personas_for_date
+from gettsim_personas import get_personas
 
-personas = personas_for_date("2025-01-01")
+jan_01_2025 = "2025-01-01"
+personas = get_personas(jan_01_2025)
 
-couple_1_child = personas.couple_1_child
+couple_1_child_no_means_tested_transfers = (
+    personas.couple_1_child_no_means_tested_transfers
+)
 ```
 
 The `personas` objects contains all available personas for the given date. We selected
-the `couple_1_child` persona to compute taxes and transfers.
+the `couple_1_child_no_means_tested_transfers` persona to compute taxes and transfers.
 
 ### Compute taxes and transfers
 
@@ -50,12 +53,12 @@ Now, we can compute taxes and transfers for the selected persona.
 ```python
 from gettsim import set_up_policy_environment, compute_taxes_and_transfers
 
-environment = set_up_policy_environment(date="2025-01-01")
+environment = set_up_policy_environment(date=jan_01_2025)
 
 result = compute_taxes_and_transfers(
-    data_tree=couple_1_child.input_data,
+    data_tree=couple_1_child_no_means_tested_transfers.input_data,
     environment=environment,
-    targets_tree=couple_1_child.targets_tree,
+    targets_tree=couple_1_child_no_means_tested_transfers.targets_tree,
 )
 ```
 
@@ -80,7 +83,7 @@ bruttolohn_to_upsert = {
 }
 
 upserted_input_data = upsert_input_data(
-    data_from_persona=personas.couple_1_child.input_data,
+    data_from_persona=personas.couple_1_child_no_means_tested_transfers.input_data,
     data_to_upsert=bruttolohn_to_upsert,
 )
 ```

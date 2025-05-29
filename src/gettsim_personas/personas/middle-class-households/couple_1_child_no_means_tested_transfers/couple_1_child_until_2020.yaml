@@ -4,7 +4,7 @@ description: >-
   Married couple with one child. Income is fixed and so high enough that transfers do
   not need to be calculated, nor do pensions.
 purpose: Example how to override many transfers so that only few inputs are needed.
-start_date: '2021-01-01'
+end_date: '2020-12-31'
 policy_inputs:
   alter: [30, 30, 10]
   arbeitsstunden_w: [35, 35, 0]
@@ -15,7 +15,7 @@ policy_inputs:
   schwerbehindert_grad_g: [0, 0, 0]
   vermögen: [100000, 30000, 0]
   weiblich: [false, true, true]
-  hh_id: [1, 1, 1]
+  hh_id: [0, 0, 0]
   p_id: [0, 1, 2]
   wohnstufe: [1, 1, 1]
   wohnort_ost: [false, false, false]
@@ -79,6 +79,8 @@ policy_inputs_overriding_functions:
 targets_tree:
   einkommensteuer:
     betrag_m_sn: null
+  solidaritätszuschlag:
+    betrag_y_sn: null
   sozialversicherung:
     pflege:
       beitrag:
