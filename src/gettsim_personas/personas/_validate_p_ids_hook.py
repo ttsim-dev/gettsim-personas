@@ -64,13 +64,14 @@ def all_id_vars_start_with_zero_and_are_weakly_consecutive_increasing(
 
 
 def _is_weakly_consecutive_increasing(id_values: list[int]) -> bool:
-    last_id_value = 0
-    if id_values[0] != 0:
+    """Check if a list of integers is weakly consecutive increasing starting from 0."""
+    if not id_values or id_values[0] != 0:
         return False
+    last = 0
     for val in id_values:
-        if val < last_id_value or val > last_id_value + 1:
+        if val < last or val > last + 1:
             return False
-        last_id_value = val
+        last = val
     return True
 
 

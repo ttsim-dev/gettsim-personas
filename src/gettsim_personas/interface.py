@@ -11,7 +11,7 @@ import pandas as pd
 
 from gettsim_personas.broadcasting import (
     _fail_if_data_lengths_are_incompatible,
-    _fail_if_data_to_upsert_is_not_dict_with_series_leafs,
+    _fail_if_data_to_upsert_is_not_dict_with_array_or_series_leafs,
     broadcast_foreign_keys,
     broadcast_group_ids,
     broadcast_p_id,
@@ -39,12 +39,7 @@ def get_personas(date_str: str) -> PersonaCollection:
         p.name: p for p in all_personas if p.start_date <= target_date <= p.end_date
     }
 
-    collection = PersonaCollection(personas=active_personas, date=target_date)
-
-    for name, persona in active_personas.items():
-        setattr(collection, name, persona)
-
-    return collection
+    return PersonaCollection(personas=active_personas, date=target_date)
 
 
 def upsert_input_data(
@@ -70,30 +65,30 @@ def upsert_input_data(
     Returns:
         NestedDataDict with upserted data
     """
-    _fail_if_data_to_upsert_is_not_dict_with_series_leafs(data_to_upsert)
+    _fail_if_data_to_upsert_is_not_dict_with_array_or_series_leafs(data_to_upsert)
     _fail_if_data_lengths_are_incompatible(data_to_upsert, data_from_persona)
-    flat_data_to_upsert = dt.flatten_to_qual_names(data_to_upsert)
-    flat_data_from_persona = dt.flatten_to_qual_names(data_from_persona)
+    flat_data_to_upsert = dt.flatten_to_tree_paths(data_to_upsert)
+    flat_data_from_persona = dt.flatten_to_tree_paths(data_from_persona)
 
     expected_length = len(next(iter(flat_data_to_upsert.values())))
     persona_length = len(next(iter(flat_data_from_persona.values())))
     number_of_new_personas = expected_length // persona_length
 
     upserted_data = flat_data_to_upsert.copy()
-    for name, series in flat_data_from_persona.items():
-        if name in upserted_data:
+    for path, series in flat_data_from_persona.items():
+        if path in upserted_data:
             continue
-        if name == "p_id":
+        if path == ("p_id",):
             broadcasted_series = broadcast_p_id(
                 original_series=series,
                 expected_length=expected_length,
             )
-        elif "p_id_" in name:
+        elif "p_id_" in path[-1]:
             broadcasted_series = broadcast_foreign_keys(
                 original_series=series,
                 expected_length=expected_length,
             )
-        elif name.endswith("_id"):
+        elif path[-1].endswith("_id"):
             broadcasted_series = broadcast_group_ids(
                 original_series=series, expected_length=expected_length
             )
@@ -102,8 +97,8 @@ def upsert_input_data(
                 np.tile(series.values, number_of_new_personas)
             )
 
-        broadcasted_series.name = dt.tree_path_from_qual_name(name)[-1]
+        broadcasted_series.name = path[-1]
         broadcasted_series.index = pd.RangeIndex(expected_length)
-        upserted_data[name] = broadcasted_series
+        upserted_data[path] = broadcasted_series
 
-    return dt.unflatten_from_qual_names(upserted_data)
+    return dt.unflatten_from_tree_paths(upserted_data)

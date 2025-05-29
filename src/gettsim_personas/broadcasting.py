@@ -104,17 +104,17 @@ def _fail_if_persona_p_id_invalid(p_id_series: pd.Series) -> None:
         raise ValueError(msg)
 
 
-def _fail_if_data_to_upsert_is_not_dict_with_series_leafs(
+def _fail_if_data_to_upsert_is_not_dict_with_array_or_series_leafs(
     data_to_upsert: NestedDataDict,
 ) -> None:
-    """Fail if data_to_upsert is not a dictionary with pandas Series as leafs.
+    """Fail if data_to_upsert is not a dictionary with Arrays as leafs.
 
     Args:
         data_to_upsert: Data to be upserted
 
     Raises:
         TypeError:
-            If data_to_upsert is not a dictionary with pandas Series as leafs
+            If data_to_upsert is not a dictionary with Arrays as leafs
     """
     if not isinstance(data_to_upsert, dict):
         msg = f"""
@@ -123,10 +123,13 @@ def _fail_if_data_to_upsert_is_not_dict_with_series_leafs(
         """
         raise TypeError(msg)
 
-    flat_data_to_upsert = dt.flatten_to_qual_names(data_to_upsert)
-    if not all(isinstance(v, pd.Series) for v in flat_data_to_upsert.values()):
+    flat_data_to_upsert = dt.flatten_to_tree_paths(data_to_upsert)
+    if not all(
+        isinstance(v, (pd.Series, np.ndarray, list))
+        for v in flat_data_to_upsert.values()
+    ):
         msg = f"""
-        All leafs in data_to_upsert must be pandas Series.
+        All leafs in data_to_upsert must be pandas Series, numpy Arrays, or lists.
         You provided: {flat_data_to_upsert.values()}
         """
         raise TypeError(msg)
@@ -154,35 +157,40 @@ def _fail_if_data_lengths_are_incompatible(
             If lengths in data_to_upsert are not a multiple of the length in
             data_from_persona
     """
-    flat_data_to_upsert = dt.flatten_to_qual_names(data_to_upsert)
-    flat_data_from_persona = dt.flatten_to_qual_names(data_from_persona)
+    flat_data_to_upsert = dt.flatten_to_tree_paths(data_to_upsert)
+    flat_data_from_persona = dt.flatten_to_tree_paths(data_from_persona)
 
-    length_to_upsert = len(next(iter(flat_data_to_upsert.values())))
+    # Get the length of any leaf of data_to_upsert
+    length_of_data_to_upsert = len(next(iter(flat_data_to_upsert.values())))
 
-    if any(length_to_upsert != len(v) for v in flat_data_to_upsert.values()):
-        incompatible_lengths = {
-            key: len(value)
-            for key, value in flat_data_to_upsert.items()
-            if length_to_upsert != len(value)
-        }
+    # Check if all leafs of data_to_upsert have the same length
+    incompatible_lengths_in_data_to_upsert = {
+        key: len(value)
+        for key, value in flat_data_to_upsert.items()
+        if length_of_data_to_upsert != len(value)
+    }
+    if incompatible_lengths_in_data_to_upsert:
         msg = f"""
         The length of data in data_to_upsert differs, which is not allowed.
-        Expected length: {length_to_upsert}
+        Expected length: {length_of_data_to_upsert}
         Found lengths:
 
-        {incompatible_lengths}
+        {incompatible_lengths_in_data_to_upsert}
         """
         raise ValueError(msg)
 
+    # Get the length of any leaf of data_from_persona
     length_from_persona = len(next(iter(flat_data_from_persona.values())))
 
-    if length_to_upsert % length_from_persona != 0:
+    # Check if the length of data_to_upsert is a multiple of the length of
+    # data_from_persona
+    if length_of_data_to_upsert % length_from_persona != 0:
         msg = f"""
         The length of data in data_to_upsert is not a multiple of the length of data in
         data_from_persona.
 
         Lengths:
-        - data_to_upsert: {length_to_upsert}
+        - data_to_upsert: {length_of_data_to_upsert}
         - data_from_persona: {length_from_persona}
         """
         raise ValueError(msg)

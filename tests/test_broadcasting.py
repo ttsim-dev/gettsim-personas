@@ -157,8 +157,8 @@ def test_broadcast_foreign_keys(original_series, expected_length, expected_serie
 )
 def test_upsert_input_data(data_from_persona, data_to_upsert, expected_upserted_data):
     upserted_data = upsert_input_data(data_from_persona, data_to_upsert)
-    flat_upserted_data = dt.flatten_to_qual_names(upserted_data)
-    flat_expected_upserted_data = dt.flatten_to_qual_names(expected_upserted_data)
+    flat_upserted_data = dt.flatten_to_tree_paths(upserted_data)
+    flat_expected_upserted_data = dt.flatten_to_tree_paths(expected_upserted_data)
 
     assert set(flat_upserted_data.keys()) == set(flat_expected_upserted_data.keys())
 
