@@ -68,6 +68,10 @@ policy_inputs:
 policy_inputs_overriding_functions:
   wohngeld:
     betrag_m_wthh: [0, 0, 0]
+  kinderzuschlag:
+    betrag_m: [0, 0, 0]
+  elterngeld:
+    betrag_m: [0, 0, 0]
   sozialversicherung:
     arbeitslosen:
       betrag_m: [0.0, 0.0, 0.0]

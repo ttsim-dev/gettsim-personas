@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import itertools
 from datetime import date
 from typing import TYPE_CHECKING
 
@@ -20,7 +21,7 @@ from gettsim_personas.load_personas import load_personas
 from gettsim_personas.persona_objects import PersonaCollection
 
 if TYPE_CHECKING:
-    from gettsim_personas.typing import NestedDataDict
+    from gettsim_personas.typing import NestedDataDict, Persona
 
 
 def get_personas(date_str: str) -> PersonaCollection:
@@ -34,6 +35,7 @@ def get_personas(date_str: str) -> PersonaCollection:
     """
     all_personas = load_personas()
     target_date = date.fromisoformat(date_str)
+    _fail_if_multiple_personas_with_same_name_active_at_same_date(all_personas)
     active_personas = {
         p.name: p for p in all_personas if p.start_date <= target_date <= p.end_date
     }
@@ -101,3 +103,28 @@ def upsert_input_data(
         upserted_data[path] = broadcasted_series
 
     return dt.unflatten_from_tree_paths(upserted_data)
+
+
+def _fail_if_multiple_personas_with_same_name_active_at_same_date(
+    all_personas: list[Persona],
+) -> None:
+    """Fail if multiple personas with the same name are active at the same date."""
+    persona_names_to_active_periods: dict[str, list[tuple[date, date]]] = {}
+    for persona in all_personas:
+        if persona.name not in persona_names_to_active_periods:
+            persona_names_to_active_periods[persona.name] = []
+        persona_names_to_active_periods[persona.name].append(
+            (persona.start_date, persona.end_date)
+        )
+    for persona_name, all_active_periods in persona_names_to_active_periods.items():
+        if len(all_active_periods) > 1:
+            for (start1, end1), (start2, end2) in itertools.combinations(
+                all_active_periods, 2
+            ):
+                if start1 <= end2 and start2 <= end1:
+                    msg = (
+                        f"Multiple personas with the name '{persona_name}' are active "
+                        f"at the same date. Overlapping periods: {start1} - {end1} and "
+                        f"{start2} - {end2}."
+                    )
+                    raise ValueError(msg)
