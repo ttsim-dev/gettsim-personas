@@ -24,11 +24,11 @@ class Persona:
 
     @property
     def input_data(self) -> NestedDataDict:
-        flat_policy_inputs = dt.flatten_to_qual_names(self.policy_inputs)
-        flat_policy_inputs_overriding_functions = dt.flatten_to_qual_names(
+        flat_policy_inputs = dt.flatten_to_tree_paths(self.policy_inputs)
+        flat_policy_inputs_overriding_functions = dt.flatten_to_tree_paths(
             self.policy_inputs_overriding_functions
         )
-        return dt.unflatten_from_qual_names(
+        return dt.unflatten_from_tree_paths(
             {**flat_policy_inputs, **flat_policy_inputs_overriding_functions}
         )
 
@@ -43,6 +43,11 @@ class PersonaCollection:
 
     personas: dict[str, Persona]
     date: datetime.date
+
+    def __post_init__(self):
+        """Set attributes for each persona after initialization."""
+        for name, persona in self.personas.items():
+            setattr(self, name, persona)
 
     @property
     def all_names(self) -> list[str]:

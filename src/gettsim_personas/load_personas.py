@@ -31,7 +31,7 @@ def load_personas() -> list[Persona]:
         List of all personas found in YAML files
     """
     personas: list[Persona] = []
-    for persona_path in PERSONAS_DIR.glob("*.yaml"):
+    for persona_path in PERSONAS_DIR.rglob("*.yaml"):
         raw_persona_spec = read_persona_yaml(persona_path)
         persona = build_persona_object(raw_persona_spec)
         personas.append(persona)
@@ -91,8 +91,8 @@ def convert_lists_to_series(data: Mapping[str, list[T]]) -> Mapping[str, pd.Seri
     Returns:
         Dictionary with leaf nodes converted to pandas Series
     """
-    flat_data = dt.flatten_to_qual_names(data)
+    flat_data = dt.flatten_to_tree_paths(data)
     for key, value in flat_data.items():
         if isinstance(value, list):
             flat_data[key] = pd.Series(value)
-    return dt.unflatten_from_qual_names(flat_data)
+    return dt.unflatten_from_tree_paths(flat_data)
