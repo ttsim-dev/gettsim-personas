@@ -31,7 +31,7 @@ def load_personas() -> list[Persona]:
         List of all personas found in YAML files
     """
     personas: list[Persona] = []
-    for persona_path in PERSONAS_DIR.glob("*.yaml"):
+    for persona_path in PERSONAS_DIR.rglob("*.yaml"):
         raw_persona_spec = read_persona_yaml(persona_path)
         persona = build_persona_object(raw_persona_spec)
         personas.append(persona)

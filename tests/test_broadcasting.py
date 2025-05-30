@@ -7,7 +7,7 @@ from gettsim_personas.broadcasting import (
     broadcast_group_ids,
     broadcast_p_id,
 )
-from gettsim_personas.interface import upsert_input_data
+from gettsim_personas.get_personas import upsert_input_data
 
 
 @pytest.mark.parametrize(

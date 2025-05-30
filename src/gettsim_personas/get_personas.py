@@ -1,4 +1,4 @@
-"""Public interface for gettsim_personas."""
+"""Get personas and upsert input data."""
 
 from __future__ import annotations
 
@@ -34,7 +34,6 @@ def get_personas(date_str: str) -> PersonaCollection:
     """
     all_personas = load_personas()
     target_date = date.fromisoformat(date_str)
-
     active_personas = {
         p.name: p for p in all_personas if p.start_date <= target_date <= p.end_date
     }
