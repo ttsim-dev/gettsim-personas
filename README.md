@@ -3,38 +3,36 @@
 This repository provides example personas to use as input data for GETTSIM. Personas
 depict typical households, which GETTSIM's users might be interested in.
 
-Personas are date-specific and provide targets and input data for GETTSIM. Each persona
-has the following attributes:
+## Basic Concepts
+
+### Persona Attributes
+
+Each persona has the following attributes:
 
 - `name`: the name of the persona
 - `description`: a description of the persona constellation
 - `purpose`: the purpose of this persona, i.e. what exactly it is trying to depict
 - `start_date`: (Optional) the date from which the persona is valid
 - `end_date`: (Optional) the date until which the persona is valid
-- `policy_inputs`: the policy inputs that are used to calculate the targets
-- `policy_inputs_overriding_functions`: a dictionary of functions that are used to
-  override GETTSIM's policy functions
+- `policy_inputs`: the basic policy inputs
+- `policy_inputs_overriding_functions`: a dictionary of inputs that override GETTSIM's
+  policy functions
+- `input_data`: the input data that is used to compute the targets. It combines the
+  `policy_inputs` and the `policy_inputs_overriding_functions` into a single nested
+  input data dictionary.
 - `targets_tree`: the targets that can be computed for this persona
-
-The input data to compute taxes and transfers is stored in the `input_data` attribute,
-which combines the `policy_inputs` and the `policy_inputs_overriding_functions` into a
-single nested input data dictionary.
 
 > [!WARNING]
 > Be careful when using personas in a different context than intended. Many personas
-> overwrite GETTSIM's policy functions via `policy_inputs_overriding_functions` or
-> represent specific household structures. Always check whether a persona is suitable
-> for your use case.
+> overwrite GETTSIM's policy functions via `policy_inputs_overriding_functions`. Always
+> check whether a persona is suitable for your use case.
 
-## Usage
+## Usage Guide
 
-The following example shows how to use a persona to calculate taxes and transfers for a
-household.
+### Loading Personas
 
-### Load personas for a specific date
-
-As personas are date-specific, we first need to load the personas for the date we are
-interested in.
+Since personas are date-specific, we first need to load the personas for our target
+date.
 
 ```python
 from gettsim_personas import get_personas
@@ -45,12 +43,13 @@ personas = get_personas(jan_01_2025)
 persona = personas.couple_1_child_no_means_tested_transfers
 ```
 
-The `personas` objects contains all available personas for the given date. We selected
-the `couple_1_child_no_means_tested_transfers` persona to compute taxes and transfers.
+The `personas` object contains all available personas for the specified date. In this
+example, we selected the `couple_1_child_no_means_tested_transfers` persona for
+computing taxes and transfers.
 
-### Compute taxes and transfers
+### Computing Taxes and Transfers
 
-Now, we can compute taxes and transfers for the selected persona.
+We can now compute taxes and transfers for the selected persona.
 
 ```python
 from gettsim import set_up_policy_environment, compute_taxes_and_transfers
@@ -64,15 +63,15 @@ result = compute_taxes_and_transfers(
 )
 ```
 
-### Upserting input data
+### Advanced Usage: Upserting Input Data
 
-Users may modify the persona by providing their own input data. Users can either modify
-existing inputs (**up**date) or add new inputs (in**sert**).
+Users can modify personas by providing their own input data. This can be done by either
+modifying existing inputs (**up**date) or adding new inputs (in**sert**).
 
-**Why upserting input data?**
+#### Why Upsert Input Data?
 
-The persona `couple_1_child_no_means_tested_transfers`, for example, depicts a single
-houshold with a specific earnings structure:
+Consider the `couple_1_child_no_means_tested_transfers` persona, which represents a
+household with a specific earnings structure:
 
 ```python
 print(
@@ -85,14 +84,14 @@ print(
 # 2    0.0
 ```
 
-Suppose we want to create two single-earner households where the earner of household one
-earns 5000 EUR and the earner of household two earns 6000 EUR. For this, we want to use
-the persona's input data as a base and modify it. Just repeating the input data (e.g.
-via a `np.tile`) would not work because the persona depicts specific household
-structures and interpersonal relations that we want to preserve.
+Let's say we want to create two single-earner households: one where the earner makes
+5000 EUR and another where the earner makes 6000 EUR. We could use the persona's input
+data as a base and modify it. However, simply repeating the input data (e.g., using
+`np.tile`) wouldn't work because the persona represents specific household structures
+and interpersonal relationships that we need to preserve.
 
-For example, GETTSIM requires pointer to the individual's parents. In the persona
-`couple_1_child_no_means_tested_transfers`, the individuals with `p_id` 0 and 1 are
+For instance, GETTSIM requires pointers to individuals' parents. In the
+`couple_1_child_no_means_tested_transfers` persona, individuals with `p_id` 0 and 1 are
 parents of the individual with `p_id` 2:
 
 ```python
@@ -112,10 +111,10 @@ print(persona.input_data["familie"]["p_id_elternteil_2"])
 # 2    1
 ```
 
-We want to update these pointers when we extend the input data by more than one
-household.
+We need to update these pointers when extending the input data to include additional
+households.
 
-**How to upsert input data**
+#### How to Upsert Input Data
 
 First, we define the input data to upsert:
 
@@ -131,7 +130,7 @@ bruttolohn_to_upsert = {
 }
 ```
 
-Alternatively, we can specify a range of income levels via a standard `linspace`:
+Alternatively, we can generate a range of income levels using `numpy.linspace`:
 
 ```python
 import numpy as np
@@ -149,12 +148,12 @@ bruttolohn_to_upsert = {
 }
 ```
 
-In general, the order of input data matters. This is because GETTSIM uses pointers to
-`p_id`s in the input data to depict household structures and relations between
-individuals as described above. In this example, `[0.0, 0.0, 4000.0, 0.0, 0.0, 6000.0]`
-will return completely different results than `[4000.0, 0.0, 0.0, 6000.0, 0.0, 0.0]`. To
-make sure you understand the persona's household structure, we recommend to carefully
-check the provided input data.
+> [!WARNING]
+> The order of input data matters! GETTSIM uses pointers to `p_id`s in the input data to
+> depict household structures and relations between individuals. In this example,
+> `[0.0, 0.0, 4000.0, 0.0, 0.0, 6000.0]` will return completely different results than
+> `[4000.0, 0.0, 0.0, 6000.0, 0.0, 0.0]`. Always check the persona's household structure
+> carefully before modifying input data.
 
 Now, we can upsert the input data:
 
@@ -167,12 +166,12 @@ upserted_input_data = upsert_input_data(
 )
 ```
 
-The function `upsert_input_data` adds the user-provided input data to the persona's
-input data. It creates an additional household and broadcasts the persona's original
-input data to the new households. In particular, it specifies the pointers of the new
-household to point to the correct individuals.
+The `upsert_input_data` function adds the user-provided input data to the persona's
+input data. It creates additional households and broadcasts the persona's original input
+data to these new households. Importantly, it ensures that the pointers in the new
+households correctly reference the appropriate individuals.
 
-The new input data can then be used to compute taxes and transfers:
+The modified input data can then be used to compute taxes and transfers:
 
 ```python
 result = compute_taxes_and_transfers(
@@ -183,5 +182,5 @@ result = compute_taxes_and_transfers(
 ```
 
 > [!WARNING]
-> Upserting input data is only possible if the length of the user-provided data is a
+> Upserting input data is only possible when the length of the user-provided data is a
 > multiple of the length of the persona's input data.
