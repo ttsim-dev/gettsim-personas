@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 class Persona:
     name: str
     description: str
-    purpose: str
     policy_inputs: NestedDataDict
     policy_inputs_overriding_functions: NestedDataDict
     targets_tree: NestedTargetDict

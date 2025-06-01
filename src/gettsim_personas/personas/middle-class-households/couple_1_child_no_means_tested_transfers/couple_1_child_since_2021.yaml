@@ -2,8 +2,8 @@
 name: couple_1_child_no_means_tested_transfers
 description: >-
   Married couple with one child. Income is fixed and so high enough that transfers do
-  not need to be calculated, nor do pensions.
-purpose: Example how to override many transfers so that only few inputs are needed.
+  not need to be calculated, nor do pensions. Example how to override many transfers so
+  that only few inputs are needed.
 start_date: '2021-01-01'
 policy_inputs:
   alter: [30, 30, 10]

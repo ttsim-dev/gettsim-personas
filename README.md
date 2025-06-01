@@ -9,9 +9,8 @@ depict typical households, which GETTSIM's users might be interested in.
 
 Each persona has the following attributes:
 
-- `name`: the name of the persona
-- `description`: a description of the persona constellation
-- `purpose`: the purpose of this persona, i.e. what exactly it is trying to depict
+- `name`: Unique identifier of the persona
+- `description`: a description of the persona
 - `start_date`: (Optional) the date from which the persona is valid
 - `end_date`: (Optional) the date until which the persona is valid
 - `policy_inputs`: the basic policy inputs

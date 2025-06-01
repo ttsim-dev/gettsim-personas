@@ -10,7 +10,6 @@ from gettsim_personas.persona_objects import Persona
 _GENERIC_PERSONA_SPEC = {
     "name": "persona_1",
     "description": "",
-    "purpose": "",
     "policy_inputs": {},
     "policy_inputs_overriding_functions": {},
     "targets_tree": {},
