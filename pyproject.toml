@@ -94,6 +94,7 @@ pytest-xdist = "*"
 numpy = "*"
 pandas = ">=2.2"
 plotly = ">=5.2.0,<6"
+dags = ">=0.3.0"
 
 [tool.pixi.pypi-dependencies]
 gettsim_personas = {path = ".", editable = true}

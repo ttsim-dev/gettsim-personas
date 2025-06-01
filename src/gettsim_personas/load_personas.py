@@ -31,7 +31,7 @@ def load_personas() -> list[Persona]:
         List of all personas found in YAML files
     """
     personas: list[Persona] = []
-    for persona_path in PERSONAS_DIR.glob("*.yaml"):
+    for persona_path in PERSONAS_DIR.rglob("*.yaml"):
         raw_persona_spec = read_persona_yaml(persona_path)
         persona = build_persona_object(raw_persona_spec)
         personas.append(persona)
@@ -49,7 +49,7 @@ def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
 
     Args:
         raw_persona_spec: Dictionary containing persona data from YAML file.
-            Expected keys: name, description, purpose, policy_inputs,
+            Expected keys: name, description, policy_inputs,
             policy_inputs_overriding_functions, targets_tree, start_date (optional),
             end_date (optional)
 
@@ -69,7 +69,6 @@ def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
     persona_spec = {
         "name": raw_persona_spec["name"],
         "description": raw_persona_spec["description"],
-        "purpose": raw_persona_spec["purpose"],
         "policy_inputs": convert_lists_to_series(raw_persona_spec["policy_inputs"]),
         "policy_inputs_overriding_functions": convert_lists_to_series(
             raw_persona_spec["policy_inputs_overriding_functions"]
@@ -91,8 +90,8 @@ def convert_lists_to_series(data: Mapping[str, list[T]]) -> Mapping[str, pd.Seri
     Returns:
         Dictionary with leaf nodes converted to pandas Series
     """
-    flat_data = dt.flatten_to_qual_names(data)
+    flat_data = dt.flatten_to_tree_paths(data)
     for key, value in flat_data.items():
         if isinstance(value, list):
             flat_data[key] = pd.Series(value)
-    return dt.unflatten_from_qual_names(flat_data)
+    return dt.unflatten_from_tree_paths(flat_data)

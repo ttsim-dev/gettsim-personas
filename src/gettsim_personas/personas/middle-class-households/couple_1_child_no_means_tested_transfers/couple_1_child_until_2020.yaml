@@ -1,23 +1,17 @@
 ---
-name: couple_one_child_10y_no_transfers
+name: couple_1_child_no_means_tested_transfers
 description: >-
   Married couple with one child. Income is fixed and so high enough that transfers do
-  not need to be calculated, nor do pensions.
-purpose: Example how to override many transfers so that only few inputs are needed.
-start_date: '2021-01-01'
+  not need to be calculated, nor do pensions. Example how to override many transfers so
+  that only few inputs are needed.
+end_date: '2020-12-31'
 policy_inputs:
   alter: [30, 30, 10]
   arbeitsstunden_w: [35, 35, 0]
   behinderungsgrad: [0, 0, 0]
   geburtsjahr: [1995, 1995, 2015]
-  geburtsmonat: [1, 1, 1]
-  geburtstag: [1, 1, 1]
-  schwerbehindert_grad_g: [0, 0, 0]
-  vermögen: [100000, 30000, 0]
-  weiblich: [false, true, true]
-  hh_id: [1, 1, 1]
-  p_id: [1, 2, 3]
-  wohnstufe: [1, 1, 1]
+  hh_id: [0, 0, 0]
+  p_id: [0, 1, 2]
   wohnort_ost: [false, false, false]
   einkommensteuer:
     einkünfte:
@@ -40,7 +34,7 @@ policy_inputs:
     abzüge:
       beitrag_private_rentenversicherung_m: [0, 0, 0]
       betreuungskosten_m: [0.0, 0.0, 100.0]
-      p_id_betreuungskostenträger: [-1, -1, 1]
+      p_id_betreuungskostenträger: [-1, -1, 0]
     gemeinsam_veranlagt: [true, true, false]
   sozialversicherung:
     rente:
@@ -54,20 +48,19 @@ policy_inputs:
   familie:
     alleinerziehend: [false, false, false]
     kind: [false, false, true]
-    p_id_ehepartner: [2, 1, -1]
-    p_id_elternteil_1: [-1, -1, 1]
-    p_id_elternteil_2: [-1, -1, 2]
-  unterhalt:
-    anspruch_m: [0, 0, 0]
-    tatsächlich_erhaltener_betrag_m: [0, 0, 0]
+    p_id_ehepartner: [1, 0, -1]
+    p_id_elternteil_1: [-1, -1, 0]
+    p_id_elternteil_2: [-1, -1, 1]
   kindergeld:
     in_ausbildung: [false, false, false]
-    p_id_empfänger: [-1, -1, 1]
-  lohnsteuer:
-    steuerklasse: [4, 4, 1]
+    p_id_empfänger: [-1, -1, 0]
 policy_inputs_overriding_functions:
   wohngeld:
     betrag_m_wthh: [0, 0, 0]
+  kinderzuschlag:
+    betrag_m: [0, 0, 0]
+  elterngeld:
+    betrag_m: [0, 0, 0]
   sozialversicherung:
     arbeitslosen:
       betrag_m: [0.0, 0.0, 0.0]
@@ -79,6 +72,8 @@ policy_inputs_overriding_functions:
 targets_tree:
   einkommensteuer:
     betrag_m_sn: null
+  solidaritätszuschlag:
+    betrag_y_sn: null
   sozialversicherung:
     pflege:
       beitrag:

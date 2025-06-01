@@ -1,15 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "required": ["name", "description", "purpose", "policy_inputs", "policy_inputs_overriding_functions", "targets_tree"],
+    "required": ["name", "description", "policy_inputs", "policy_inputs_overriding_functions", "targets_tree"],
     "properties": {
       "name": {
         "type": "string"
       },
       "description": {
-        "type": "string"
-      },
-      "purpose": {
         "type": "string"
       },
       "start_date": {
