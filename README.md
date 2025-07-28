@@ -51,14 +51,13 @@ computing taxes and transfers.
 We can now compute taxes and transfers for the selected persona.
 
 ```python
-from gettsim import set_up_policy_environment, compute_taxes_and_transfers
+from gettsim import main, MainTarget, InputData, TTTargets
 
-environment = set_up_policy_environment(date=jan_01_2025)
-
-result = compute_taxes_and_transfers(
-    data_tree=persona.input_data,
-    environment=environment,
-    targets_tree=persona.targets_tree,
+result = main(
+    main_target=MainTarget.results.df_with_nested_columns,
+    policy_date_str=jan_01_2025,
+    input_data=InputData.tree(persona.input_data),
+    tt_targets=TTTargets(tree=persona.targets_tree),
 )
 ```
 
@@ -173,10 +172,12 @@ households correctly reference the appropriate individuals.
 The modified input data can then be used to compute taxes and transfers:
 
 ```python
-result = compute_taxes_and_transfers(
-    data_tree=upserted_input_data,
-    environment=environment,
-    targets_tree=persona.targets_tree,
+result = main(
+    main_target=MainTarget.results.df_with_nested_columns,
+    policy_date_str=jan_01_2025,
+    input_data=InputData.tree(upserted_input_data),
+    tt_targets=TTTargets(tree=persona.targets_tree),
+    backend="numpy",
 )
 ```
 
