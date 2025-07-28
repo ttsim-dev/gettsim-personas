@@ -6,6 +6,7 @@
 name = "gettsim_personas"
 description = "Personas to use as example inputs for GETTSIM."
 requires-python = ">=3.11"
+dependencies = ["ttsim-backend>=1.0a3"]
 dynamic = ["version"]
 keywords = [
     "Economics",
@@ -55,7 +56,7 @@ Tracker = "https://github.com/ttsim-dev/gettsim-personas/issues"
 # ======================================================================================
 
 [build-system]
-requires = ["hatchling", "hatch_vcs"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.hooks.vcs]
@@ -84,7 +85,7 @@ channels = ["conda-forge"]
 platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 
 [tool.pixi.dependencies]
-python = ">=3.11,<=3.13"
+python = ">=3.11,<3.14"
 jupyterlab = "*"
 pre-commit = "*"
 pygraphviz = "*"
@@ -93,12 +94,13 @@ pytest-cov = "*"
 pytest-xdist = "*"
 numpy = "*"
 pandas = ">=2.2"
-plotly = ">=5.2.0,<6"
-dags = ">=0.3.0"
+plotly = ">=6.2"
+dags = ">=0.4.1"
+networkx = ">=3.5"
 
 [tool.pixi.pypi-dependencies]
 gettsim_personas = {path = ".", editable = true}
-gettsim = {git = "https://github.com/iza-institute-of-labor-economics/gettsim", rev = "da62dfd4a619eecf98a15d44560938a8e59e61d0"}
+gettsim = {git = "https://github.com/iza-institute-of-labor-economics/gettsim", rev = "be95562b86cb912ca9f11eec0e9912c65f3d5a24"}
 pdbp = "*"
 
 [tool.pixi.target.unix.pypi-dependencies]
@@ -120,7 +122,7 @@ python = "3.12.*"
 python = "3.13.*"
 
 [tool.pixi.feature.mypy.pypi-dependencies]
-mypy = "==1.15.0"
+mypy = "~=1.16"
 types-PyYAML = "*"
 types-pytz = "*"
 
@@ -167,7 +169,6 @@ extend-ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "PD011"]
-"task_*.py" = ["ANN", "ARG001"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -179,9 +180,6 @@ convention = "google"
 
 [tool.pytest.ini_options]
 addopts = "--pdbcls=pdbp:Pdb"
-filterwarnings = [
-    "ignore::ttsim.compute_taxes_and_transfers.FunctionsAndColumnsOverlapWarning"
-]
 markers = [
     "wip: Tests that are work-in-progress.",
     "unit: Flag for unit tests which target mainly a single function.",
