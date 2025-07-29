@@ -38,41 +38,34 @@ class ActivePersonaCollection:
     Personas can be accessed by name as attributes.
     """
 
-    nested_personas: NestedPersonas
+    active_personas: NestedPersonas
     date: datetime.date
 
     def __post_init__(self):
         """Set attributes for each persona after initialization."""
-        flat_personas = dt.flatten_to_tree_paths(self.nested_personas)
+        flat_personas = dt.flatten_to_tree_paths(self.active_personas)
 
         for path, persona in flat_personas.items():
             self._set_nested_attribute(path, persona)
 
     def _set_nested_attribute(self, path: tuple[str, ...], value: object) -> None:
-        """Recursively set nested attributes for a path."""
-        if len(path) == 1:
-            setattr(self, path[0], value)
-        else:
-            if not hasattr(self, path[0]):
-                intermediate = type("PersonaLevel", (), {})()
-                setattr(self, path[0], intermediate)
-            else:
-                intermediate = getattr(self, path[0])
+        """Recursively set persona by path.
 
-            intermediate._set_nested_attribute(path[1:], value)
-
-    @property
-    def all_names(self) -> list[str]:
-        """Return names of all personas in the collection."""
-        return list(self.personas.keys())
-
-    def get_persona(self, name: str) -> Persona:
-        """Get a persona by name.
-
-        Args:
-            name: Name of the persona to retrieve
-
-        Returns:
-            The requested persona
+        Creates an intermediate object for each path level and sets the persona at the
+        last level. Useful for IDE autocompletion.
         """
-        return self.personas[name]
+
+        def set_nested_attr(obj, path, value):
+            if len(path) == 1:
+                setattr(obj, path[0], value)
+            else:
+                if not hasattr(obj, path[0]):
+                    intermediate = type(
+                        "PersonaLevel", (), {"_set_nested_attribute": set_nested_attr}
+                    )()
+                    setattr(obj, path[0], intermediate)
+                else:
+                    intermediate = getattr(obj, path[0])
+                intermediate._set_nested_attribute(path[1:], value)  # noqa: SLF001
+
+        set_nested_attr(self, path, value)
