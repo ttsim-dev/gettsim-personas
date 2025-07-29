@@ -21,4 +21,5 @@ def test_call_gettsim_on_personas(date_str):
             input_data=InputData.tree(persona.input_data),
             tt_targets=TTTargets(tree=persona.targets_tree),
             backend="numpy",
+            include_warn_nodes=False,
         )
