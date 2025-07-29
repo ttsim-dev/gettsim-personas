@@ -18,8 +18,8 @@ def test_call_gettsim_on_personas(date_str):
             main_target=MainTarget.results.df_with_nested_columns,
             policy_environment=environment,
             policy_date_str=date_str,
-            input_data=InputData.tree(persona.input_data),
-            tt_targets=TTTargets(tree=persona.targets_tree),
+            input_data=InputData.tree(persona.input_data_tree),
+            tt_targets=TTTargets(tree=persona.tt_targets_tree),
             backend="numpy",
             include_warn_nodes=False,
         )

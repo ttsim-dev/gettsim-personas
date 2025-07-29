@@ -56,8 +56,8 @@ def all_id_vars_start_with_zero_and_are_weakly_consecutive_increasing(
     - 0, 1, 3
     - 0, 1, 0
     """
-    policy_inputs = persona.get("policy_inputs", {})
-    all_id_vars = {k: v for k, v in policy_inputs.items() if k.endswith("_id")}
+    input_data_tree = persona.get("input_data_tree", {})
+    all_id_vars = {k: v for k, v in input_data_tree.items() if k.endswith("_id")}
     return [
         k for k, v in all_id_vars.items() if not _is_weakly_consecutive_increasing(v)
     ]

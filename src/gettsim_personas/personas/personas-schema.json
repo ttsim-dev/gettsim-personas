@@ -1,13 +1,25 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "required": ["name", "description", "policy_inputs", "policy_inputs_overriding_functions", "targets_tree"],
+    "required": ["name", "description", "varies_by", "input_data_tree", "tt_targets_tree"],
     "properties": {
       "name": {
         "type": "string"
       },
       "description": {
         "type": "string"
+      },
+      "varies_by": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": ["array", "object"],
+            "items": {
+              "type": ["integer", "number", "boolean", "string"]
+            }
+          }
+        }
       },
       "start_date": {
         "type": "string",
@@ -17,7 +29,7 @@
         "type": "string",
         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
       },
-      "policy_inputs": {
+      "input_data_tree": {
         "type": "object",
         "additionalProperties": {
           "type": ["array", "object"],
@@ -26,16 +38,7 @@
           }
         }
       },
-      "policy_inputs_overriding_functions": {
-        "type": "object",
-        "additionalProperties": {
-          "type": ["array", "object"],
-          "items": {
-            "type": ["number", "boolean", "string"]
-          }
-        }
-      },
-      "targets_tree": {
+      "tt_targets_tree": {
         "type": "object",
         "additionalProperties": {
           "type": ["object", "null"],

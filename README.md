@@ -13,18 +13,13 @@ Each persona has the following attributes:
 - `description`: a description of the persona
 - `start_date`: (Optional) the date from which the persona is valid
 - `end_date`: (Optional) the date until which the persona is valid
-- `policy_inputs`: the basic policy inputs
-- `policy_inputs_overriding_functions`: a dictionary of inputs that override GETTSIM's
-  policy functions
-- `input_data`: the input data that is used to compute the targets. It combines the
-  `policy_inputs` and the `policy_inputs_overriding_functions` into a single nested
-  input data dictionary.
-- `targets_tree`: the targets that can be computed for this persona
+- `input_data_tree`: the input data used to compute the targets
+- `tt_targets_tree`: the targets that can be computed for this persona
 
 > [!WARNING]
 > Be careful when using personas in a different context than intended. Many personas
-> overwrite GETTSIM's policy functions via `policy_inputs_overriding_functions`. Always
-> check whether a persona is suitable for your use case.
+> overwrite GETTSIM's policy functions. Always check whether a persona is suitable for
+> your use case.
 
 ## Usage Guide
 
@@ -57,7 +52,7 @@ result = main(
     main_target=MainTarget.results.df_with_nested_columns,
     policy_date_str=jan_01_2025,
     input_data=InputData.tree(persona.input_data),
-    tt_targets=TTTargets(tree=persona.targets_tree),
+    tt_targets=TTTargets(tree=persona.tt_targets_tree),
 )
 ```
 
@@ -176,7 +171,7 @@ result = main(
     main_target=MainTarget.results.df_with_nested_columns,
     policy_date_str=jan_01_2025,
     input_data=InputData.tree(upserted_input_data),
-    tt_targets=TTTargets(tree=persona.targets_tree),
+    tt_targets=TTTargets(tree=persona.tt_targets_tree),
     backend="numpy",
 )
 ```

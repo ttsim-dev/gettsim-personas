@@ -17,30 +17,34 @@ from gettsim_personas.broadcasting import (
     broadcast_group_ids,
     broadcast_p_id,
 )
-from gettsim_personas.load_personas import load_personas
-from gettsim_personas.persona_objects import PersonaCollection
+from gettsim_personas.orig_persona_objects import orig_personas
+from gettsim_personas.persona_objects import ActivePersonaCollection
 
 if TYPE_CHECKING:
-    from gettsim_personas.typing import NestedDataDict, Persona
+    from gettsim_personas.typing import NestedDataDict, NestedPersonas
 
 
-def get_personas(date_str: str) -> PersonaCollection:
-    """Collection of personas that are active at a given date.
+def get_personas(date: date.fromisoformat) -> ActivePersonaCollection:
+    """Collection of personas that are active at a given date. Builds the user-facing
+    persona tree.
 
     Args:
         date_str: Date in ISO format (YYYY-MM-DD)
 
     Returns:
-        PersonaCollection containing only personas active at the given date
+        ActivePersonaCollection containing only personas active at the given date
     """
-    all_personas = load_personas()
-    target_date = date.fromisoformat(date_str)
-    _fail_if_multiple_personas_with_same_name_active_at_same_date(all_personas)
-    active_personas = {
-        p.name: p for p in all_personas if p.start_date <= target_date <= p.end_date
-    }
-
-    return PersonaCollection(personas=active_personas, date=target_date)
+    all_personas: NestedPersonas = orig_personas()
+    _fail_if_multiple_personas_with_same_path_active_at_same_date(all_personas)
+    flat_all_personas = dt.flatten_to_tree_paths(all_personas)
+    active_personas: NestedPersonas = {}
+    for path, persona in flat_all_personas.items():
+        if persona.start_date <= date <= persona.end_date:
+            new_path = path[:-1] + (persona.name,)
+            active_personas[new_path] = persona
+    return ActivePersonaCollection(
+        active_personas=dt.unflatten_from_tree_paths(active_personas), date=date
+    )
 
 
 def upsert_input_data(
@@ -105,25 +109,27 @@ def upsert_input_data(
     return dt.unflatten_from_tree_paths(upserted_data)
 
 
-def _fail_if_multiple_personas_with_same_name_active_at_same_date(
-    all_personas: list[Persona],
+def _fail_if_multiple_personas_with_same_path_active_at_same_date(
+    all_personas: NestedPersonas,
 ) -> None:
-    """Fail if multiple personas with the same name are active at the same date."""
-    persona_names_to_active_periods: dict[str, list[tuple[date, date]]] = {}
-    for persona in all_personas:
-        if persona.name not in persona_names_to_active_periods:
-            persona_names_to_active_periods[persona.name] = []
-        persona_names_to_active_periods[persona.name].append(
+    """Fail if multiple personas with the same path are active at the same date."""
+    persona_path_to_active_periods: dict[tuple[str, ...], list[tuple[date, date]]] = {}
+    flat_all_personas = dt.flatten_to_tree_paths(all_personas)
+    for orig_path, persona in flat_all_personas.items():
+        persona_path = orig_path[:-1] + (persona.name,)
+        if persona_path not in persona_path_to_active_periods:
+            persona_path_to_active_periods[persona_path] = []
+        persona_path_to_active_periods[persona_path].append(
             (persona.start_date, persona.end_date)
         )
-    for persona_name, all_active_periods in persona_names_to_active_periods.items():
+    for persona_path, all_active_periods in persona_path_to_active_periods.items():
         if len(all_active_periods) > 1:
             for (start1, end1), (start2, end2) in itertools.combinations(
                 all_active_periods, 2
             ):
                 if start1 <= end2 and start2 <= end1:
                     msg = (
-                        f"Multiple personas with the name '{persona_name}' are active "
+                        f"Multiple personas with the path '{persona_path}' are active "
                         f"at the same date. Overlapping periods: {start1} - {end1} and "
                         f"{start2} - {end2}."
                     )

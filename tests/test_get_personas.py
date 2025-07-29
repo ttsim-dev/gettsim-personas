@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from gettsim_personas.get_personas import (
+from gettsim_personas.active_personas import (
     _fail_if_multiple_personas_with_same_name_active_at_same_date,
 )
 from gettsim_personas.persona_objects import Persona
@@ -10,9 +10,8 @@ from gettsim_personas.persona_objects import Persona
 _GENERIC_PERSONA_SPEC = {
     "name": "persona_1",
     "description": "",
-    "policy_inputs": {},
-    "policy_inputs_overriding_functions": {},
-    "targets_tree": {},
+    "input_data_tree": {},
+    "tt_targets_tree": {},
 }
 
 

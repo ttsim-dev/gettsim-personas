@@ -9,9 +9,10 @@ if TYPE_CHECKING:
     from ttsim.typing import NestedDataDict  # noqa: F401
 
     from gettsim_personas.persona_objects import (  # noqa: F401
+        ActivePersonaCollection,
         Persona,
-        PersonaCollection,
     )
 
     GETTSIMScalar = bool | int | float
     RawPersonaSpec = Mapping[str, str | list[GETTSIMScalar]]
+    NestedPersonas = Mapping[str, Persona | "NestedPersonas"]

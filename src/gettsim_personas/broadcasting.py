@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 if TYPE_CHECKING:
-    from gettsim_personas.get_personas import NestedDataDict
+    from gettsim_personas.active_personas import NestedDataDict
 
 
 def broadcast_p_id(original_series: pd.Series, expected_length: int) -> pd.Series:
