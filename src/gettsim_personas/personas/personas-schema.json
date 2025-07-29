@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "required": ["name", "description", "varies_by", "input_data_tree", "tt_targets_tree"],
+    "required": ["name", "description", "varying_input_data", "constant_input_data", "tt_targets_tree"],
     "properties": {
       "name": {
         "type": "string"
@@ -9,7 +9,7 @@
       "description": {
         "type": "string"
       },
-      "varies_by": {
+      "varying_input_data": {
         "type": "object",
         "additionalProperties": {
           "type": "object",
@@ -29,7 +29,7 @@
         "type": "string",
         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
       },
-      "input_data_tree": {
+      "constant_input_data": {
         "type": "object",
         "additionalProperties": {
           "type": ["array", "object"],

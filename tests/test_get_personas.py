@@ -10,7 +10,7 @@ from gettsim_personas.persona_objects import Persona
 _GENERIC_PERSONA_SPEC = {
     "name": "persona_1",
     "description": "",
-    "input_data_tree": {},
+    "constant_input_data": {},
     "tt_targets_tree": {},
 }
 

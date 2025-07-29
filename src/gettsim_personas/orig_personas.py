@@ -44,7 +44,7 @@ def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
 
     Args:
         raw_persona_spec: Dictionary containing persona data from YAML file.
-            Expected keys: name, description, varies_by, input_data_tree,
+            Expected keys: name, description, varying_input_data, constant_input_data,
             tt_targets_tree, start_date (optional), end_date (optional)
 
     Returns:
@@ -60,8 +60,8 @@ def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
     persona_spec = {
         "name": raw_persona_spec["name"],
         "description": raw_persona_spec["description"],
-        "varies_by": raw_persona_spec["varies_by"],
-        "input_data_tree": raw_persona_spec["input_data_tree"],
+        "varying_input_data": raw_persona_spec["varying_input_data"],
+        "constant_input_data": raw_persona_spec["constant_input_data"],
         "tt_targets_tree": raw_persona_spec["tt_targets_tree"],
         "start_date": start_date,
         "end_date": end_date,

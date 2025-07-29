@@ -13,7 +13,7 @@ Each persona has the following attributes:
 - `description`: a description of the persona
 - `start_date`: (Optional) the date from which the persona is valid
 - `end_date`: (Optional) the date until which the persona is valid
-- `input_data_tree`: the input data used to compute the targets
+- `constant_input_data`: the input data used to compute the targets
 - `tt_targets_tree`: the targets that can be computed for this persona
 
 > [!WARNING]

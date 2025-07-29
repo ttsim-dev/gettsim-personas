@@ -4,6 +4,9 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
 import dags.tree as dt
+import numpy as np
+
+from gettsim_personas.upsert import upsert_input_data
 
 if TYPE_CHECKING:
     import datetime
@@ -18,16 +21,29 @@ MinMaxVariationThresholds = Literal["min", "max"]
 class Persona:
     name: str
     description: str
-    varies_by: dict[str, dict[MinMaxVariationThresholds, list[float | int]]]
-    input_data_tree: NestedDataDict
+    varying_input_data: dict[str, dict[MinMaxVariationThresholds, list[float | int]]]
+    constant_input_data: NestedDataDict
     tt_targets_tree: NestedTargetDict
     start_date: datetime.date
     end_date: datetime.date
+    
+    def input_data(self, n_points: int | None = None, **kwargs):
+        """Input data for this persona.
+        
+        Args:
+            n_points: Number of points to generate
+            **kwargs: Additional arguments passed to the persona processing
+        """
+        varying_input_data_as_arrays: NestedDataDict = {}
+        
+        flat_varying_input_data_spec = dt.flatten_to_tree_paths(self.varying_input_data)
+        # Flatten to proper version - probably should use dataclass here...
+        # ...
 
-
-@dataclass(frozen=True)
-class PersonaSpec(Persona):
-    varies_by: dict[str, dict[MinMaxVariationThresholds, list[float | int]]]
+        return upsert_input_data(
+            input_data=self.constant_input_data,
+            data_to_upsert=varying_input_data_as_arrays,
+        )
 
 
 @dataclass
