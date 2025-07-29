@@ -100,7 +100,7 @@ networkx = ">=3.5"
 
 [tool.pixi.pypi-dependencies]
 gettsim_personas = {path = ".", editable = true}
-gettsim = {git = "https://github.com/iza-institute-of-labor-economics/gettsim", rev = "be95562b86cb912ca9f11eec0e9912c65f3d5a24"}
+gettsim = {git = "https://github.com/ttsim-dev/gettsim", branch = "main"}
 pdbp = "*"
 
 [tool.pixi.target.unix.pypi-dependencies]
@@ -122,7 +122,7 @@ python = "3.12.*"
 python = "3.13.*"
 
 [tool.pixi.feature.mypy.pypi-dependencies]
-mypy = "~=1.16"
+mypy = ">=1.17"
 types-PyYAML = "*"
 types-pytz = "*"
 
