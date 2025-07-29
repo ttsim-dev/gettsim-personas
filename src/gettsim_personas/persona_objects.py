@@ -11,38 +11,54 @@ from gettsim_personas.upsert import upsert_input_data
 if TYPE_CHECKING:
     import datetime
 
-    from gettsim_personas.typing import NestedDataDict, NestedPersonas, NestedTargetDict
+    from gettsim_personas.typing import NestedData, NestedPersonas, NestedTargetDict
 
 
 MinMaxVariationThresholds = Literal["min", "max"]
 
 
 @dataclass(frozen=True)
+class VariationBounds:
+    """Min and max arrays defining a range of values for input data variation."""
+
+    min: list[float | int]
+    max: list[float | int]
+
+
+@dataclass(frozen=True)
 class Persona:
     name: str
     description: str
-    varying_input_data: dict[str, dict[MinMaxVariationThresholds, list[float | int]]]
-    constant_input_data: NestedDataDict
+    input_data_range: dict[str, dict[MinMaxVariationThresholds, list[float | int]]]
+    constant_input_data: NestedData
     tt_targets_tree: NestedTargetDict
     start_date: datetime.date
     end_date: datetime.date
-    
-    def input_data(self, n_points: int | None = None, **kwargs):
+
+    def input_data(self, n_points: int | None = None):
         """Input data for this persona.
-        
+
         Args:
             n_points: Number of points to generate
-            **kwargs: Additional arguments passed to the persona processing
         """
-        varying_input_data_as_arrays: NestedDataDict = {}
-        
-        flat_varying_input_data_spec = dt.flatten_to_tree_paths(self.varying_input_data)
-        # Flatten to proper version - probably should use dataclass here...
-        # ...
+        input_data_from_variation_bounds: NestedData = {}
+        for path, variation_bounds in self.input_data_range.items():
+            input_data_from_variation_bounds[path] = np.linspace(
+                variation_bounds.min, variation_bounds.max, n_points
+            )
+
+        flat_constant_input_data = dt.flatten_to_tree_paths(self.constant_input_data)
+        input_data_from_constant_input_data: NestedData = {}
+        for path, value in flat_constant_input_data.items():
+            input_data_from_constant_input_data[path] = np.array(value)
 
         return upsert_input_data(
-            input_data=self.constant_input_data,
-            data_to_upsert=varying_input_data_as_arrays,
+            input_data=dt.unflatten_from_tree_paths(
+                input_data_from_constant_input_data
+            ),
+            data_to_upsert=dt.unflatten_from_tree_paths(
+                input_data_from_variation_bounds
+            ),
         )
 
 

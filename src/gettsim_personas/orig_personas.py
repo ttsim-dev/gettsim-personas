@@ -7,12 +7,17 @@ from typing import TYPE_CHECKING
 import dags.tree as dt
 import yaml
 
-from gettsim_personas.persona_objects import Persona
+from gettsim_personas.persona_objects import Persona, VariationBounds
 
 if TYPE_CHECKING:
     from typing import TypeVar
 
-    from gettsim_personas.typing import GETTSIMScalar, NestedPersonas, RawPersonaSpec
+    from gettsim_personas.typing import (
+        GETTSIMScalar,
+        NestedData,
+        NestedPersonas,
+        RawPersonaSpec,
+    )
 
     T = TypeVar("T", bound=GETTSIMScalar)
 
@@ -44,7 +49,7 @@ def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
 
     Args:
         raw_persona_spec: Dictionary containing persona data from YAML file.
-            Expected keys: name, description, varying_input_data, constant_input_data,
+            Expected keys: name, description, input_data_range, constant_input_data,
             tt_targets_tree, start_date (optional), end_date (optional)
 
     Returns:
@@ -57,10 +62,15 @@ def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
         raw_persona_spec.get("end_date", DEFAULT_PERSONA_END_DATE)
     )
 
+    # Properly format varying input data
+    path_to_variation_bounds = _get_path_to_variation_bounds(
+        raw_persona_spec["input_data_range"]
+    )
+
     persona_spec = {
         "name": raw_persona_spec["name"],
         "description": raw_persona_spec["description"],
-        "varying_input_data": raw_persona_spec["varying_input_data"],
+        "input_data_range": path_to_variation_bounds,
         "constant_input_data": raw_persona_spec["constant_input_data"],
         "tt_targets_tree": raw_persona_spec["tt_targets_tree"],
         "start_date": start_date,
@@ -68,3 +78,26 @@ def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
     }
 
     return Persona(**persona_spec)
+
+
+def _get_path_to_variation_bounds(
+    spec: NestedData,
+) -> dict[tuple[str, ...], VariationBounds]:
+    """Get a dictionary mapping paths to variation bounds."""
+    flat_spec = dt.flatten_to_tree_paths(spec)
+    # Separate path from min/max specifier
+    path_to_variation_bounds_spec = {}
+    for key, value in flat_spec.items():
+        path = key[:-1]
+        if path not in path_to_variation_bounds_spec:
+            path_to_variation_bounds_spec[path] = {}
+        path_to_variation_bounds_spec[path][key[-1]] = value
+
+    # Create variation bounds objects
+    path_to_variation_bounds = {}
+    for path, variation_bounds_spec in path_to_variation_bounds_spec.items():
+        variation_bounds = VariationBounds(
+            min=variation_bounds_spec["min"], max=variation_bounds_spec["max"]
+        )
+        path_to_variation_bounds[path] = variation_bounds
+    return path_to_variation_bounds

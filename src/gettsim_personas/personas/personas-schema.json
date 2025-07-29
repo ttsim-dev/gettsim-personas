@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "required": ["name", "description", "varying_input_data", "constant_input_data", "tt_targets_tree"],
+    "required": ["name", "description", "input_data_range", "constant_input_data", "tt_targets_tree"],
     "properties": {
       "name": {
         "type": "string"
@@ -9,7 +9,7 @@
       "description": {
         "type": "string"
       },
-      "varying_input_data": {
+      "input_data_range": {
         "type": "object",
         "additionalProperties": {
           "type": "object",

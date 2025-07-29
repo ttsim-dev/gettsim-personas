@@ -5,7 +5,7 @@ description: >-
   married couple with one child. All transfers are set to zero; don't use this persona
   for low- to mid-income households, as they may be eligible for (means-tested)
   transfers.
-varying_input_data:
+input_data_range:
   bruttolohn_m:
     min: [1000, 1000, 0]
     max: [10000, 10000, 0]

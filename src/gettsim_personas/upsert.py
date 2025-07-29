@@ -7,16 +7,16 @@ import numpy as np
 import pandas as pd
 
 if TYPE_CHECKING:
-    from gettsim_personas.typing import NestedDataDict
+    from gettsim_personas.typing import NestedData
 
 
 def upsert_input_data(
-    input_data: NestedDataDict,
-    data_to_upsert: NestedDataDict,
-) -> NestedDataDict:
+    input_data: NestedData,
+    data_to_upsert: NestedData,
+) -> NestedData:
     """Upsert GETTSIM input data.
 
-    Updates and inserts new values into a NestedDataDict with input data for GETTSIM,
+    Updates and inserts new values into a NestedData with input data for GETTSIM,
     e.g. created from a persona via `get_personas`. Data not in `data_to_upsert` is
     broadcasted to match the length of `data_to_upsert`.
 
@@ -25,13 +25,13 @@ def upsert_input_data(
 
     Args:
         input_data:
-            NestedDataDict with input data for GETTSIM. Typically created from a persona
+            NestedData with input data for GETTSIM. Typically created from a persona
             object via `get_personas`.
         data_to_upsert:
-            NestedDataDict with data to be upserted
+            NestedData with data to be upserted
 
     Returns:
-        NestedDataDict with upserted data
+        NestedData with upserted data
     """
     _fail_if_data_to_upsert_is_not_dict_with_array_or_series_leafs(data_to_upsert)
     _fail_if_data_lengths_are_incompatible(data_to_upsert, input_data)
@@ -165,7 +165,7 @@ def _fail_if_persona_p_id_invalid(p_id_series: pd.Series) -> None:
 
 
 def _fail_if_data_to_upsert_is_not_dict_with_array_or_series_leafs(
-    data_to_upsert: NestedDataDict,
+    data_to_upsert: NestedData,
 ) -> None:
     """Fail if data_to_upsert is not a dictionary with Arrays as leafs.
 
@@ -196,8 +196,8 @@ def _fail_if_data_to_upsert_is_not_dict_with_array_or_series_leafs(
 
 
 def _fail_if_data_lengths_are_incompatible(
-    data_to_upsert: NestedDataDict,
-    data_from_persona: NestedDataDict,
+    data_to_upsert: NestedData,
+    data_from_persona: NestedData,
 ) -> None:
     """Fail if data lengths are incompatible.
 
