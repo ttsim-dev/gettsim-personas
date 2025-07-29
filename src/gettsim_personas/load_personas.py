@@ -81,7 +81,7 @@ def build_persona_object(raw_persona_spec: RawPersonaSpec) -> Persona:
     return Persona(**persona_spec)
 
 
-def convert_lists_to_series(data: Mapping[str, list[T]]) -> Mapping[str, pd.Series]:
+def convert_lists_to_series[T](data: Mapping[str, list[T]]) -> Mapping[str, pd.Series]:
     """Convert leaf nodes to pandas Series.
 
     Args:
