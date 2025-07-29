@@ -1,25 +1,25 @@
 from __future__ import annotations
 
 import datetime
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import dags.tree as dt
 import yaml
 
-from gettsim_personas.config import (
-    DEFAULT_PERSONA_END_DATE,
-    DEFAULT_PERSONA_START_DATE,
-    PERSONAS_SOURCE_DIR,
-)
 from gettsim_personas.persona_objects import Persona
 
 if TYPE_CHECKING:
-    from pathlib import Path
     from typing import TypeVar
 
     from gettsim_personas.typing import GETTSIMScalar, NestedPersonas, RawPersonaSpec
 
     T = TypeVar("T", bound=GETTSIMScalar)
+
+
+DEFAULT_PERSONA_START_DATE = "1900-01-01"
+DEFAULT_PERSONA_END_DATE = "2100-12-31"
+PERSONAS_SOURCE_DIR = Path(__file__).parent / "personas"
 
 
 def orig_personas() -> NestedPersonas:

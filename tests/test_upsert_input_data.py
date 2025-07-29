@@ -2,11 +2,11 @@ import dags.tree as dt
 import pandas as pd
 import pytest
 
-from gettsim_personas.active_personas import upsert_input_data
-from gettsim_personas.broadcasting import (
+from gettsim_personas.upsert import (
     broadcast_foreign_keys,
     broadcast_group_ids,
     broadcast_p_id,
+    upsert_input_data,
 )
 
 

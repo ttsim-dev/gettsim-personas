@@ -69,3 +69,13 @@ class ActivePersonaCollection:
                 intermediate._set_nested_attribute(path[1:], value)  # noqa: SLF001
 
         set_nested_attr(self, path, value)
+
+    @property
+    def all_names(self) -> list[tuple[str, ...]]:
+        """All paths in the active personas collection."""
+        return dt.tree_paths(self.active_personas)
+
+    def get_persona(self, path: tuple[str, ...]) -> Persona:
+        """Get a persona by its path."""
+        flat_active_personas = dt.flatten_to_tree_paths(self.active_personas)
+        return flat_active_personas[path]
