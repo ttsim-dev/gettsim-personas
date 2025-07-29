@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
 import dags.tree as dt
-import numpy as np
 
 from gettsim_personas.upsert import upsert_input_data
 
@@ -26,16 +25,16 @@ class Persona:
     tt_targets_tree: NestedTargetDict
     start_date: datetime.date
     end_date: datetime.date
-    
+
     def input_data(self, n_points: int | None = None, **kwargs):
         """Input data for this persona.
-        
+
         Args:
             n_points: Number of points to generate
             **kwargs: Additional arguments passed to the persona processing
         """
         varying_input_data_as_arrays: NestedDataDict = {}
-        
+
         flat_varying_input_data_spec = dt.flatten_to_tree_paths(self.varying_input_data)
         # Flatten to proper version - probably should use dataclass here...
         # ...
