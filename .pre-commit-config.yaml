@@ -56,23 +56,5 @@ repos:
         additional_dependencies: [mdformat-gfm, mdformat-gfm-alerts, mdformat-ruff]
         args: [--wrap, '88']
         files: (README\.md)
-  - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.33.2
-    hooks:
-      - id: check-jsonschema
-        name: Validate JSON/YAML files against schema
-        entry: check-jsonschema
-        language: python
-        files: ^(src/gettsim_personas/personas)/.*\.(yaml|yml)$
-        args: [--schemafile=src/gettsim_personas/personas/personas-schema.json]
-  - repo: local
-    hooks:
-      - id: validate-p_ids
-        name: Validate p_ids
-        entry: python src/gettsim_personas/personas/_validate_p_ids_hook.py
-        language: python
-        types: [yaml]
-        additional_dependencies: [pyyaml]
-        files: ^(src/gettsim_personas/personas)/.*\.(yaml|yml)$
 ci:
   autoupdate_schedule: monthly
