@@ -33,3 +33,11 @@ def test_end_to_end():
         persona.input_data_tree["einnahmen"]["bruttolohn_m"][-3:],
         np.array([5000, 5000, 0]),
     )
+
+
+def test_can_create_persona_with_default_bruttolohn():
+    policy_date_str = "2020-01-01"
+    persona = GETTSIMPersonas.einkommensteuer_sozialabgaben.couple_1_child(
+        policy_date_str=policy_date_str,
+    )
+    assert len(persona.input_data_tree["einnahmen"]["bruttolohn_m"]) == 3
