@@ -39,7 +39,7 @@ class Persona:
         """Input data for this persona.
 
         Args:
-            n_points: Number of points to generate
+            n_points: Number of grid points to generate
         """
         input_data_from_variation_bounds: NestedData = {}
         for path, variation_bounds in self.input_data_range.items():

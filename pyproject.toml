@@ -6,7 +6,7 @@
 name = "gettsim_personas"
 description = "Personas to use as example inputs for GETTSIM."
 requires-python = ">=3.11"
-dependencies = ["ttsim-backend>=1.0a3"]
+dependencies = ["gettsim>=1.0a1"]
 dynamic = ["version"]
 keywords = [
     "Economics",
@@ -89,37 +89,25 @@ python = ">=3.11,<3.14"
 jupyterlab = "*"
 pre-commit = "*"
 pygraphviz = "*"
-pytest = "*"
-pytest-cov = "*"
-pytest-xdist = "*"
-numpy = "*"
-pandas = ">=2.2"
-plotly = ">=6.2"
-dags = ">=0.4.1"
-networkx = ">=3.5"
 
 [tool.pixi.pypi-dependencies]
 gettsim_personas = {path = ".", editable = true}
-gettsim = {git = "https://github.com/ttsim-dev/gettsim", branch = "main"}
+kaleido = ">=1.0.0"
 pdbp = "*"
 
-[tool.pixi.target.unix.pypi-dependencies]
-kaleido = "*"
 
-[tool.pixi.target.win-64.pypi-dependencies]
-kaleido = "==0.1.0.post1"
 
 # Features
 # --------------------------------------------------------------------------------------
 
 [tool.pixi.feature.py311.dependencies]
-python = "3.11.*"
+python = "~=3.11"
 
 [tool.pixi.feature.py312.dependencies]
-python = "3.12.*"
+python = "~=3.12"
 
 [tool.pixi.feature.py313.dependencies]
-python = "3.13.*"
+python = "~=3.13"
 
 [tool.pixi.feature.mypy.pypi-dependencies]
 mypy = ">=1.17"
@@ -150,7 +138,7 @@ py313 = ["test", "py313"]
 # ======================================================================================
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py311"
 fix = true
 
 [tool.ruff.lint]
