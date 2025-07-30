@@ -1,5 +1,10 @@
 """Test that all persona definitions are valid."""
 
+import dags.tree as dt
+import pytest
+from gettsim import InputData, MainTarget, TTTargets, main
+
+from gettsim_personas import GETTSIMPersonas
 from gettsim_personas.orig_personas import orig_personas
 
 
@@ -28,3 +33,34 @@ def test_p_ids_are_consecutive():
                     f"consecutive increasing: {p_id_array}"
                 )
                 raise ValueError(msg)
+
+
+@pytest.mark.parametrize(
+    "policy_date_str", [f"{year}-01-01" for year in range(2015, 2025)]
+)
+def test_persona_inputs_does_not_contain_unnecessary_inputs(policy_date_str):
+    environment = main(
+        main_target=MainTarget.policy_environment,
+        policy_date_str=policy_date_str,
+        backend="numpy",
+    )
+    personas_active_at_date = GETTSIMPersonas.personas_active_at_date(policy_date_str)
+    for path, persona in personas_active_at_date.items():
+        root_nodes = main(
+            main_target=MainTarget.labels.root_nodes,
+            policy_environment=environment,
+            policy_date_str=policy_date_str,
+            input_data=InputData.tree(persona.input_data_tree),
+            tt_targets=TTTargets(tree=persona.tt_targets_tree),
+            backend="numpy",
+            include_warn_nodes=False,
+        )
+        input_qnames = dt.flatten_to_qnames(persona.input_data_tree)
+        unnecessary_inputs = set(input_qnames) - set(root_nodes)
+        if unnecessary_inputs:
+            msg = (
+                f"The following inputs are not used in one persona with path "
+                f"'{path}': \n\n"
+                f"{unnecessary_inputs}"
+            )
+            raise ValueError(msg)

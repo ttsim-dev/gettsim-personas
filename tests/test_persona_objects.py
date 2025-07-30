@@ -28,7 +28,7 @@ def test_persona_collection_without_overlap():
         end_date=date(2021, 12, 31),
     )
 
-    collection = PersonaCollection(personas=[persona1, persona2])
+    collection = PersonaCollection(path=tuple(), personas=[persona1, persona2])
     assert len(collection.personas) == 2
 
 
@@ -52,7 +52,7 @@ def test_persona_collection_with_overlap():
     with pytest.raises(
         ValueError, match="Multiple personas are active at the same date"
     ):
-        PersonaCollection(personas=[persona1, persona2])
+        PersonaCollection(path=tuple(), personas=[persona1, persona2])
 
 
 def test_persona_collection_single_persona():
@@ -64,12 +64,12 @@ def test_persona_collection_single_persona():
         end_date=date(2020, 12, 31),
     )
 
-    collection = PersonaCollection(personas=[persona])
+    collection = PersonaCollection(path=tuple(), personas=[persona])
     assert len(collection.personas) == 1
 
 
 def test_persona_collection_empty():
-    collection = PersonaCollection(personas=[])
+    collection = PersonaCollection(path=tuple(), personas=[])
     assert len(collection.personas) == 0
 
 
@@ -93,7 +93,9 @@ def test_persona_collection_call_method():
     not_implemented_error = PersonaNotImplementedError("Expected error message.")
 
     collection = PersonaCollection(
-        personas=[persona1, persona2], not_implemented_error=not_implemented_error
+        path=tuple(),
+        personas=[persona1, persona2],
+        not_implemented_error=not_implemented_error,
     )
 
     found_persona = collection(policy_date_str="2020-06-15")

@@ -54,8 +54,6 @@ in_karenzzeit_persona = Persona(
             "p_id_elternteil_2": np.array([-1, -1, 1]),
         },
         "geburtsjahr": np.array([1995, 1995, 2015]),
-        "geburtsmonat": np.array([1, 1, 1]),
-        "grundsicherung": {"im_alter": {"betrag_m_eg": np.array([0, 0, 0])}},
         "kindergeld": {
             "in_ausbildung": np.array([False, False, False]),
             "p_id_empfänger": np.array([-1, -1, 0]),
@@ -91,7 +89,6 @@ in_karenzzeit_persona = Persona(
             "bruttokaltmiete_m_hh": np.array([900, 900, 900]),
             "heizkosten_m_hh": np.array([80, 80, 80]),
             "wohnfläche_hh": np.array([80, 80, 80]),
-            "baujahr_immobilie_hh": np.array([2000, 2000, 2000]),
         },
         "wohngeld": {"mietstufe_hh": np.array([5, 5, 5])},
         "wohnort_ost_hh": np.array([False, False, False]),

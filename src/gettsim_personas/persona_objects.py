@@ -34,6 +34,7 @@ class Persona:
 class PersonaCollection:
     """A collection of all available personas for a given path."""
 
+    path: tuple[str, ...]
     personas: list[Persona]
     not_implemented_error: PersonaNotImplementedError | None = None
 
@@ -120,21 +121,18 @@ class _GETTSIMPersonas:
 
         set_nested_attr(self, path, value)
 
-    def _all_personas(self) -> list[Persona]:
-        return [
-            p
-            for p_collection in self.persona_collections.values()
-            for p in p_collection.personas
-        ]
-
-    def personas_active_at_date(self, policy_date_str: str) -> list[Persona]:
+    def personas_active_at_date(
+        self, policy_date_str: str
+    ) -> dict[tuple[str, ...], list[Persona]]:
         """Get all personas active at a given date."""
         date = datetime.date.fromisoformat(policy_date_str)
-        return [
-            persona
-            for persona in self._all_personas()
-            if persona.start_date <= date <= persona.end_date
-        ]
+        active_personas: dict[tuple[str, ...], Persona] = {}
+        for p_collection in self.persona_collections.values():
+            for p in p_collection.personas:
+                if p.start_date <= date <= p.end_date:
+                    # only one persona can be active per path
+                    active_personas[p_collection.path] = p
+        return active_personas
 
 
 class PersonaNotImplementedError(BaseException):

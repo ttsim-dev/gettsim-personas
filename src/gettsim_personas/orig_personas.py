@@ -35,16 +35,20 @@ def orig_personas() -> OrigPersonas:
     """
     orig_personas: OrigPersonas = {}
     for path in PERSONAS_SOURCE_DIR.rglob("*.py"):
+        tree_path = path.relative_to(PERSONAS_SOURCE_DIR).with_suffix("").parts
         module = load_module(path=path, root=PERSONAS_SOURCE_DIR)
-        personas_in_this_module = persona_collection_from_module(module)
+        personas_in_this_module = persona_collection_from_module(
+            module=module, tree_path=tree_path
+        )
         if personas_in_this_module:
-            orig_tree_path = path.relative_to(PERSONAS_SOURCE_DIR).with_suffix("").parts
-            orig_personas[orig_tree_path] = personas_in_this_module
+            orig_personas[tree_path] = personas_in_this_module
 
     return orig_personas
 
 
-def persona_collection_from_module(module: ModuleType) -> PersonaCollection | None:
+def persona_collection_from_module(
+    module: ModuleType, tree_path: tuple[str, ...]
+) -> PersonaCollection | None:
     personas_in_this_module: list[Persona] = []
     not_implemented_error = None
     for _, obj in inspect.getmembers(module):
@@ -54,6 +58,7 @@ def persona_collection_from_module(module: ModuleType) -> PersonaCollection | No
             not_implemented_error = obj
     if personas_in_this_module:
         return PersonaCollection(
+            path=tree_path,
             personas=personas_in_this_module,
             not_implemented_error=not_implemented_error,
         )

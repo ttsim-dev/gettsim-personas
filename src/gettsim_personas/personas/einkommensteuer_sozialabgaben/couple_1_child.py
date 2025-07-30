@@ -1,6 +1,6 @@
 import numpy as np
 
-from gettsim_personas.persona_objects import Persona, PersonaNotImplementedError
+from gettsim_personas.persona_objects import Persona
 
 couple_1_child = Persona(
     description=(
@@ -14,7 +14,6 @@ couple_1_child = Persona(
         "arbeitsstunden_w": np.array([39, 39, 0]),
         "behinderungsgrad": np.array([0, 0, 0]),
         "geburtsjahr": np.array([1995, 1995, 2015]),
-        "hh_id": np.array([0, 0, 0]),
         "p_id": np.array([0, 1, 2]),
         "wohnort_ost_hh": np.array([False, False, False]),
         "einnahmen": {
@@ -67,13 +66,9 @@ couple_1_child = Persona(
                     "hat_kinder": np.array([True, True, False]),
                 },
             },
-            "arbeitslosen": {
-                "betrag_m": np.array([0.0, 0.0, 0.0]),
-            },
         },
         "familie": {
             "alleinerziehend": np.array([False, False, False]),
-            "kind": np.array([False, False, True]),
             "p_id_ehepartner": np.array([1, 0, -1]),
             "p_id_elternteil_1": np.array([-1, -1, 0]),
             "p_id_elternteil_2": np.array([-1, -1, 1]),
@@ -81,18 +76,6 @@ couple_1_child = Persona(
         "kindergeld": {
             "in_ausbildung": np.array([False, False, False]),
             "p_id_empfänger": np.array([-1, -1, 0]),
-        },
-        "wohngeld": {
-            "betrag_m_wthh": np.array([0, 0, 0]),
-        },
-        "kinderzuschlag": {
-            "betrag_m": np.array([0, 0, 0]),
-        },
-        "elterngeld": {
-            "betrag_m": np.array([0, 0, 0]),
-        },
-        "arbeitslosengeld_2": {
-            "betrag_m_bg": np.array([0, 0, 0]),
         },
     },
     tt_targets_tree={
@@ -122,9 +105,4 @@ couple_1_child = Persona(
             },
         },
     },
-)
-
-
-ERROR_IF_NO_ACTIVE_PERSONA_FOUND = PersonaNotImplementedError(
-    "This is just a placeholder for some error message."
 )
