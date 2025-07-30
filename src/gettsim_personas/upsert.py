@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 
 import dags.tree as dt
 import numpy as np
-import pandas as pd
 
 if TYPE_CHECKING:
     from gettsim_personas.typing import NestedData
@@ -33,7 +32,7 @@ def upsert_input_data(
     Returns:
         NestedData with upserted data
     """
-    _fail_if_data_to_upsert_is_not_dict_with_array_or_series_leafs(data_to_upsert)
+    _fail_if_data_to_upsert_is_not_dict_with_array_leafs(data_to_upsert)
     _fail_if_data_lengths_are_incompatible(data_to_upsert, input_data)
     flat_data_to_upsert = dt.flatten_to_tree_paths(data_to_upsert)
     flat_input_data = dt.flatten_to_tree_paths(input_data)
@@ -43,56 +42,52 @@ def upsert_input_data(
     number_of_new_personas = expected_length // persona_length
 
     upserted_data = flat_data_to_upsert.copy()
-    for path, series in flat_input_data.items():
+    for path, array in flat_input_data.items():
         if path in upserted_data:
             continue
         if path == ("p_id",):
-            broadcasted_series = broadcast_p_id(
-                original_series=series,
+            broadcasted_array = broadcast_p_id(
+                original_array=array,
                 expected_length=expected_length,
             )
         elif "p_id_" in path[-1]:
-            broadcasted_series = broadcast_foreign_keys(
-                original_series=series,
+            broadcasted_array = broadcast_foreign_keys(
+                original_array=array,
                 expected_length=expected_length,
             )
         elif path[-1].endswith("_id"):
-            broadcasted_series = broadcast_group_ids(
-                original_series=series, expected_length=expected_length
+            broadcasted_array = broadcast_group_ids(
+                original_array=array, expected_length=expected_length
             )
         else:
-            broadcasted_series = pd.Series(
-                np.tile(series.values, number_of_new_personas)
-            )
+            broadcasted_array = np.tile(array, number_of_new_personas)
 
-        broadcasted_series.name = path[-1]
-        broadcasted_series.index = pd.RangeIndex(expected_length)
-        upserted_data[path] = broadcasted_series
+        upserted_data[path] = broadcasted_array
 
     return dt.unflatten_from_tree_paths(upserted_data)
 
 
-def broadcast_p_id(original_series: pd.Series, expected_length: int) -> pd.Series:
+def broadcast_p_id(original_array: np.ndarray, expected_length: int) -> np.ndarray:
     """Broadcast p_id to the expected length.
 
     Fails (for simplicity) if the persona p_id does not start with 0 or is not
     consecutive.
     """
-    _fail_if_persona_p_id_invalid(original_series)
-    return pd.Series(list(range(expected_length)))
+    _fail_if_persona_p_id_invalid(original_array)
+    return np.arange(expected_length)
 
 
-def broadcast_group_ids(original_series: pd.Series, expected_length: int) -> pd.Series:
-    """Broadcast series with group IDs.
+def broadcast_group_ids(original_array: np.ndarray, expected_length: int) -> np.ndarray:
+    """Broadcast array with group IDs.
 
     Group IDs are used to identify groups of rows that should be treated together.
     The exact values don't matter as long as they maintain the same grouping pattern.
 
     Example:
     -------
-    >>> original_series = pd.Series([0, 1, 1])
+    >>> original_array = np.array([0, 1, 1])
     >>> expected_length = 6
-    >>> broadcast_group_ids(original_series, expected_length)
+    >>> broadcast_group_ids(original_array, expected_length)
     >>> 0    0
     >>> 1    1
     >>> 2    1
@@ -100,35 +95,33 @@ def broadcast_group_ids(original_series: pd.Series, expected_length: int) -> pd.
     >>> 4    3
     >>> 5    3
     """
-    number_of_personas = expected_length // len(original_series)
+    number_of_personas = expected_length // len(original_array)
 
-    repeated_series = pd.Series(
-        np.tile(original_series.values, reps=number_of_personas)
-    )
+    repeated_array = np.tile(original_array, reps=number_of_personas)
 
-    max_original_id = original_series.max()
+    max_original_id = original_array.max()
     to_add = np.repeat(
         np.arange(number_of_personas) * (max_original_id + 1),
-        repeats=len(original_series),
+        repeats=len(original_array),
     )
 
-    repeated_series += to_add
+    repeated_array += to_add
 
-    return repeated_series
+    return repeated_array
 
 
 def broadcast_foreign_keys(
-    original_series: pd.Series, expected_length: int
-) -> pd.Series:
-    """Broadcast series with foreign keys.
+    original_array: np.ndarray, expected_length: int
+) -> np.ndarray:
+    """Broadcast array with foreign keys.
 
     Foreign keys are used to reference specific rows in another table.
 
     Example:
     -------
-    >>> original_series = pd.Series([1, 0, -1])
+    >>> original_array = np.array([1, 0, -1])
     >>> expected_length = 6
-    >>> broadcast_foreign_keys(original_series, expected_length)
+    >>> broadcast_foreign_keys(original_array, expected_length)
     >>> 0    1
     >>> 1    0
     >>> 2    -1
@@ -136,35 +129,33 @@ def broadcast_foreign_keys(
     >>> 4    3
     >>> 5    -1
     """
-    number_of_personas = expected_length // len(original_series)
+    number_of_personas = expected_length // len(original_array)
 
-    repeated_series = pd.Series(
-        np.tile(original_series.values, reps=number_of_personas)
-    )
+    repeated_array = np.tile(original_array, reps=number_of_personas)
 
     to_add_if_not_minus_one = np.repeat(
-        np.arange(number_of_personas) * len(original_series),
-        repeats=len(original_series),
+        np.arange(number_of_personas) * len(original_array),
+        repeats=len(original_array),
     )
 
-    is_valid_id = repeated_series >= 0
-    repeated_series[is_valid_id] += to_add_if_not_minus_one[is_valid_id]
+    is_valid_id = repeated_array >= 0
+    repeated_array[is_valid_id] += to_add_if_not_minus_one[is_valid_id]
 
-    return repeated_series
+    return repeated_array
 
 
-def _fail_if_persona_p_id_invalid(p_id_series: pd.Series) -> None:
+def _fail_if_persona_p_id_invalid(p_id_array: np.ndarray) -> None:
     """Fail if persona p_id does not start with 0 or increment in steps of 1."""
-    valid = pd.Series(list(range(len(p_id_series))))
-    if not p_id_series.equals(valid):
+    valid = np.arange(len(p_id_array))
+    if not np.array_equal(p_id_array, valid):
         msg = f"""
         Persona p_id does not start with 0 or increment in steps of 1.
-        Found: {p_id_series.to_list()}
+        Found: {p_id_array.tolist()}
         """
         raise ValueError(msg)
 
 
-def _fail_if_data_to_upsert_is_not_dict_with_array_or_series_leafs(
+def _fail_if_data_to_upsert_is_not_dict_with_array_leafs(
     data_to_upsert: NestedData,
 ) -> None:
     """Fail if data_to_upsert is not a dictionary with Arrays as leafs.
@@ -184,12 +175,9 @@ def _fail_if_data_to_upsert_is_not_dict_with_array_or_series_leafs(
         raise TypeError(msg)
 
     flat_data_to_upsert = dt.flatten_to_tree_paths(data_to_upsert)
-    if not all(
-        isinstance(v, (pd.Series, np.ndarray, list))
-        for v in flat_data_to_upsert.values()
-    ):
+    if not all(isinstance(v, (np.ndarray, list)) for v in flat_data_to_upsert.values()):
         msg = f"""
-        All leafs in data_to_upsert must be pandas Series, numpy Arrays, or lists.
+        All leafs in data_to_upsert must be numpy Arrays or lists.
         You provided: {flat_data_to_upsert.values()}
         """
         raise TypeError(msg)

@@ -3,7 +3,11 @@ from __future__ import annotations
 import datetime
 import itertools
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
+
+import numpy as np
+
+from gettsim_personas.upsert import upsert_input_data
 
 if TYPE_CHECKING:
     from gettsim_personas.typing import NestedData, NestedTargetDict
@@ -11,6 +15,10 @@ if TYPE_CHECKING:
 
 DEFAULT_PERSONA_START_DATE = datetime.date(1900, 1, 1)
 DEFAULT_PERSONA_END_DATE = datetime.date(2100, 12, 31)
+
+
+BottomOrTop = Literal["bottom", "top"]
+BruttolohnLinspaceSpec = dict[int, dict[BottomOrTop, float]]
 
 
 @dataclass(frozen=True)
@@ -28,26 +36,50 @@ class PersonaCollection:
 
     personas: list[Persona]
 
-    def __call__(self, *, date_str: str) -> Persona:
+    def __call__(
+        self,
+        *,
+        date_str: str,
+        n_points: int = 1,
+        bruttolohn_m_linspace_spec: BruttolohnLinspaceSpec | None = None,
+    ) -> Persona:
         """Return a persona active at a given date.
 
         Args:
-            date_str: Date as string (YYYY-MM-DD)
+            date_str:
+                Date as string (YYYY-MM-DD)
+            n_points:
+                Optional, number of points to sample from the linspace specified via
+                bruttolohn_m.
+            bruttolohn_m_linspace_spec:
+                Optional, if provided, earnings are sampled from the linspace specified
+                here.
         """
         date = datetime.date.fromisoformat(date_str)
-
+        base_persona = None
         for persona in self.personas:
             if persona.start_date <= date <= persona.end_date:
-                return persona
-        msg = f"No persona found for date {date_str}. Consider using a different one."
-        raise NotImplementedError(msg)
+                base_persona = persona
+        if not base_persona:
+            msg = (
+                f"No persona found for date {date_str}. Consider using a different one."
+            )
+            raise NotImplementedError(msg)
+
+        if bruttolohn_m_linspace_spec:
+            return persona_with_upserted_bruttolohn(
+                base_persona=base_persona,
+                n_points=n_points,
+                bruttolohn_m_linspace_spec=bruttolohn_m_linspace_spec,
+            )
+        return base_persona
 
     def __post_init__(self):
         _fail_if_active_dates_overlap(self.personas)
 
 
 @dataclass
-class GETTSIMPersonas:
+class _GETTSIMPersonas:
     """A collection of all available personas."""
 
     persona_collections: dict = None
@@ -118,3 +150,77 @@ def _fail_if_active_dates_overlap(personas: list[Persona]) -> None:
                     f"and {persona2.start_date} - {persona2.end_date}."
                 )
                 raise ValueError(msg)
+
+
+def persona_with_upserted_bruttolohn(
+    base_persona: Persona,
+    n_points: int,
+    bruttolohn_m_linspace_spec: BruttolohnLinspaceSpec,
+) -> Persona:
+    _fail_if_bruttolohn_m_linspace_spec_invalid(
+        base_persona=base_persona,
+        bruttolohn_m_linspace_spec=bruttolohn_m_linspace_spec,
+    )
+    p_id_to_bruttolohn_m_linspace = {
+        p_id: np.linspace(
+            bounds["bottom"],
+            bounds["top"],
+            n_points,
+        )
+        for p_id, bounds in bruttolohn_m_linspace_spec.items()
+    }
+
+    # Create alternating array by interleaving arrays from different p_ids
+    bruttolohn_m_array = np.array(
+        [
+            value
+            for pair in zip(*p_id_to_bruttolohn_m_linspace.values(), strict=False)
+            for value in pair
+        ]
+    )
+
+    upserted_input_data = upsert_input_data(
+        input_data=base_persona.input_data_tree,
+        data_to_upsert={
+            "einnahmen": {"bruttolohn_m": bruttolohn_m_array},
+        },
+    )
+
+    return Persona(
+        description=base_persona.description,
+        input_data_tree=upserted_input_data,
+        tt_targets_tree=base_persona.tt_targets_tree,
+        start_date=base_persona.start_date,
+        end_date=base_persona.end_date,
+    )
+
+
+def _fail_if_bruttolohn_m_linspace_spec_invalid(
+    base_persona: Persona,
+    bruttolohn_m_linspace_spec: BruttolohnLinspaceSpec,
+) -> None:
+    """Fail if the bruttolohn_m_linspace_spec is invalid."""
+    if not isinstance(bruttolohn_m_linspace_spec, dict):
+        msg = "bruttolohn_m_linspace_spec must be a dictionary."
+        raise TypeError(msg)
+    keys_in_spec = set(bruttolohn_m_linspace_spec.keys())
+    p_id_in_base_persona = set(base_persona.input_data_tree.get("p_id"))
+    if keys_in_spec != p_id_in_base_persona:
+        msg = (
+            "You must specify linspace bounds for each p_id in the base_persona."
+            "The following p_ids are in the base_persona: "
+            f"{p_id_in_base_persona}"
+            "The following p_ids are in the bruttolohn_m_linspace_spec: "
+            f"{keys_in_spec}"
+        )
+        raise ValueError(msg)
+    for bounds in bruttolohn_m_linspace_spec.values():
+        if not isinstance(bounds, dict) or {"bottom", "top"} != set(bounds.keys()):
+            msg = (
+                "For each p_id in the bruttolohn_m_linspace_spec, you must specify "
+                "a dictionary with keys 'bottom' and 'top'."
+            )
+            raise TypeError(msg)
+        if bounds["bottom"] >= bounds["top"]:
+            msg = "The lower bound of the linspace must be less than the upper bound."
+            raise ValueError(msg)
