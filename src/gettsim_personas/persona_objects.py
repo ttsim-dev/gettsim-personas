@@ -1,83 +1,65 @@
 from __future__ import annotations
 
+import datetime
+import itertools
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal
-
-import dags.tree as dt
-import numpy as np
-
-from gettsim_personas.upsert import upsert_input_data
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import datetime
-
-    from gettsim_personas.typing import NestedData, NestedPersonas, NestedTargetDict
+    from gettsim_personas.typing import NestedData, NestedTargetDict
 
 
-MinMaxVariationThresholds = Literal["min", "max"]
-
-
-@dataclass(frozen=True)
-class VariationBounds:
-    """Min and max arrays defining a range of values for input data variation."""
-
-    min: list[float | int]
-    max: list[float | int]
+DEFAULT_PERSONA_START_DATE = datetime.date(1900, 1, 1)
+DEFAULT_PERSONA_END_DATE = datetime.date(2100, 12, 31)
 
 
 @dataclass(frozen=True)
 class Persona:
-    name: str
     description: str
-    input_data_range: dict[str, dict[MinMaxVariationThresholds, list[float | int]]]
-    constant_input_data: NestedData
+    input_data_tree: NestedData
     tt_targets_tree: NestedTargetDict
-    start_date: datetime.date
-    end_date: datetime.date
+    start_date: datetime.date = DEFAULT_PERSONA_START_DATE
+    end_date: datetime.date = DEFAULT_PERSONA_END_DATE
 
-    def input_data(self, n_points: int | None = None):
-        """Input data for this persona.
+
+@dataclass(frozen=True)
+class PersonaCollection:
+    """A collection of all available personas for a given path."""
+
+    personas: list[Persona]
+
+    def __call__(self, *, date_str: str) -> Persona:
+        """Return a persona active at a given date.
 
         Args:
-            n_points: Number of grid points to generate
+            date_str: Date as string (YYYY-MM-DD)
         """
-        input_data_from_variation_bounds: NestedData = {}
-        for path, variation_bounds in self.input_data_range.items():
-            input_data_from_variation_bounds[path] = np.linspace(
-                variation_bounds.min, variation_bounds.max, n_points
-            )
+        date = datetime.date.fromisoformat(date_str)
 
-        flat_constant_input_data = dt.flatten_to_tree_paths(self.constant_input_data)
-        input_data_from_constant_input_data: NestedData = {}
-        for path, value in flat_constant_input_data.items():
-            input_data_from_constant_input_data[path] = np.array(value)
+        for persona in self.personas:
+            if persona.start_date <= date <= persona.end_date:
+                return persona
+        msg = f"No persona found for date {date_str}. Consider using a different one."
+        raise NotImplementedError(msg)
 
-        return upsert_input_data(
-            input_data=dt.unflatten_from_tree_paths(
-                input_data_from_constant_input_data
-            ),
-            data_to_upsert=dt.unflatten_from_tree_paths(
-                input_data_from_variation_bounds
-            ),
-        )
+    def __post_init__(self):
+        _fail_if_active_dates_overlap(self.personas)
 
 
 @dataclass
-class ActivePersonaCollection:
-    """A collection of personas that are active at a specific date.
+class GETTSIMPersonas:
+    """A collection of all available personas."""
 
-    This class provides access to personas that are active at a specific date.
-    Personas can be accessed by name as attributes.
-    """
-
-    active_personas: NestedPersonas
-    date: datetime.date
+    persona_collections: dict = None
 
     def __post_init__(self):
         """Set attributes for each persona after initialization."""
-        flat_personas = dt.flatten_to_tree_paths(self.active_personas)
+        # This avoids a circular import.
+        from gettsim_personas.orig_personas import orig_personas  # noqa: PLC0415
 
-        for path, persona in flat_personas.items():
+        self.persona_collections = orig_personas()
+
+        for path, persona in self.persona_collections.items():
             self._set_nested_attribute(path, persona)
 
     def _set_nested_attribute(self, path: tuple[str, ...], value: object) -> None:
@@ -102,12 +84,37 @@ class ActivePersonaCollection:
 
         set_nested_attr(self, path, value)
 
-    @property
-    def all_names(self) -> list[tuple[str, ...]]:
-        """All paths in the active personas collection."""
-        return dt.tree_paths(self.active_personas)
+    def _all_personas(self) -> list[Persona]:
+        return [
+            p
+            for p_collection in self.persona_collections.values()
+            for p in p_collection.personas
+        ]
 
-    def get_persona(self, path: tuple[str, ...]) -> Persona:
-        """Get a persona by its path."""
-        flat_active_personas = dt.flatten_to_tree_paths(self.active_personas)
-        return flat_active_personas[path]
+    def personas_active_at_date(self, date_str: str) -> PersonaCollection:
+        """Get all personas active at a given date."""
+        date = datetime.date.fromisoformat(date_str)
+        return PersonaCollection(
+            personas=[
+                persona
+                for persona in self._all_personas()
+                if persona.start_date <= date <= persona.end_date
+            ]
+        )
+
+
+def _fail_if_active_dates_overlap(personas: list[Persona]) -> None:
+    """Fail if multiple personas are active at the same date."""
+    if len(personas) > 1:
+        for persona1, persona2 in itertools.combinations(personas, 2):
+            # Check if date ranges overlap
+            if (
+                persona1.start_date <= persona2.end_date
+                and persona2.start_date <= persona1.end_date
+            ):
+                msg = (
+                    f"Multiple personas are active at the same date. "
+                    f"Overlapping periods: {persona1.start_date} - {persona1.end_date} "
+                    f"and {persona2.start_date} - {persona2.end_date}."
+                )
+                raise ValueError(msg)

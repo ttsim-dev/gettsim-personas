@@ -1,6 +1,7 @@
 """Personas to use as example data when calling GETTSIM."""
 
-from gettsim_personas.active_personas import get_personas
-from gettsim_personas.upsert import upsert_input_data
+from gettsim_personas.persona_objects import GETTSIMPersonas as _GETTSIMPersonas
 
-__all__ = ["get_personas", "upsert_input_data"]
+GETTSIMPersonas = _GETTSIMPersonas()
+
+__all__ = ["GETTSIMPersonas"]
