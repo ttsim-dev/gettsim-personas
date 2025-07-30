@@ -88,11 +88,11 @@ def test_persona_collection_call_method():
 
     collection = PersonaCollection(personas=[persona1, persona2])
 
-    found_persona = collection(date_str="2020-06-15")
+    found_persona = collection(policy_date_str="2020-06-15")
     assert found_persona == persona1
 
-    found_persona = collection(date_str="2021-06-15")
+    found_persona = collection(policy_date_str="2021-06-15")
     assert found_persona == persona2
 
     with pytest.raises(NotImplementedError, match="No persona found for date"):
-        collection(date_str="2019-06-15")
+        collection(policy_date_str="2019-06-15")

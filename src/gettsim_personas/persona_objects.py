@@ -39,14 +39,14 @@ class PersonaCollection:
     def __call__(
         self,
         *,
-        date_str: str,
+        policy_date_str: str,
         n_points: int = 1,
         bruttolohn_m_linspace_spec: BruttolohnLinspaceSpec | None = None,
     ) -> Persona:
         """Return a persona active at a given date.
 
         Args:
-            date_str:
+            policy_date_str:
                 Date as string (YYYY-MM-DD)
             n_points:
                 Optional, number of points to sample from the linspace specified via
@@ -55,14 +55,15 @@ class PersonaCollection:
                 Optional, if provided, earnings are sampled from the linspace specified
                 here.
         """
-        date = datetime.date.fromisoformat(date_str)
+        date = datetime.date.fromisoformat(policy_date_str)
         base_persona = None
         for persona in self.personas:
             if persona.start_date <= date <= persona.end_date:
                 base_persona = persona
         if not base_persona:
             msg = (
-                f"No persona found for date {date_str}. Consider using a different one."
+                f"No persona found for date {policy_date_str}. "
+                "Consider using a different one."
             )
             raise NotImplementedError(msg)
 
@@ -123,9 +124,9 @@ class _GETTSIMPersonas:
             for p in p_collection.personas
         ]
 
-    def personas_active_at_date(self, date_str: str) -> PersonaCollection:
+    def personas_active_at_date(self, policy_date_str: str) -> PersonaCollection:
         """Get all personas active at a given date."""
-        date = datetime.date.fromisoformat(date_str)
+        date = datetime.date.fromisoformat(policy_date_str)
         return PersonaCollection(
             personas=[
                 persona
@@ -221,6 +222,6 @@ def _fail_if_bruttolohn_m_linspace_spec_invalid(
                 "a dictionary with keys 'bottom' and 'top'."
             )
             raise TypeError(msg)
-        if bounds["bottom"] >= bounds["top"]:
+        if bounds["bottom"] > bounds["top"]:
             msg = "The lower bound of the linspace must be less than the upper bound."
             raise ValueError(msg)
