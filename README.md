@@ -31,8 +31,9 @@ date.
 ```python
 from gettsim_personas import get_personas
 
-jan_01_2025 = "2025-01-01"
-personas = get_personas(jan_01_2025)
+jan_2025 = "2025-01-01"
+
+personas = get_personas(jan_2025)
 
 persona = personas.couple_1_child_no_means_tested_transfers
 ```
@@ -50,7 +51,7 @@ from gettsim import main, MainTarget, InputData, TTTargets
 
 result = main(
     main_target=MainTarget.results.df_with_nested_columns,
-    policy_date_str=jan_01_2025,
+    policy_date_str=jan_2025,
     input_data=InputData.tree(persona.input_data),
     tt_targets=TTTargets(tree=persona.tt_targets_tree),
 )
@@ -169,7 +170,7 @@ The modified input data can then be used to compute taxes and transfers:
 ```python
 result = main(
     main_target=MainTarget.results.df_with_nested_columns,
-    policy_date_str=jan_01_2025,
+    policy_date_str=jan_2025,
     input_data=InputData.tree(upserted_input_data),
     tt_targets=TTTargets(tree=persona.tt_targets_tree),
     backend="numpy",
