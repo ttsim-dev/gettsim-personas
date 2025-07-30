@@ -42,6 +42,7 @@ class PersonaCollection:
         self,
         *,
         policy_date_str: str,
+        evaluation_date_str: str | None = None,
         n_points: int = 1,
         bruttolohn_m_linspace_spec: BruttolohnLinspaceSpec | None = None,
     ) -> Persona:
@@ -50,6 +51,9 @@ class PersonaCollection:
         Args:
             policy_date_str:
                 Date as string (YYYY-MM-DD)
+            evaluation_date_str:
+                Optional, date as string (YYYY-MM-DD) to evaluate the persona at. If
+                not provided, the persona is evaluated at the policy date.
             n_points:
                 Optional, number of points to sample from the linspace specified via
                 bruttolohn_m.
@@ -57,10 +61,14 @@ class PersonaCollection:
                 Optional, if provided, earnings are sampled from the linspace specified
                 here.
         """
-        date = datetime.date.fromisoformat(policy_date_str)
+        policy_date = datetime.date.fromisoformat(policy_date_str)
+        if not evaluation_date_str:
+            evaluation_date_str = policy_date_str
+        evaluation_date = datetime.date.fromisoformat(evaluation_date_str)  # noqa: F841
+
         base_persona = None
         for persona in self.personas:
-            if persona.start_date <= date <= persona.end_date:
+            if persona.start_date <= policy_date <= persona.end_date:
                 base_persona = persona
         if not base_persona:
             if isinstance(self.not_implemented_error, PersonaNotImplementedError):

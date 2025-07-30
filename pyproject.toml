@@ -94,7 +94,7 @@ pygraphviz = "*"
 gettsim_personas = {path = ".", editable = true}
 kaleido = ">=1.0.0"
 pdbp = "*"
-
+pytest-cov = "*"
 
 
 # Features
@@ -120,6 +120,9 @@ types-pytz = "*"
 
 [tool.pixi.feature.test.tasks]
 tests = "pytest"
+
+[tool.pixi.feature.test.pypi-dependencies]
+pytest-cov = "*"
 
 [tool.pixi.feature.mypy.tasks]
 mypy = "mypy --ignore-missing-imports"
