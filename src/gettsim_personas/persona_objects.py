@@ -127,16 +127,14 @@ class _GETTSIMPersonas:
             for p in p_collection.personas
         ]
 
-    def personas_active_at_date(self, policy_date_str: str) -> PersonaCollection:
+    def personas_active_at_date(self, policy_date_str: str) -> list[Persona]:
         """Get all personas active at a given date."""
         date = datetime.date.fromisoformat(policy_date_str)
-        return PersonaCollection(
-            personas=[
-                persona
-                for persona in self._all_personas()
-                if persona.start_date <= date <= persona.end_date
-            ]
-        )
+        return [
+            persona
+            for persona in self._all_personas()
+            if persona.start_date <= date <= persona.end_date
+        ]
 
 
 class PersonaNotImplementedError(BaseException):

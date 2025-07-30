@@ -5,7 +5,7 @@ from gettsim_personas import GETTSIMPersonas
 
 
 @pytest.mark.parametrize(
-    "policy_date_str", [f"{year}-01-01" for year in range(2006, 2025)]
+    "policy_date_str", [f"{year}-01-01" for year in range(2005, 2025)]
 )
 def test_call_gettsim_on_personas(policy_date_str):
     environment = main(
@@ -14,7 +14,7 @@ def test_call_gettsim_on_personas(policy_date_str):
         backend="numpy",
     )
     personas_active_at_date = GETTSIMPersonas.personas_active_at_date(policy_date_str)
-    for persona in personas_active_at_date.personas:
+    for persona in personas_active_at_date:
         main(
             main_target=MainTarget.results.df_with_nested_columns,
             policy_environment=environment,
