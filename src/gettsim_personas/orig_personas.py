@@ -6,7 +6,11 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from gettsim_personas.persona_objects import Persona, PersonaCollection
+from gettsim_personas.persona_objects import (
+    Persona,
+    PersonaCollection,
+    PersonaNotImplementedError,
+)
 
 if TYPE_CHECKING:
     from types import ModuleType
@@ -42,11 +46,17 @@ def orig_personas() -> OrigPersonas:
 
 def persona_collection_from_module(module: ModuleType) -> PersonaCollection | None:
     personas_in_this_module: list[Persona] = []
+    not_implemented_error = None
     for _, obj in inspect.getmembers(module):
         if isinstance(obj, Persona):
             personas_in_this_module.append(obj)
+        elif isinstance(obj, PersonaNotImplementedError):
+            not_implemented_error = obj
     if personas_in_this_module:
-        return PersonaCollection(personas=personas_in_this_module)
+        return PersonaCollection(
+            personas=personas_in_this_module,
+            not_implemented_error=not_implemented_error,
+        )
     return None
 
 

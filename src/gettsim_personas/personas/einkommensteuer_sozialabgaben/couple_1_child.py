@@ -1,6 +1,6 @@
 import numpy as np
 
-from gettsim_personas.persona_objects import Persona
+from gettsim_personas.persona_objects import Persona, PersonaNotImplementedError
 
 couple_1_child = Persona(
     description=(
@@ -122,4 +122,9 @@ couple_1_child = Persona(
             },
         },
     },
+)
+
+
+ERROR_IF_NO_ACTIVE_PERSONA_FOUND = PersonaNotImplementedError(
+    "This is just a placeholder for some error message."
 )

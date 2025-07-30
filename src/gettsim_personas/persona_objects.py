@@ -35,6 +35,7 @@ class PersonaCollection:
     """A collection of all available personas for a given path."""
 
     personas: list[Persona]
+    not_implemented_error: PersonaNotImplementedError | None = None
 
     def __call__(
         self,
@@ -61,11 +62,13 @@ class PersonaCollection:
             if persona.start_date <= date <= persona.end_date:
                 base_persona = persona
         if not base_persona:
+            if isinstance(self.not_implemented_error, PersonaNotImplementedError):
+                raise self.not_implemented_error
             msg = (
                 f"No persona found for date {policy_date_str}. "
                 "Consider using a different one."
             )
-            raise NotImplementedError(msg)
+            raise PersonaNotImplementedError(msg)
 
         if bruttolohn_m_linspace_spec:
             return persona_with_upserted_bruttolohn(
@@ -134,6 +137,10 @@ class _GETTSIMPersonas:
                 if persona.start_date <= date <= persona.end_date
             ]
         )
+
+
+class PersonaNotImplementedError(BaseException):
+    """Error to be raised if a persona is not implemented."""
 
 
 def _fail_if_active_dates_overlap(personas: list[Persona]) -> None:

@@ -4,7 +4,11 @@ from datetime import date
 
 import pytest
 
-from gettsim_personas.persona_objects import Persona, PersonaCollection
+from gettsim_personas.persona_objects import (
+    Persona,
+    PersonaCollection,
+    PersonaNotImplementedError,
+)
 
 
 def test_persona_collection_without_overlap():
@@ -86,7 +90,11 @@ def test_persona_collection_call_method():
         end_date=date(2021, 12, 31),
     )
 
-    collection = PersonaCollection(personas=[persona1, persona2])
+    not_implemented_error = PersonaNotImplementedError("Expected error message.")
+
+    collection = PersonaCollection(
+        personas=[persona1, persona2], not_implemented_error=not_implemented_error
+    )
 
     found_persona = collection(policy_date_str="2020-06-15")
     assert found_persona == persona1
@@ -94,5 +102,5 @@ def test_persona_collection_call_method():
     found_persona = collection(policy_date_str="2021-06-15")
     assert found_persona == persona2
 
-    with pytest.raises(NotImplementedError, match="No persona found for date"):
+    with pytest.raises(PersonaNotImplementedError, match="Expected error message."):
         collection(policy_date_str="2019-06-15")
