@@ -4,10 +4,15 @@ from gettsim_personas.persona_objects import Persona
 
 couple_1_child = Persona(
     description=(
-        """Persona to compute income taxes and social insurance contributions. Jointly
-        taxed married couple with one child. All transfers are set to zero; don't use
-        this persona for low- to mid-income households, as they may be eligible for
-        (means-tested) transfers."""
+        """Jointly taxed married couple with one child, who never applies for
+        any means-tested transfers.
+
+        Use safely for upper-income households where this provides a
+        minimal set of required input values.
+
+        Only use for lower-income households if you want to know what happens
+        in the absence of means-tested transfers.
+        """
     ),
     input_data_tree={
         "alter": np.array([30, 30, 10]),
