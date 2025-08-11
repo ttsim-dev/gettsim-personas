@@ -6,7 +6,7 @@
 name = "gettsim_personas"
 description = "Personas to use as example inputs for GETTSIM."
 requires-python = ">=3.11"
-dependencies = ["gettsim>=1.0a1"]
+dependencies = ["gettsim>=1.0a2"]
 dynamic = ["version"]
 keywords = [
     "Economics",
@@ -172,13 +172,6 @@ convention = "google"
 
 [tool.pytest.ini_options]
 addopts = "--pdbcls=pdbp:Pdb"
-markers = [
-    "wip: Tests that are work-in-progress.",
-    "unit: Flag for unit tests which target mainly a single function.",
-    "integration: Flag for integration tests which may comprise of multiple unit tests.",
-    "end_to_end: Flag for tests that cover the whole program.",
-]
-
 
 [tool.yamlfix]
 line_length = 88
