@@ -156,6 +156,7 @@ extend-ignore = [
     "RET504", # Don't force to calculate upon return
     "S101",  # Use of `assert` detected.
     "S301",  # pickle module is unsafe
+    "PLC2403", # Modules may contain non-ASCII characters
 ]
 
 [tool.ruff.lint.per-file-ignores]
