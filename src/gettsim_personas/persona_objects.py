@@ -168,7 +168,6 @@ class TTTarget(TimeDependentPersonaSpec):
 
 def target_column(
     *,
-    qname: str | None = None,
     start_date: str | datetime.date = DEFAULT_START_DATE,
     end_date: str | datetime.date = DEFAULT_END_DATE,
 ) -> Callable[[Callable[..., Any]], TTTarget]:
@@ -179,7 +178,7 @@ def target_column(
 
     def inner(func: Callable[..., Any]) -> TTTarget:
         return TTTarget(
-            qname=qname if qname else func.__name__,
+            qname=func.__name__,
             start_date=start_date,
             end_date=end_date,
         )
