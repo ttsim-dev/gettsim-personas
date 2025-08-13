@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
     import numpy as np
 
-    from gettsim_personas.typing import NestedData, NestedStrings
+    from gettsim_personas.typing import DashedISOString, NestedData, NestedStrings
 
 
 DEFAULT_START_DATE = datetime.date(1900, 1, 1)
@@ -39,7 +39,7 @@ class PersonaForDate:
 class Persona:
     """A persona containing inputs and targets to use with GETTSIM."""
 
-    specs_file: Path
+    path_to_persona_elements: Path
     name: str = __name__
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
@@ -56,53 +56,53 @@ class Persona:
         if evaluation_date is None:
             evaluation_date = policy_date
 
-        active_specs = self.active_specs(policy_date)
+        active_elements = self.active_elements(policy_date)
         qname_input_data = _get_qname_input_data(
             persona_name=self.name,
             evaluation_date=evaluation_date,
-            input_columns=self.active_input_columns(active_specs),
+            input_columns=self.active_input_columns(active_elements),
         )
         return PersonaForDate(
-            description=self.active_description(active_specs),
+            description=self.active_description(active_elements),
             input_data_tree=dt.unflatten_from_qnames(qname_input_data),
             tt_targets_tree=dt.unflatten_from_qnames(
-                self.active_tt_targets(active_specs)
+                self.active_tt_targets(active_elements)
             ),
         )
 
-    def orig_specs(self) -> list[TimeDependentPersonaSpec]:
-        return load_persona_specs_from_module(self.specs_file)
+    def orig_elements(self) -> list[TimeDependentPersonaElement]:
+        return load_persona_elements_from_module(self.path_to_persona_elements)
 
-    def active_specs(
+    def active_elements(
         self, policy_date: datetime.date
-    ) -> list[TimeDependentPersonaSpec]:
-        active_specs = [
-            spec for spec in self.orig_specs() if spec.is_active(policy_date)
+    ) -> list[TimeDependentPersonaElement]:
+        active_elements = [
+            el for el in self.orig_elements() if el.is_active(policy_date)
         ]
         _fail_if_active_qnames_overlap(
-            active_specs=active_specs,
+            active_elements=active_elements,
             persona_name=self.name,
         )
         _fail_if_more_than_one_description_is_active(
-            active_specs=active_specs,
+            active_elements=active_elements,
             persona_name=self.name,
         )
-        return active_specs
+        return active_elements
 
     def active_input_columns(
-        self, active_specs: list[TimeDependentPersonaSpec]
+        self, active_elements: list[TimeDependentPersonaElement]
     ) -> list[InputColumn]:
-        return [s for s in active_specs if isinstance(s, InputColumn)]
+        return [s for s in active_elements if isinstance(s, InputColumn)]
 
     def active_tt_targets(
-        self, active_specs: list[TimeDependentPersonaSpec]
+        self, active_elements: list[TimeDependentPersonaElement]
     ) -> list[TTTarget]:
-        return {s.qname: None for s in active_specs if isinstance(s, TTTarget)}
+        return {s.qname: None for s in active_elements if isinstance(s, TTTarget)}
 
     def active_description(
-        self, active_specs: list[TimeDependentPersonaSpec]
+        self, active_elements: list[TimeDependentPersonaElement]
     ) -> PersonaDescription:
-        return next(s for s in active_specs if isinstance(s, PersonaDescription))
+        return next(s for s in active_elements if isinstance(s, PersonaDescription))
 
     def _fail_if_persona_not_implemented(
         self,
@@ -113,8 +113,8 @@ class Persona:
 
 
 @dataclass(frozen=True)
-class TimeDependentPersonaSpec:
-    """A persona specification object that depends on a policy date."""
+class TimeDependentPersonaElement:
+    """An element of some Persona that depends on a policy date."""
 
     start_date: datetime.date
     end_date: datetime.date
@@ -125,7 +125,7 @@ class TimeDependentPersonaSpec:
 
 
 @dataclass(frozen=True)
-class InputColumn(TimeDependentPersonaSpec):
+class InputColumn(TimeDependentPersonaElement):
     """An object that returns input data for one qname."""
 
     qname: str
@@ -134,14 +134,14 @@ class InputColumn(TimeDependentPersonaSpec):
     def __call__(
         self, *args: FunArgTypes.args, **kwargs: FunArgTypes.kwargs
     ) -> ReturnType:
-        return self.func(*args, **kwargs)
+        return self.function(*args, **kwargs)
 
 
 def input_column(
     *,
     qname: str | None = None,
-    start_date: str | datetime.date = DEFAULT_START_DATE,
-    end_date: str | datetime.date = DEFAULT_END_DATE,
+    start_date: DashedISOString | datetime.date = DEFAULT_START_DATE,
+    end_date: DashedISOString | datetime.date = DEFAULT_END_DATE,
 ) -> Callable[[Callable[..., Any]], InputColumn]:
     """Decorator to create an instance of InputColumn."""
     start_date, end_date = convert_and_validate_dates(
@@ -152,6 +152,7 @@ def input_column(
     def inner(func: Callable[..., Any]) -> InputColumn:
         return InputColumn(
             qname=qname if qname else func.__name__,
+            function=func,
             start_date=start_date,
             end_date=end_date,
         )
@@ -160,7 +161,7 @@ def input_column(
 
 
 @dataclass(frozen=True)
-class TTTarget(TimeDependentPersonaSpec):
+class TTTarget(TimeDependentPersonaElement):
     """An object that stores one qname to be used as a TT target."""
 
     qname: str
@@ -168,8 +169,8 @@ class TTTarget(TimeDependentPersonaSpec):
 
 def target_column(
     *,
-    start_date: str | datetime.date = DEFAULT_START_DATE,
-    end_date: str | datetime.date = DEFAULT_END_DATE,
+    start_date: DashedISOString | datetime.date = DEFAULT_START_DATE,
+    end_date: DashedISOString | datetime.date = DEFAULT_END_DATE,
 ) -> Callable[[Callable[..., Any]], TTTarget]:
     start_date, end_date = convert_and_validate_dates(
         start_date=start_date,
@@ -187,10 +188,33 @@ def target_column(
 
 
 @dataclass(frozen=True)
-class PersonaDescription(TimeDependentPersonaSpec):
+class PersonaDescription(TimeDependentPersonaElement):
     """An object that stores a description of a persona."""
 
+    name: str
     description: str
+
+
+def persona_description(
+    *,
+    description: str,
+    start_date: DashedISOString | datetime.date = DEFAULT_START_DATE,
+    end_date: DashedISOString | datetime.date = DEFAULT_END_DATE,
+) -> PersonaDescription:
+    start_date, end_date = convert_and_validate_dates(
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+    def inner(func: Callable[..., Any]) -> PersonaDescription:
+        return PersonaDescription(
+            name=func.__name__,
+            start_date=start_date,
+            end_date=end_date,
+            description=description,
+        )
+
+    return inner
 
 
 def _get_qname_input_data(
@@ -199,8 +223,8 @@ def _get_qname_input_data(
     input_columns: list[InputColumn],
 ) -> dict[str, np.ndarray]:
     f = dags.concatenate_functions(
-        functions=[spec.function for spec in input_columns],
-        targets=[spec.qname for spec in input_columns],
+        functions=[el.function for el in input_columns],
+        targets=[el.qname for el in input_columns],
         return_type="dict",
     )
     params = inspect.signature(f).parameters
@@ -217,35 +241,35 @@ def _get_qname_input_data(
     return f()
 
 
-def load_persona_specs_from_module(
+def load_persona_elements_from_module(
     module: ModuleType,
-) -> list[TimeDependentPersonaSpec]:
-    persona_specs_in_this_module: list[TimeDependentPersonaSpec] = []
+) -> list[TimeDependentPersonaElement]:
+    persona_elements_in_this_module: list[TimeDependentPersonaElement] = []
     for _, obj in inspect.getmembers(module):
-        if isinstance(obj, TimeDependentPersonaSpec):
-            persona_specs_in_this_module.append(obj)
-    return persona_specs_in_this_module
+        if isinstance(obj, TimeDependentPersonaElement):
+            persona_elements_in_this_module.append(obj)
+    return persona_elements_in_this_module
 
 
 def _fail_if_more_than_one_description_is_active(
-    active_specs: list[TimeDependentPersonaSpec], persona_name: str
+    active_elements: list[TimeDependentPersonaElement], persona_name: str
 ) -> None:
-    descriptions = [s for s in active_specs if isinstance(s, PersonaDescription)]
+    descriptions = [s for s in active_elements if isinstance(s, PersonaDescription)]
     if len(descriptions) > 1:
         msg = f"More than one PersonaDescription is active for {persona_name}"
         raise ValueError(msg)
 
 
 def _fail_if_active_qnames_overlap(
-    active_specs: list[TimeDependentPersonaSpec], persona_name: str
+    active_elements: list[TimeDependentPersonaElement], persona_name: str
 ) -> None:
     all_qnames: set[str] = set()
     overlapping_qnames: set[str] = set()
-    for spec in active_specs:
-        if spec.qname in all_qnames:
-            overlapping_qnames.add(spec.qname)
+    for el in active_elements:
+        if el.qname in all_qnames:
+            overlapping_qnames.add(el.qname)
         else:
-            all_qnames.add(spec.qname)
+            all_qnames.add(el.qname)
     if overlapping_qnames:
         msg = (
             f"Active qnames overlap for {persona_name}. "

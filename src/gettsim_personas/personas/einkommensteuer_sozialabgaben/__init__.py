@@ -6,7 +6,7 @@ from gettsim_personas.persona_objects import Persona
 
 @dataclass(frozen=True)
 class Couple1Child(Persona):
-    specs_file: Path = Path(__file__).parent / "_couple_1_child.py"
+    path_to_persona_elements: Path = Path(__file__).parent / "_couple_1_child.py"
 
 
 __all__ = ["Couple1Child"]

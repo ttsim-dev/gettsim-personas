@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from gettsim_personas.persona_objects import (
-    PersonaDescription,
     input_column,
+    persona_description,
     target_column,
 )
 
@@ -14,16 +14,20 @@ if TYPE_CHECKING:
     import datetime
 
 
-description_until_2009 = PersonaDescription(
-    end_date="2009-12-31",
+@persona_description(
     description="Test description valid until 2009.",
+    end_date="2009-12-31",
 )
+def description_until_2009() -> None:
+    pass
 
 
-description_since_2010 = PersonaDescription(
-    start_date="2010-01-01",
+@persona_description(
     description="Test description valid since 2010.",
+    start_date="2010-01-01",
 )
+def description_since_2010() -> None:
+    pass
 
 
 @input_column()
