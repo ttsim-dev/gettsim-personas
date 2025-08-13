@@ -12,7 +12,7 @@
 #     main(
 #         main_target=MainTarget.results.tree,
 #         input_data=InputData.tree(persona.input_data_tree),
-#         tt_targets=TTTargets(tree=persona.tt_targets_tree),
+#         tt_targets=PersonaTargetElements(tree=persona.tt_targets_tree),
 #         policy_date_str=policy_date_str,
 #         include_warn_nodes=False,
 #     )

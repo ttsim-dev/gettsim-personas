@@ -5,9 +5,9 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from gettsim_personas.persona_objects import (
-    input_column,
     persona_description,
-    target_column,
+    persona_input_element,
+    persona_target_element,
 )
 
 if TYPE_CHECKING:
@@ -30,41 +30,41 @@ def description_since_2010() -> None:
     pass
 
 
-@input_column()
-def some_input_column() -> np.ndarray:
+@persona_input_element()
+def some_persona_input_element() -> np.ndarray:
     return np.array([1, 2, 3])
 
 
-@input_column(end_date="2009-12-31")
-def input_column_until_2009() -> np.ndarray:
+@persona_input_element(end_date="2009-12-31")
+def persona_input_element_until_2009() -> np.ndarray:
     return np.array([1, 2, 3])
 
 
-@input_column(start_date="2010-01-01")
-def input_column_since_2010() -> np.ndarray:
+@persona_input_element(start_date="2010-01-01")
+def persona_input_element_since_2010() -> np.ndarray:
     return np.array([1, 2, 3])
 
 
-@input_column(qname="input_qname_via_decorator")
+@persona_input_element(tt_qname="input_qname_via_decorator")
 def some_irrelevant_name() -> np.ndarray:
     return np.array([1, 2, 3])
 
 
-@input_column()
+@persona_input_element()
 def some_qname_depending_on_another_qname(
-    some_input_column: np.ndarray,
+    some_persona_input_element: np.ndarray,
 ) -> np.ndarray:
-    return 2 * some_input_column
+    return 2 * some_persona_input_element
 
 
-@input_column()
+@persona_input_element()
 def true_if_evaluation_year_at_least_2015(
     evaluation_date: datetime.date,
 ) -> np.ndarray:
     return evaluation_date.year >= np.array([2015, 2015, 2015])
 
 
-@input_column()
+@persona_input_element()
 def qname_depending_on_evaluation_date_and_another_qname(
     evaluation_date: datetime.date,
     some_qname_depending_on_another_qname: np.ndarray,
@@ -72,16 +72,16 @@ def qname_depending_on_evaluation_date_and_another_qname(
     return evaluation_date.year >= some_qname_depending_on_another_qname
 
 
-@target_column()
+@persona_target_element()
 def some_target_qname():
     pass
 
 
-@target_column(end_date="2009-12-31")
+@persona_target_element(end_date="2009-12-31")
 def some_target_qname_until_2009():
     pass
 
 
-@target_column(start_date="2010-01-01")
+@persona_target_element(start_date="2010-01-01")
 def some_target_qname_since_2010():
     pass

@@ -6,18 +6,18 @@ from numpy.testing import assert_array_equal
 
 from gettsim_personas.persona_objects import (
     TimeDependentPersonaElement,
-    input_column,
     persona_description,
-    target_column,
+    persona_input_element,
+    persona_target_element,
 )
 from tests.personas_for_testing.persona_elements import (
     description_since_2010,
     description_until_2009,
-    input_column_since_2010,
-    input_column_until_2009,
+    persona_input_element_since_2010,
+    persona_input_element_until_2009,
     qname_depending_on_evaluation_date_and_another_qname,
-    some_input_column,
     some_irrelevant_name,
+    some_persona_input_element,
     some_qname_depending_on_another_qname,
     some_target_qname,
     some_target_qname_since_2010,
@@ -40,13 +40,13 @@ def test_time_dependent_persona_elements():
 def test_time_dependent_persona_elements_raises_error_for_invalid_dates():
     with pytest.raises(ValueError, match="must be before the end date"):
 
-        @input_column(start_date="2005-01-01", end_date="2004-01-01")
+        @persona_input_element(start_date="2005-01-01", end_date="2004-01-01")
         def some_input():
             return 1
 
     with pytest.raises(ValueError, match="must be before the end date"):
 
-        @target_column(start_date="2005-01-01", end_date="2004-01-01")
+        @persona_target_element(start_date="2005-01-01", end_date="2004-01-01")
         def some_target():
             pass
 
@@ -60,26 +60,30 @@ def test_time_dependent_persona_elements_raises_error_for_invalid_dates():
 
 
 def test_persona_elements_have_correct_qname():
-    assert some_input_column.qname == "some_input_column"
-    assert input_column_until_2009.qname == "input_column_until_2009"
-    assert input_column_since_2010.qname == "input_column_since_2010"
-    assert some_irrelevant_name.qname == "input_qname_via_decorator"
+    assert some_persona_input_element.tt_qname == "some_persona_input_element"
     assert (
-        some_qname_depending_on_another_qname.qname
+        persona_input_element_until_2009.tt_qname == "persona_input_element_until_2009"
+    )
+    assert (
+        persona_input_element_since_2010.tt_qname == "persona_input_element_since_2010"
+    )
+    assert some_irrelevant_name.tt_qname == "input_qname_via_decorator"
+    assert (
+        some_qname_depending_on_another_qname.tt_qname
         == "some_qname_depending_on_another_qname"
     )
-    assert some_target_qname.qname == "some_target_qname"
+    assert some_target_qname.tt_qname == "some_target_qname"
 
 
 def test_persona_elements_are_active_at_correct_dates():
     jan_01_2009 = datetime.date(2009, 1, 1)
     jan_01_2010 = datetime.date(2010, 1, 1)
 
-    assert input_column_until_2009.is_active(jan_01_2009)
-    assert not input_column_until_2009.is_active(jan_01_2010)
+    assert persona_input_element_until_2009.is_active(jan_01_2009)
+    assert not persona_input_element_until_2009.is_active(jan_01_2010)
 
-    assert not input_column_since_2010.is_active(jan_01_2009)
-    assert input_column_since_2010.is_active(jan_01_2010)
+    assert not persona_input_element_since_2010.is_active(jan_01_2009)
+    assert persona_input_element_since_2010.is_active(jan_01_2010)
 
     assert description_until_2009.is_active(jan_01_2009)
     assert not description_until_2009.is_active(jan_01_2010)
@@ -94,9 +98,9 @@ def test_persona_elements_are_active_at_correct_dates():
     assert some_target_qname_since_2010.is_active(jan_01_2010)
 
 
-def test_can_call_input_column_elements():
+def test_can_call_persona_input_element_elements():
     assert_array_equal(
-        some_input_column(),
+        some_persona_input_element(),
         np.array([1, 2, 3]),
     )
     assert_array_equal(

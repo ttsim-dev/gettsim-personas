@@ -47,13 +47,13 @@ computing taxes and transfers.
 We can now compute taxes and transfers for the selected persona.
 
 ```python
-from gettsim import main, MainTarget, InputData, TTTargets
+from gettsim import main, MainTarget, InputData, PersonaTargetElements
 
 result = main(
     main_target=MainTarget.results.df_with_nested_columns,
     policy_date_str=jan_2025,
     input_data=InputData.tree(persona.input_data),
-    tt_targets=TTTargets(tree=persona.tt_targets_tree),
+    tt_targets=PersonaTargetElements(tree=persona.tt_targets_tree),
 )
 ```
 
@@ -172,7 +172,7 @@ result = main(
     main_target=MainTarget.results.df_with_nested_columns,
     policy_date_str=jan_2025,
     input_data=InputData.tree(upserted_input_data),
-    tt_targets=TTTargets(tree=persona.tt_targets_tree),
+    tt_targets=PersonaTargetElements(tree=persona.tt_targets_tree),
     backend="numpy",
 )
 ```

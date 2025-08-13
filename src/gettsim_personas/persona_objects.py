@@ -3,16 +3,16 @@ from __future__ import annotations
 import datetime
 import inspect
 from dataclasses import dataclass
+from pathlib import Path
 from typing import TYPE_CHECKING, ParamSpec, TypeVar
 
 import dags
 import dags.tree as dt
 
-from gettsim_personas.utils import convert_and_validate_dates
+from gettsim_personas.utils import convert_and_validate_dates, load_module, to_datetime
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-    from pathlib import Path
     from types import ModuleType
     from typing import Any
 
@@ -40,7 +40,6 @@ class Persona:
     """A persona containing inputs and targets to use with GETTSIM."""
 
     path_to_persona_elements: Path
-    name: str = __name__
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
@@ -48,19 +47,22 @@ class Persona:
     def __call__(
         self,
         *,
-        policy_date: datetime.date,
+        policy_date: DashedISOString | datetime.date,
         evaluation_date: datetime.date | None = None,
     ) -> PersonaForDate:
-        self._fail_if_persona_not_implemented(policy_date)
-
+        policy_date = to_datetime(policy_date)
         if evaluation_date is None:
             evaluation_date = policy_date
+        else:
+            evaluation_date = to_datetime(evaluation_date)
+
+        self._fail_if_persona_not_implemented(policy_date)
 
         active_elements = self.active_elements(policy_date)
         qname_input_data = _get_qname_input_data(
-            persona_name=self.name,
             evaluation_date=evaluation_date,
-            input_columns=self.active_input_columns(active_elements),
+            persona_input_elements=self.active_persona_input_elements(active_elements),
+            path_to_persona_elements=self.path_to_persona_elements,
         )
         return PersonaForDate(
             description=self.active_description(active_elements),
@@ -71,7 +73,11 @@ class Persona:
         )
 
     def orig_elements(self) -> list[TimeDependentPersonaElement]:
-        return load_persona_elements_from_module(self.path_to_persona_elements)
+        module = load_module(
+            path=self.path_to_persona_elements,
+            root=Path(__file__).parent.parent.parent,
+        )
+        return load_persona_elements_from_module(module)
 
     def active_elements(
         self, policy_date: datetime.date
@@ -79,25 +85,29 @@ class Persona:
         active_elements = [
             el for el in self.orig_elements() if el.is_active(policy_date)
         ]
-        _fail_if_active_qnames_overlap(
+        _fail_if_active_tt_qnames_overlap(
             active_elements=active_elements,
-            persona_name=self.name,
+            path_to_persona_elements=self.path_to_persona_elements,
         )
-        _fail_if_more_than_one_description_is_active(
+        _fail_if_not_exactly_one_description_is_active(
             active_elements=active_elements,
-            persona_name=self.name,
+            path_to_persona_elements=self.path_to_persona_elements,
         )
         return active_elements
 
-    def active_input_columns(
+    def active_persona_input_elements(
         self, active_elements: list[TimeDependentPersonaElement]
-    ) -> list[InputColumn]:
-        return [s for s in active_elements if isinstance(s, InputColumn)]
+    ) -> list[PersonaInputElement]:
+        return [s for s in active_elements if isinstance(s, PersonaInputElement)]
 
     def active_tt_targets(
         self, active_elements: list[TimeDependentPersonaElement]
-    ) -> list[TTTarget]:
-        return {s.qname: None for s in active_elements if isinstance(s, TTTarget)}
+    ) -> list[PersonaTargetElement]:
+        return {
+            s.tt_qname: None
+            for s in active_elements
+            if isinstance(s, PersonaTargetElement)
+        }
 
     def active_description(
         self, active_elements: list[TimeDependentPersonaElement]
@@ -125,10 +135,11 @@ class TimeDependentPersonaElement:
 
 
 @dataclass(frozen=True)
-class InputColumn(TimeDependentPersonaElement):
-    """An object that returns input data for one qname."""
+class PersonaInputElement(TimeDependentPersonaElement):
+    """An object that returns input data for one TT qname."""
 
-    qname: str
+    orig_name: str
+    tt_qname: str
     function: Callable[FunArgTypes, ReturnType]
 
     def __call__(
@@ -137,21 +148,22 @@ class InputColumn(TimeDependentPersonaElement):
         return self.function(*args, **kwargs)
 
 
-def input_column(
+def persona_input_element(
     *,
-    qname: str | None = None,
+    tt_qname: str | None = None,
     start_date: DashedISOString | datetime.date = DEFAULT_START_DATE,
     end_date: DashedISOString | datetime.date = DEFAULT_END_DATE,
-) -> Callable[[Callable[..., Any]], InputColumn]:
-    """Decorator to create an instance of InputColumn."""
+) -> Callable[[Callable[..., Any]], PersonaInputElement]:
+    """Decorator to create an instance of PersonaInputElement."""
     start_date, end_date = convert_and_validate_dates(
         start_date=start_date,
         end_date=end_date,
     )
 
-    def inner(func: Callable[..., Any]) -> InputColumn:
-        return InputColumn(
-            qname=qname if qname else func.__name__,
+    def inner(func: Callable[..., Any]) -> PersonaInputElement:
+        return PersonaInputElement(
+            orig_name=func.__name__,
+            tt_qname=tt_qname if tt_qname else func.__name__,
             function=func,
             start_date=start_date,
             end_date=end_date,
@@ -161,25 +173,27 @@ def input_column(
 
 
 @dataclass(frozen=True)
-class TTTarget(TimeDependentPersonaElement):
-    """An object that stores one qname to be used as a TT target."""
+class PersonaTargetElement(TimeDependentPersonaElement):
+    """An object that stores one TT qname to be used as a TT target."""
 
-    qname: str
+    orig_name: str
+    tt_qname: str
 
 
-def target_column(
+def persona_target_element(
     *,
     start_date: DashedISOString | datetime.date = DEFAULT_START_DATE,
     end_date: DashedISOString | datetime.date = DEFAULT_END_DATE,
-) -> Callable[[Callable[..., Any]], TTTarget]:
+) -> Callable[[Callable[..., Any]], PersonaTargetElement]:
     start_date, end_date = convert_and_validate_dates(
         start_date=start_date,
         end_date=end_date,
     )
 
-    def inner(func: Callable[..., Any]) -> TTTarget:
-        return TTTarget(
-            qname=func.__name__,
+    def inner(func: Callable[..., Any]) -> PersonaTargetElement:
+        return PersonaTargetElement(
+            orig_name=func.__name__,
+            tt_qname=func.__name__,
             start_date=start_date,
             end_date=end_date,
         )
@@ -191,7 +205,7 @@ def target_column(
 class PersonaDescription(TimeDependentPersonaElement):
     """An object that stores a description of a persona."""
 
-    name: str
+    orig_name: str
     description: str
 
 
@@ -208,23 +222,22 @@ def persona_description(
 
     def inner(func: Callable[..., Any]) -> PersonaDescription:
         return PersonaDescription(
-            name=func.__name__,
+            orig_name=func.__name__,
+            description=description,
             start_date=start_date,
             end_date=end_date,
-            description=description,
         )
 
     return inner
 
 
 def _get_qname_input_data(
-    persona_name: str,
     evaluation_date: datetime.date,
-    input_columns: list[InputColumn],
+    persona_input_elements: list[PersonaInputElement],
 ) -> dict[str, np.ndarray]:
     f = dags.concatenate_functions(
-        functions=[el.function for el in input_columns],
-        targets=[el.qname for el in input_columns],
+        functions=[el.function for el in persona_input_elements],
+        targets=[el.tt_qname for el in persona_input_elements],
         return_type="dict",
     )
     params = inspect.signature(f).parameters
@@ -234,8 +247,8 @@ def _get_qname_input_data(
     if params:
         # We only support "evaluation_date" or no parameter at all for now
         msg = (
-            f"The following parameters are needed to create the input data for persona "
-            f"'{persona_name}': {params}. "
+            f"The following parameters are needed to create the input data for this "
+            f"persona: {params}. "
         )
         raise ValueError(msg)
     return f()
@@ -251,28 +264,34 @@ def load_persona_elements_from_module(
     return persona_elements_in_this_module
 
 
-def _fail_if_more_than_one_description_is_active(
-    active_elements: list[TimeDependentPersonaElement], persona_name: str
+def _fail_if_not_exactly_one_description_is_active(
+    active_elements: list[TimeDependentPersonaElement], path_to_persona_elements: Path
 ) -> None:
     descriptions = [s for s in active_elements if isinstance(s, PersonaDescription)]
     if len(descriptions) > 1:
-        msg = f"More than one PersonaDescription is active for {persona_name}"
+        msg = f"More than one PersonaDescription is active at {path_to_persona_elements!s}."
+        raise ValueError(msg)
+    if len(descriptions) == 0:
+        msg = f"No PersonaDescription found at {path_to_persona_elements!s}."
         raise ValueError(msg)
 
 
-def _fail_if_active_qnames_overlap(
-    active_elements: list[TimeDependentPersonaElement], persona_name: str
+def _fail_if_active_tt_qnames_overlap(
+    active_elements: list[TimeDependentPersonaElement], path_to_persona_elements: Path
 ) -> None:
     all_qnames: set[str] = set()
     overlapping_qnames: set[str] = set()
     for el in active_elements:
-        if el.qname in all_qnames:
-            overlapping_qnames.add(el.qname)
+        if isinstance(el, PersonaDescription):
+            # Should be unique, see _fail_if_not_exactly_one_description_is_active
+            continue
+        if el.tt_qname in all_qnames:
+            overlapping_qnames.add(el.tt_qname)
         else:
-            all_qnames.add(el.qname)
+            all_qnames.add(el.tt_qname)
     if overlapping_qnames:
         msg = (
-            f"Active qnames overlap for {persona_name}. "
+            f"Active qnames overlap at {path_to_persona_elements!s}. "
             f"Overlapping qnames: {overlapping_qnames}"
         )
         raise ValueError(msg)

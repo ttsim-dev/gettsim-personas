@@ -14,7 +14,7 @@
 #             policy_environment=environment,
 #             policy_date_str=policy_date_str,
 #             input_data=InputData.tree(persona.input_data_tree),
-#             tt_targets=TTTargets(tree=persona.tt_targets_tree),
+#             tt_targets=PersonaTargetElements(tree=persona.tt_targets_tree),
 #             backend="numpy",
 #             include_warn_nodes=False,
 #         )
