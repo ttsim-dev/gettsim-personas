@@ -2,13 +2,15 @@ import datetime
 
 import numpy as np
 
-from gettsim_personas.persona_objects import (
-    PersonaDescription,
+from gettsim_personas.persona_elements import (
+    persona_description,
     persona_input_element,
+    persona_pid_element,
     persona_target_element,
 )
 
-description = PersonaDescription(
+
+@persona_description(
     description=(
         """Persona to compute income taxes and social insurance contributions. Jointly
         taxed married couple with one child. All transfers are set to zero; don't use
@@ -16,6 +18,13 @@ description = PersonaDescription(
         (means-tested) transfers."""
     ),
 )
+def description() -> None:
+    pass
+
+
+@persona_pid_element()
+def p_id() -> np.ndarray:
+    return np.array([0, 1, 2])
 
 
 @persona_input_element()
@@ -39,11 +48,6 @@ def geburtsjahr(
     alter: np.ndarray,
 ) -> np.ndarray:
     return evaluation_date.year - alter
-
-
-@persona_input_element()
-def p_id() -> np.ndarray:
-    return np.array([0, 1, 2])
 
 
 @persona_input_element()

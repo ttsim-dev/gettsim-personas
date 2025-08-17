@@ -2,22 +2,26 @@ import datetime
 
 import numpy as np
 
-from gettsim_personas.persona_objects import (
-    PersonaDescription,
+from gettsim_personas.persona_elements import (
+    persona_description,
     persona_input_element,
+    persona_pid_element,
     persona_target_element,
 )
 
-description = PersonaDescription(
+
+@persona_description(
     description="""Persona to compute mean-tested transfers for low-income households.
     Jointly taxed married couple with one child. Income from pensions, parental leave
     benefits and subsistence benefits for the elderly are set to zero. The household is
     in the grace period, meaning that the limits on assets and rent are less strict.
     """,
 )
+def description() -> None:
+    pass
 
 
-@persona_input_element()
+@persona_pid_element()
 def p_id() -> np.ndarray:
     return np.array([0, 1, 2])
 
@@ -37,17 +41,12 @@ def alter_monate(alter: np.ndarray) -> np.ndarray:
     return alter * 12
 
 
-@persona_input_element(end_date="2022-12-31")
-def arbeitslosengeld_2__p_id_einstandspartner() -> np.ndarray:
-    return np.array([1, 0, -1])
-
-
-@persona_input_element(start_date="2023-01-01")
+@persona_input_element()
 def bürgergeld__p_id_einstandspartner() -> np.ndarray:
     return np.array([1, 0, -1])
 
 
-@persona_input_element(start_date="2023-01-01")
+@persona_input_element()
 def bürgergeld__bezug_im_vorjahr() -> np.ndarray:
     return np.array([False, False, False])
 
@@ -278,11 +277,6 @@ def wohnen__wohnfläche_hh() -> np.ndarray:
     return np.array([0, 0, 0])
 
 
-@persona_input_element(end_date="2008-12-31")
-def wohnen__baujahr_immobilie_hh() -> np.ndarray:
-    return np.array([2000, 2000, 2000])
-
-
 @persona_input_element()
 def wohngeld__mietstufe_hh() -> np.ndarray:
     return np.array([5, 5, 5])
@@ -293,7 +287,7 @@ def wohnort_ost_hh() -> np.ndarray:
     return np.array([False, False, False])
 
 
-@persona_target_element
+@persona_target_element()
 def einkommensteuer__betrag_m_sn() -> None:
     pass
 
@@ -323,12 +317,7 @@ def sozialversicherung__arbeitslosen__betrag_m() -> None:
     pass
 
 
-@persona_target_element(end_date="2022-12-31")
-def arbeitslosengeld_2__betrag_m_bg() -> None:
-    pass
-
-
-@persona_target_element(start_date="2023-01-01")
+@persona_target_element()
 def bürgergeld__betrag_m_bg() -> None:
     pass
 

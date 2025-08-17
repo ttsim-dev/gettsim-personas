@@ -2,20 +2,25 @@ import datetime
 
 import numpy as np
 
-from gettsim_personas.persona_objects import (
-    PersonaDescription,
+from gettsim_personas.persona_elements import (
+    persona_description,
     persona_input_element,
+    persona_pid_element,
     persona_target_element,
 )
 
-description = PersonaDescription(
+
+@persona_description(
     description="""Persona to compute mean-tested transfers for low-income households.
     Jointly taxed married couple with one child. Income from pensions, parental leave
     benefits and subsistence benefits for the elderly are set to zero.""",
+    start_date="2005-01-01",
 )
+def description() -> None:
+    pass
 
 
-@persona_input_element(start_date="2005-01-01")
+@persona_pid_element()
 def p_id() -> np.ndarray:
     return np.array([0, 1, 2])
 

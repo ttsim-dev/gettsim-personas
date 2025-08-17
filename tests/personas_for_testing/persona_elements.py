@@ -4,9 +4,10 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from gettsim_personas.persona_objects import (
+from gettsim_personas.persona_elements import (
     persona_description,
     persona_input_element,
+    persona_pid_element,
     persona_target_element,
 )
 
@@ -30,18 +31,23 @@ def description_since_2010() -> None:
     pass
 
 
+@persona_pid_element()
+def p_id() -> np.ndarray:
+    return np.array([0, 1, 2])
+
+
 @persona_input_element()
-def some_persona_input_element() -> np.ndarray:
+def some_time_dependent_persona_input_element() -> np.ndarray:
     return np.array([1, 2, 3])
 
 
 @persona_input_element(end_date="2009-12-31")
-def persona_input_element_until_2009() -> np.ndarray:
+def time_dependent_persona_input_element_until_2009() -> np.ndarray:
     return np.array([1, 2, 3])
 
 
 @persona_input_element(start_date="2010-01-01")
-def persona_input_element_since_2010() -> np.ndarray:
+def time_dependent_persona_input_element_since_2010() -> np.ndarray:
     return np.array([1, 2, 3])
 
 
@@ -52,9 +58,9 @@ def some_irrelevant_name() -> np.ndarray:
 
 @persona_input_element()
 def some_qname_depending_on_another_qname(
-    some_persona_input_element: np.ndarray,
+    some_time_dependent_persona_input_element: np.ndarray,
 ) -> np.ndarray:
-    return 2 * some_persona_input_element
+    return 2 * some_time_dependent_persona_input_element
 
 
 @persona_input_element()
