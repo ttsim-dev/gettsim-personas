@@ -35,7 +35,7 @@ class PersonaForDate:
     tt_targets_tree: NestedStrings
 
 
-@dataclass(frozen=True)
+@dataclass
 class Persona:
     """A persona containing inputs and targets to use with GETTSIM."""
 
