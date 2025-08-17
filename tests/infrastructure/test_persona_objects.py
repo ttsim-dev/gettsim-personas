@@ -1,16 +1,16 @@
 import datetime
 
 import pytest
+from personas_for_testing import (
+    SamplePersona,
+    SamplePersonaWithOverlappingElements,
+)
 
 from gettsim_personas.persona_objects import (
     _fail_if_active_tt_qnames_overlap,
     _fail_if_not_exactly_one_description_is_active,
     persona_description,
     persona_input_element,
-)
-from tests.personas_for_testing import (
-    SamplePersona,
-    SamplePersonaWithOverlappingElements,
 )
 
 

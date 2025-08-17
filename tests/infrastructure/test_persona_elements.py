@@ -3,14 +3,7 @@ import datetime
 import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
-
-from gettsim_personas.persona_objects import (
-    TimeDependentPersonaElement,
-    persona_description,
-    persona_input_element,
-    persona_target_element,
-)
-from tests.personas_for_testing.persona_elements import (
+from personas_for_testing.persona_elements import (
     description_since_2010,
     description_until_2009,
     persona_input_element_since_2010,
@@ -23,6 +16,13 @@ from tests.personas_for_testing.persona_elements import (
     some_target_qname_since_2010,
     some_target_qname_until_2009,
     true_if_evaluation_year_at_least_2015,
+)
+
+from gettsim_personas.persona_objects import (
+    TimeDependentPersonaElement,
+    persona_description,
+    persona_input_element,
+    persona_target_element,
 )
 
 some_time_dependent_persona_element = TimeDependentPersonaElement(
