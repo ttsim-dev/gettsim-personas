@@ -61,6 +61,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "some_target_qname_until_2009",
         "some_target_qname_since_2010",
         "p_id",
+        "einnahmen__bruttolohn_m",
     }
     orig_names = {el.orig_name for el in SamplePersona.orig_elements()}
     assert expected_orig_names == orig_names
@@ -77,6 +78,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "some_target_qname_until_2009",
         "some_target_qname_since_2010",
         "p_id",
+        "einnahmen__bruttolohn_m",
     }
     tt_qnames = {
         el.tt_qname for el in SamplePersona.orig_elements() if hasattr(el, "tt_qname")
@@ -103,6 +105,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
                 "some_target_qname",
                 "some_target_qname_until_2009",
                 "p_id",
+                "einnahmen__bruttolohn_m",
             },
         ),
         (
@@ -118,6 +121,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
                 "some_target_qname",
                 "some_target_qname_since_2010",
                 "p_id",
+                "einnahmen__bruttolohn_m",
             },
         ),
     ],
@@ -273,3 +277,31 @@ def test_bruttolohn_m_linspace_grid_invalid_n_points_zero():
         match="The number of points in the linspace must be greater than 0.",
     ):
         call_invalid()
+
+
+def test_bruttolohn_m_is_default_value_if_no_linspace_grid_is_provided():
+    persona = SamplePersona(
+        policy_date="2015-01-01",
+        evaluation_date="2015-01-01",
+    )
+    assert_array_equal(
+        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+        np.array([1, 2, 3]),
+    )
+
+
+def test_bruttolohn_m_is_upserted_if_linspace_grid_is_provided():
+    persona = SamplePersona(
+        policy_date="2015-01-01",
+        evaluation_date="2015-01-01",
+        bruttolohn_m_linspace_grid=SamplePersona.LinspaceGridClass(
+            p0=SamplePersona.LinspaceRange(bottom=0, top=1),
+            p1=SamplePersona.LinspaceRange(bottom=0, top=1),
+            p2=SamplePersona.LinspaceRange(bottom=0, top=0),
+            n_points=2,
+        ),
+    )
+    assert_array_equal(
+        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+        np.array([0, 0, 0, 1, 1, 0]),
+    )

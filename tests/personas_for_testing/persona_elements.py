@@ -91,3 +91,8 @@ def some_target_qname_until_2009():
 @persona_target_element(start_date="2010-01-01")
 def some_target_qname_since_2010():
     pass
+
+
+@persona_input_element()
+def einnahmen__bruttolohn_m() -> np.ndarray:
+    return np.array([1, 2, 3])

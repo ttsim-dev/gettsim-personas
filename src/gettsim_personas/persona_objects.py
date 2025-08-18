@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, TypeAlias
 
 import dags
 import dags.tree as dt
+import numpy as np
 
 from gettsim_personas.persona_elements import (
     DEFAULT_END_DATE,
@@ -18,13 +19,12 @@ from gettsim_personas.persona_elements import (
     TimeDependentPersonaElement,
 )
 from gettsim_personas.typing import PersonaElement
+from gettsim_personas.upsert import upsert_input_data
 from gettsim_personas.utils import load_module, to_datetime
 
 if TYPE_CHECKING:
     import datetime
     from types import ModuleType
-
-    import numpy as np
 
     from gettsim_personas.typing import DashedISOString, NestedData, NestedStrings
 
@@ -111,10 +111,10 @@ class Persona:
                 linspace_grid=bruttolohn_m_linspace_grid,
                 p_id_array=qname_input_data["p_id"],
             )
-            # qname_input_data = upsert_with_bruttolohn_m_linspace_grid(
-            #    qname_input_data=qname_input_data,
-            #    bruttolohn_m_linspace_grid=bruttolohn_m_linspace_grid,
-            # )
+            qname_input_data = upsert_with_bruttolohn_m_linspace_grid(
+                qname_input_data=qname_input_data,
+                bruttolohn_m_linspace_grid=bruttolohn_m_linspace_grid,
+            )
 
         return PersonaForDate(
             description=active_description(active_elements),
@@ -203,6 +203,35 @@ def make_linspace_grid_class(size: int):
     fields = [(f"p{i}", LinspaceRange) for i in range(size)]
     fields.append(("n_points", int))
     return make_dataclass(f"LinspaceGrid{size}PIDs", fields, frozen=True)
+
+
+def upsert_with_bruttolohn_m_linspace_grid(
+    qname_input_data: dict[str, np.ndarray],
+    bruttolohn_m_linspace_grid: LinspaceGridClass,
+) -> dict[str, np.ndarray]:
+    """Upsert the bruttolohn_m_linspace_grid into the qname_input_data."""
+    linspace_by_p_id = {
+        p_id: np.linspace(
+            bruttolohn_m_linspace_grid.__getattribute__(p_id).bottom,
+            bruttolohn_m_linspace_grid.__getattribute__(p_id).top,
+            bruttolohn_m_linspace_grid.n_points,
+        )
+        for p_id in bruttolohn_m_linspace_grid.__dict__
+        if p_id != "n_points"
+    }
+    bruttolohn_m_grid = np.array(
+        [
+            value
+            for pair in zip(*linspace_by_p_id.values(), strict=False)
+            for value in pair
+        ]
+    )
+    return upsert_input_data(
+        input_data=qname_input_data,
+        data_to_upsert={
+            "einnahmen__bruttolohn_m": bruttolohn_m_grid,
+        },
+    )
 
 
 def _get_qname_input_data(
