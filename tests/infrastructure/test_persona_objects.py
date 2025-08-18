@@ -218,7 +218,7 @@ def test_call_persona_with_evaluation_date():
 def test_bruttolohn_m_linspace_grid_invalid_wrong_type():
     with pytest.raises(
         TypeError,
-        match="The LinspaceGridClass has not been instantiated correctly.",
+        match="The LinspaceGrid has not been instantiated correctly.",
     ):
         _fail_if_bruttolohn_m_linspace_grid_is_invalid(
             linspace_grid={"a": 1},
@@ -244,7 +244,7 @@ def test_bruttolohn_m_linspace_grid_invalid_wrong_number_of_p_ids():
 
 
 def test_bruttolohn_m_linspace_grid_invalid_bottom_larger_than_top():
-    linspace_grid = SamplePersona.LinspaceGridClass(
+    linspace_grid = SamplePersona.LinspaceGrid(
         p0=SamplePersona.LinspaceRange(bottom=0, top=1),
         p1=SamplePersona.LinspaceRange(bottom=0, top=1),
         p2=SamplePersona.LinspaceRange(bottom=1, top=0),
@@ -262,7 +262,7 @@ def test_bruttolohn_m_linspace_grid_invalid_bottom_larger_than_top():
 
 def test_bruttolohn_m_linspace_grid_invalid_n_points_zero():
     def call_invalid():
-        linspace_grid = SamplePersona.LinspaceGridClass(
+        linspace_grid = SamplePersona.LinspaceGrid(
             p0=SamplePersona.LinspaceRange(bottom=0, top=1),
             p1=SamplePersona.LinspaceRange(bottom=0, top=1),
             p2=SamplePersona.LinspaceRange(bottom=0, top=1),
@@ -295,7 +295,7 @@ def test_bruttolohn_m_is_upserted_if_linspace_grid_is_provided():
     persona = SamplePersona(
         policy_date="2015-01-01",
         evaluation_date="2015-01-01",
-        bruttolohn_m_linspace_grid=SamplePersona.LinspaceGridClass(
+        bruttolohn_m_linspace_grid=SamplePersona.LinspaceGrid(
             p0=SamplePersona.LinspaceRange(bottom=0, top=1),
             p1=SamplePersona.LinspaceRange(bottom=0, top=1),
             p2=SamplePersona.LinspaceRange(bottom=0, top=0),

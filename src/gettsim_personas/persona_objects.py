@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 
     from gettsim_personas.typing import DashedISOString, NestedData, NestedStrings
 
-LinspaceGridClass: TypeAlias = type
+LinspaceGrid: TypeAlias = type
 
 
 @dataclass(frozen=True)
@@ -51,7 +51,7 @@ class Persona:
         p_id = next(
             el for el in self.orig_elements() if isinstance(el, PersonaPIDElement)
         )
-        self.LinspaceGridClass = make_linspace_grid_class(p_id.persona_size)
+        self.LinspaceGrid = make_linspace_grid_class(p_id.persona_size)
         self.LinspaceRange = LinspaceRange
 
     def __call__(
@@ -59,7 +59,7 @@ class Persona:
         *,
         policy_date: DashedISOString | datetime.date,
         evaluation_date: DashedISOString | datetime.date | None = None,
-        bruttolohn_m_linspace_grid: LinspaceGridClass | None = None,
+        bruttolohn_m_linspace_grid: LinspaceGrid | None = None,
     ) -> PersonaForDate:
         """An instance of persona for a given policy and evaluation date.
 
@@ -73,14 +73,14 @@ class Persona:
                 (Optional) A linspace grid of einnahmen__bruttolohn_m. Use if you
                 want to calculate taxes and transfers over a range of earnings.
                 The grid specifies for each p_id the range of earnings to be evaluated.
-                Create the grid via the LinspaceGridClass (Persona.LinspaceGridClass).
+                Create the grid via the LinspaceGrid (Persona.LinspaceGrid).
 
         Example:
             >>> from gettsim_personas.de.einkommensteuer_sozialabgaben import Couple1Child
             >>> persona = Couple1Child(
             ...     policy_date="2025-01-01",
             ...     evaluation_date="2025-01-01",
-            ...     bruttolohn_m_linspace_grid=Couple1Child.LinspaceGridClass(
+            ...     bruttolohn_m_linspace_grid=Couple1Child.LinspaceGrid(
             ...         p0=Couple1Child.LinspaceRange(bottom=0, top=10000),
             ...         p1=Couple1Child.LinspaceRange(bottom=0, top=10000),
             ...         p2=Couple1Child.LinspaceRange(bottom=0, top=0),
@@ -207,7 +207,7 @@ def make_linspace_grid_class(size: int):
 
 def upsert_with_bruttolohn_m_linspace_grid(
     qname_input_data: dict[str, np.ndarray],
-    bruttolohn_m_linspace_grid: LinspaceGridClass,
+    bruttolohn_m_linspace_grid: LinspaceGrid,
 ) -> dict[str, np.ndarray]:
     """Upsert the bruttolohn_m_linspace_grid into the qname_input_data."""
     linspace_by_p_id = {
@@ -317,11 +317,11 @@ def _fail_if_active_tt_qnames_overlap(
 
 
 def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
-    linspace_grid: LinspaceGridClass,
+    linspace_grid: LinspaceGrid,
     p_id_array: np.ndarray,
 ) -> None:
     """Fail if the bruttolohn_m_linspace_spec is invalid."""
-    # Because the LinspaceGridClass is dynamically created, we cannot check for the
+    # Because the LinspaceGrid is dynamically created, we cannot check for the
     # correct type directly.
     try:
         pids_in_linspace_grid = [
@@ -329,16 +329,16 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
         ]
     except Exception as err:
         msg = (
-            "The LinspaceGridClass has not been instantiated correctly. "
-            "Always instantiate via 'NameOfThePersona.LinspaceGridClass'."
+            "The LinspaceGrid has not been instantiated correctly. "
+            "Always instantiate via 'NameOfThePersona.LinspaceGrid'."
         )
         raise TypeError(msg) from err
     if not pids_in_linspace_grid or "n_points" not in [
         f.name for f in fields(linspace_grid)
     ]:
         msg = (
-            "The LinspaceGridClass has not been instantiated correctly. "
-            "Always instantiate via 'NameOfThePersona.LinspaceGridClass'."
+            "The LinspaceGrid has not been instantiated correctly. "
+            "Always instantiate via 'NameOfThePersona.LinspaceGrid'."
         )
         raise TypeError(msg)
     if len(p_id_array) != len(pids_in_linspace_grid):
@@ -347,8 +347,8 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
             "in the persona. The number of p_ids in the linspace grid is "
             f"{len(pids_in_linspace_grid)}, but the number of p_ids in the persona is "
             f"{len(p_id_array)}."
-            "You likely used the wrong LinspaceGridClass. Always instantiate via "
-            "'NameOfThePersona.LinspaceGridClass'."
+            "You likely used the wrong LinspaceGrid. Always instantiate via "
+            "'NameOfThePersona.LinspaceGrid'."
         )
         raise ValueError(msg)
     for p_id in pids_in_linspace_grid:

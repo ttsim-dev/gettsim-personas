@@ -8,7 +8,7 @@ def test_end_to_end():
     policy_date_str = "2020-01-01"
     persona = Couple1Child(
         policy_date=policy_date_str,
-        bruttolohn_m_linspace_grid=Couple1Child.LinspaceGridClass(
+        bruttolohn_m_linspace_grid=Couple1Child.LinspaceGrid(
             p0=Couple1Child.LinspaceRange(bottom=0, top=5000),
             p1=Couple1Child.LinspaceRange(bottom=0, top=5000),
             p2=Couple1Child.LinspaceRange(bottom=0, top=0),
