@@ -209,3 +209,8 @@ def sozialversicherung__rente__beitrag__betrag_versicherter_y() -> None:
 @persona_target_element()
 def sozialversicherung__arbeitslosen__beitrag__betrag_versicherter_y() -> None:
     return None
+
+
+@persona_target_element()
+def kindergeld__betrag_y() -> None:
+    return None
