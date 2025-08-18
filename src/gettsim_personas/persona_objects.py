@@ -76,7 +76,7 @@ class Persona:
                 Create the grid via the LinspaceGridClass (Persona.LinspaceGridClass).
 
         Example:
-            >>> from gettsim_personas.personas.einkommensteuer_sozialabgaben import Couple1Child
+            >>> from gettsim_personas.de.einkommensteuer_sozialabgaben import Couple1Child
             >>> persona = Couple1Child(
             ...     policy_date="2025-01-01",
             ...     evaluation_date="2025-01-01",
