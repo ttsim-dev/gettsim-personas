@@ -3,7 +3,7 @@ from __future__ import annotations
 import inspect
 from dataclasses import dataclass, make_dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias
 
 import dags
 import dags.tree as dt
@@ -27,6 +27,8 @@ if TYPE_CHECKING:
     import numpy as np
 
     from gettsim_personas.typing import DashedISOString, NestedData, NestedStrings
+
+LinspaceGridClass: TypeAlias = type
 
 
 @dataclass(frozen=True)
@@ -56,8 +58,39 @@ class Persona:
         *,
         policy_date: DashedISOString | datetime.date,
         evaluation_date: DashedISOString | datetime.date | None = None,
-        # bruttolohn_m_linspace_grid: Any = None,
+        bruttolohn_m_linspace_grid: LinspaceGridClass | None = None,
     ) -> PersonaForDate:
+        """An instance of persona for a given policy and evaluation date.
+
+        Args:
+            policy_date:
+                The date of the policy environment.
+            evaluation_date:
+                (Optional) The date for which the persona is evaluated.
+                If not provided, the policy date is used.
+            bruttolohn_m_linspace_grid:
+                (Optional) A linspace grid of einnahmen__bruttolohn_m. Use if you
+                want to calculate taxes and transfers over a range of earnings.
+                The grid specifies for each p_id the range of earnings to be evaluated.
+                Create the grid via the LinspaceGridClass (Persona.LinspaceGridClass).
+
+        Example:
+            >>> from gettsim_personas.personas.einkommensteuer_sozialabgaben import Couple1Child
+            >>> persona = Couple1Child(
+            ...     policy_date="2025-01-01",
+            ...     evaluation_date="2025-01-01",
+            ...     bruttolohn_m_linspace_grid=Couple1Child.LinspaceGridClass(
+            ...         p0=LinspaceRange(bottom=0, top=10000),
+            ...         p1=LinspaceRange(bottom=0, top=10000),
+            ...         p2=LinspaceRange(bottom=0, top=0),
+            ...         n_points=100,
+            ...     ),
+            ... )
+
+        Returns:
+            A PersonaForDate object containing the persona's description, input data,
+            and targets.
+        """  # noqa: E501
         policy_date = to_datetime(policy_date)
         evaluation_date = (
             policy_date if not evaluation_date else to_datetime(evaluation_date)
