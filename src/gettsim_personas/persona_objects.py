@@ -68,16 +68,13 @@ class Persona:
         active_elements = self.active_elements(policy_date)
         qname_input_data = _get_qname_input_data(
             evaluation_date=evaluation_date,
-            time_dependent_persona_input_elements=self.active_time_dependent_persona_input_elements(
-                active_elements
-            ),
-            path_to_persona_elements=self.path_to_persona_elements,
+            persona_input_elements=active_persona_input_elements(active_elements),
         )
         return PersonaForDate(
-            description=self.active_description(active_elements),
+            description=active_description(active_elements),
             input_data_tree=dt.unflatten_from_qnames(qname_input_data),
             tt_targets_tree=dt.unflatten_from_qnames(
-                self.active_tt_targets(active_elements)
+                active_tt_targets(active_elements)
             ),
         )
 
@@ -111,29 +108,6 @@ class Persona:
         )
         return active_elements
 
-    def active_time_dependent_persona_input_elements(
-        self, active_elements: list[PersonaElement]
-    ) -> dict[str, PersonaInputElement | PersonaPIDElement]:
-        return {
-            s.tt_qname: s
-            for s in active_elements
-            if isinstance(s, PersonaInputElement | PersonaPIDElement)
-        }
-
-    def active_tt_targets(
-        self, active_elements: list[PersonaElement]
-    ) -> dict[str, PersonaTargetElement]:
-        return {
-            s.tt_qname: None
-            for s in active_elements
-            if isinstance(s, PersonaTargetElement)
-        }
-
-    def active_description(
-        self, active_elements: list[PersonaElement]
-    ) -> PersonaDescription:
-        return next(s for s in active_elements if isinstance(s, PersonaDescription))
-
     def _fail_if_persona_not_implemented(
         self,
         policy_date: datetime.date,
@@ -146,6 +120,31 @@ class Persona:
 class LinspaceRange:
     bottom: float
     top: float
+
+
+def active_persona_input_elements(
+    active_elements: list[PersonaElement],
+) -> dict[str, PersonaInputElement | PersonaPIDElement]:
+    """Active input elements of a persona."""
+    return {
+        s.tt_qname: s
+        for s in active_elements
+        if isinstance(s, PersonaInputElement | PersonaPIDElement)
+    }
+
+
+def active_tt_targets(
+    active_elements: list[PersonaElement],
+) -> dict[str, PersonaTargetElement]:
+    """Active target elements of a persona."""
+    return {
+        s.tt_qname: None for s in active_elements if isinstance(s, PersonaTargetElement)
+    }
+
+
+def active_description(active_elements: list[PersonaElement]) -> PersonaDescription:
+    """Active description element of a persona."""
+    return next(s for s in active_elements if isinstance(s, PersonaDescription))
 
 
 def make_linspace_grid_class(size: int):
@@ -162,22 +161,22 @@ def make_linspace_grid_class(size: int):
 
 def _get_qname_input_data(
     evaluation_date: datetime.date,
-    time_dependent_persona_input_elements: list[PersonaInputElement],
+    persona_input_elements: dict[str, PersonaInputElement],
 ) -> dict[str, np.ndarray]:
     f = dags.concatenate_functions(
-        functions=[el.function for el in time_dependent_persona_input_elements],
-        targets=[el.tt_qname for el in time_dependent_persona_input_elements],
+        functions=persona_input_elements,
+        targets=list(persona_input_elements.keys()),
         return_type="dict",
     )
-    params = inspect.signature(f).parameters
+    args = dags.get_free_arguments(f)
 
-    if params == "evaluation_date":
+    if args == ["evaluation_date"]:
         return f(evaluation_date=evaluation_date)
-    if params:
+    if args:
         # We only support "evaluation_date" or no parameter at all for now
         msg = (
             f"The following parameters are needed to create the input data for this "
-            f"persona: {params}. "
+            f"persona: {args}. "
         )
         raise ValueError(msg)
     return f()

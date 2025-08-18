@@ -1,6 +1,8 @@
 import datetime
 
+import numpy as np
 import pytest
+from numpy.testing import assert_array_equal
 
 from gettsim_personas.persona_elements import (
     persona_description,
@@ -184,3 +186,23 @@ def test_sample_persona_raises_error_if_called_with_invalid_date():
         NotImplementedError, match="This Persona is not implemented before 2015."
     ):
         SamplePersonaWithStartAndEndDate(policy_date="2014-01-01")
+
+
+def test_call_persona_with_evaluation_date():
+    persona2015 = SamplePersona(
+        policy_date="2015-01-01",
+        evaluation_date="2015-01-01",
+    )
+    assert_array_equal(
+        persona2015.input_data_tree["true_if_evaluation_year_at_least_2015"],
+        np.array([True, True, True]),
+    )
+
+    persona2014 = SamplePersona(
+        policy_date="2015-01-01",
+        evaluation_date="2014-01-01",
+    )
+    assert_array_equal(
+        persona2014.input_data_tree["true_if_evaluation_year_at_least_2015"],
+        np.array([False, False, False]),
+    )

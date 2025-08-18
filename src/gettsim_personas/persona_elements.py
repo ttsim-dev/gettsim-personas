@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+import inspect
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, ParamSpec, TypeVar
 
@@ -34,8 +35,14 @@ class PersonaPIDElement:
     def __post_init__(self):
         _fail_if_p_ids_not_consecutive_starting_at_zero(self.function())
 
-    def __call__(self, *args, **kwargs):
+    def __call__(
+        self, *args: FunArgTypes.args, **kwargs: FunArgTypes.kwargs
+    ) -> ReturnType:
         return self.function(*args, **kwargs)
+
+    @property
+    def __signature__(self):
+        return inspect.signature(self.function)
 
     @property
     def persona_size(self) -> int:
@@ -73,6 +80,10 @@ class PersonaInputElement(TimeDependentPersonaElement):
         self, *args: FunArgTypes.args, **kwargs: FunArgTypes.kwargs
     ) -> ReturnType:
         return self.function(*args, **kwargs)
+
+    @property
+    def __signature__(self):
+        return inspect.signature(self.function)
 
 
 def persona_input_element(
