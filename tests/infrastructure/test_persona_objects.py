@@ -13,6 +13,7 @@ from gettsim_personas.persona_objects import (
 from tests.personas_for_testing import (
     SamplePersona,
     SamplePersonaWithOverlappingElements,
+    SamplePersonaWithStartAndEndDate,
 )
 
 
@@ -176,3 +177,10 @@ def test_do_not_fail_if_only_one_description_is_active():
         ],
         path_to_persona_elements="",
     )
+
+
+def test_sample_persona_raises_error_if_called_with_invalid_date():
+    with pytest.raises(
+        NotImplementedError, match="This Persona is not implemented before 2015."
+    ):
+        SamplePersonaWithStartAndEndDate(policy_date="2014-01-01")

@@ -55,14 +55,13 @@ class Persona:
         self,
         *,
         policy_date: DashedISOString | datetime.date,
-        evaluation_date: datetime.date | None = None,
+        evaluation_date: DashedISOString | datetime.date | None = None,
         # bruttolohn_m_linspace_grid: Any = None,
     ) -> PersonaForDate:
         policy_date = to_datetime(policy_date)
-        if evaluation_date is None:
-            evaluation_date = policy_date
-        else:
-            evaluation_date = to_datetime(evaluation_date)
+        evaluation_date = (
+            policy_date if not evaluation_date else to_datetime(evaluation_date)
+        )
 
         self._fail_if_persona_not_implemented(policy_date)
 
