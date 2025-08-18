@@ -161,7 +161,7 @@ extend-ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "PD011", "PLR2004", "C408"]
-"src/gettsim_personas/personas/*" = ["E501", "PLC2401"]
+"src/gettsim_personas/de/*" = ["E501", "PLC2401"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
