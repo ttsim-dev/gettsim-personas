@@ -105,6 +105,7 @@ class Persona:
             evaluation_date=evaluation_date,
             persona_input_elements=active_persona_input_elements(active_elements),
         )
+        _fail_if_qname_input_data_differs_in_length_from_p_id_array(qname_input_data)
 
         if bruttolohn_m_linspace_grid:
             _fail_if_bruttolohn_m_linspace_grid_is_invalid(
@@ -361,3 +362,17 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
     if linspace_grid.n_points <= 0:
         msg = "The number of points in the linspace must be greater than 0."
         raise ValueError(msg)
+
+
+def _fail_if_qname_input_data_differs_in_length_from_p_id_array(
+    qname_input_data: dict[str, np.ndarray],
+) -> None:
+    p_id_array = qname_input_data["p_id"]
+    for qname, array in qname_input_data.items():
+        if len(array) != len(p_id_array):
+            msg = (
+                f"The input data for {qname} has a different length than the p_id "
+                f"array. The length of {qname} is {len(array)}, but the length of "
+                f"p_id is {len(p_id_array)}."
+            )
+            raise ValueError(msg)

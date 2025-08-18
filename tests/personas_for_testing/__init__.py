@@ -17,6 +17,10 @@ SamplePersonaWithOverlappingElements = Persona(
     path_to_persona_elements=Path(__file__).parent
     / "persona_elements_with_overlapping_dates.py"
 )
+SamplePersonaWithInvalidLengthOfInputData = Persona(
+    path_to_persona_elements=Path(__file__).parent
+    / "persona_elements_with_invalid_length_of_input_data.py"
+)
 
 
 __all__ = [

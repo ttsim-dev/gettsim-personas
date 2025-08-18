@@ -16,6 +16,7 @@ from gettsim_personas.persona_objects import (
 )
 from tests.personas_for_testing import (
     SamplePersona,
+    SamplePersonaWithInvalidLengthOfInputData,
     SamplePersonaWithOverlappingElements,
     SamplePersonaWithStartAndEndDate,
 )
@@ -305,3 +306,13 @@ def test_bruttolohn_m_is_upserted_if_linspace_grid_is_provided():
         persona.input_data_tree["einnahmen"]["bruttolohn_m"],
         np.array([0, 0, 0, 1, 1, 0]),
     )
+
+
+def test_persona_call_fails_if_input_data_differs_in_length_from_p_id_array():
+    with pytest.raises(
+        ValueError,
+        match="The input data for input_1 has a different length than the p_id array.",
+    ):
+        SamplePersonaWithInvalidLengthOfInputData(
+            policy_date="2015-01-01",
+        )
