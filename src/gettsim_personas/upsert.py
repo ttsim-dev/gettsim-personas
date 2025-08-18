@@ -13,11 +13,11 @@ def upsert_input_data(
     input_data: NestedData,
     data_to_upsert: NestedData,
 ) -> NestedData:
-    """Upsert GETTSIM input data.
+    """Upsert persona input data.
 
-    Updates and inserts new values into a NestedData with input data for GETTSIM,
-    e.g. created from a persona via `get_personas`. Data not in `data_to_upsert` is
-    broadcasted to match the length of `data_to_upsert`.
+    Updates and insters new values into a NestedData dict. Data not in `data_to_upsert`
+    is broadcasted to match the length of `data_to_upsert`. Broadcasting takes into
+    account the special rules for ID variables that GETTSIM uses.
 
     The length of data in `data_to_upsert` must be a multiple of the length of data in
     `input_data`.
@@ -28,6 +28,24 @@ def upsert_input_data(
             object via `get_personas`.
         data_to_upsert:
             NestedData with data to be upserted
+
+
+    Example:
+    -------
+    >>> input_data = {
+    >>>     "p_id": np.array([0, 1, 2]),
+    >>>     "p_id_elternteil_1": np.array([-1, -1, 0]),
+    >>>     "einnahmen": {"bruttolohn_m": np.array([1, 2, 3])},
+    >>> }
+    >>> data_to_upsert = {
+    >>>     "einnahmen": {"bruttolohn_m": np.array([1, 2, 3, 4, 5, 6])},
+    >>> }
+    >>> upsert_input_data(input_data, data_to_upsert)
+    >>> {
+    >>>     "p_id": np.array([0, 1, 2, 3, 4, 5]),
+    >>>     "p_id_elternteil_1": np.array([-1, -1, 0, -1, -1, 3]),
+    >>>     "einnahmen": {"bruttolohn_m": np.array([1, 2, 3, 4, 5, 6])},
+    >>> }
 
     Returns:
         NestedData with upserted data

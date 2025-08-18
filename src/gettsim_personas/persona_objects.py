@@ -52,7 +52,6 @@ class Persona:
             el for el in self.orig_elements() if isinstance(el, PersonaPIDElement)
         )
         self.LinspaceGridClass = make_linspace_grid_class(p_id.persona_size)
-        # Make LinspaceRange available as attribute for convenience
         self.LinspaceRange = LinspaceRange
 
     def __call__(
