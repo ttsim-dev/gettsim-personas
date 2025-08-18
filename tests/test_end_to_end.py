@@ -1,7 +1,7 @@
 import numpy as np
 from gettsim import InputData, MainTarget, TTTargets, main
 
-from gettsim_personas.de.einkommensteuer_sozialabgaben import Couple1Child
+from gettsim_personas.einkommensteuer_sozialabgaben import Couple1Child
 
 
 def test_end_to_end():

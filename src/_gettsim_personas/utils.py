@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from pathlib import Path
     from types import ModuleType
 
-    from gettsim_personas.typing import DashedISOString
+    from _gettsim_personas.typing import DashedISOString
 
 
 _DASHED_ISO_DATE_REGEX = re.compile(r"\d{4}-\d{2}-\d{2}")

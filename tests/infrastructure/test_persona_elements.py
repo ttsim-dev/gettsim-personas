@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-from gettsim_personas.persona_elements import (
+from _gettsim_personas.persona_elements import (
     TimeDependentPersonaElement,
     persona_description,
     persona_input_element,

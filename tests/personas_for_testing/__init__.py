@@ -3,7 +3,7 @@ from __future__ import annotations
 import datetime
 from pathlib import Path
 
-from gettsim_personas.persona_objects import Persona
+from _gettsim_personas.persona_objects import Persona
 
 SamplePersona = Persona(
     path_to_persona_elements=Path(__file__).parent / "persona_elements.py"

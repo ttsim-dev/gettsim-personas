@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from ttsim.typing import DashedISOString, NestedData, NestedStrings  # noqa: F401
 
 
-from gettsim_personas.persona_elements import (
+from _gettsim_personas.persona_elements import (
     PersonaPIDElement,
     TimeDependentPersonaElement,
 )

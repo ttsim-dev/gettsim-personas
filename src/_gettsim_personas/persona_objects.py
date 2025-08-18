@@ -9,7 +9,7 @@ import dags
 import dags.tree as dt
 import numpy as np
 
-from gettsim_personas.persona_elements import (
+from _gettsim_personas.persona_elements import (
     DEFAULT_END_DATE,
     DEFAULT_START_DATE,
     PersonaDescription,
@@ -18,15 +18,15 @@ from gettsim_personas.persona_elements import (
     PersonaTargetElement,
     TimeDependentPersonaElement,
 )
-from gettsim_personas.typing import PersonaElement
-from gettsim_personas.upsert import upsert_input_data
-from gettsim_personas.utils import load_module, to_datetime
+from _gettsim_personas.typing import PersonaElement
+from _gettsim_personas.upsert import upsert_input_data
+from _gettsim_personas.utils import load_module, to_datetime
 
 if TYPE_CHECKING:
     import datetime
     from types import ModuleType
 
-    from gettsim_personas.typing import DashedISOString, NestedData, NestedStrings
+    from _gettsim_personas.typing import DashedISOString, NestedData, NestedStrings
 
 LinspaceGrid: TypeAlias = type
 

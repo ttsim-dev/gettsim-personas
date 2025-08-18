@@ -7,13 +7,13 @@ from typing import TYPE_CHECKING, ParamSpec, TypeVar
 
 import numpy as np
 
-from gettsim_personas.utils import convert_and_validate_dates
+from _gettsim_personas.utils import convert_and_validate_dates
 
 if TYPE_CHECKING:
     from collections.abc import Callable
     from typing import Any
 
-    from gettsim_personas.typing import DashedISOString
+    from _gettsim_personas.typing import DashedISOString
 
 
 DEFAULT_START_DATE = datetime.date(1900, 1, 1)

@@ -2,7 +2,7 @@ import datetime
 
 import numpy as np
 
-from gettsim_personas.persona_elements import (
+from _gettsim_personas.persona_elements import (
     persona_description,
     persona_input_element,
     persona_pid_element,

@@ -6,7 +6,7 @@ import dags.tree as dt
 import numpy as np
 
 if TYPE_CHECKING:
-    from gettsim_personas.typing import NestedData
+    from _gettsim_personas.typing import NestedData
 
 
 def upsert_input_data(

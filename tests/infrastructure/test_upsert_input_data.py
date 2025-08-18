@@ -2,7 +2,7 @@ import dags.tree as dt
 import numpy as np
 import pytest
 
-from gettsim_personas.upsert import (
+from _gettsim_personas.upsert import (
     broadcast_foreign_keys,
     broadcast_group_ids,
     broadcast_p_id,

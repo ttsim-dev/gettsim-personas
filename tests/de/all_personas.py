@@ -1,11 +1,14 @@
 import datetime
 
-from gettsim_personas import de
-from gettsim_personas.persona_objects import Persona
+from _gettsim_personas.persona_objects import Persona
+from gettsim_personas import (
+    einkommensteuer_sozialabgaben,
+    grundsicherung_für_erwerbsfähige,
+)
 
 ALL_PERSONA_SUBMODULES = [
-    de.einkommensteuer_sozialabgaben,
-    de.grundsicherung_für_erwerbsfähige,
+    einkommensteuer_sozialabgaben,
+    grundsicherung_für_erwerbsfähige,
 ]
 
 

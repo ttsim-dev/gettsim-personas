@@ -1,6 +1,11 @@
-"""Personas to use as example data when calling GETTSIM."""
+from _gettsim_personas.upsert import upsert_input_data
+from gettsim_personas import (
+    einkommensteuer_sozialabgaben,
+    grundsicherung_für_erwerbsfähige,
+)
 
-from gettsim_personas import de
-from gettsim_personas.upsert import upsert_input_data
-
-__all__ = ["de", "upsert_input_data"]
+__all__ = [
+    "einkommensteuer_sozialabgaben",
+    "grundsicherung_für_erwerbsfähige",
+    "upsert_input_data",
+]
