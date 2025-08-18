@@ -1,7 +1,7 @@
 import pytest
 from gettsim import InputData, MainTarget, TTTargets, main
 
-from tests.de_personas.all_personas import persona_year_pairs
+from tests.de.all_personas import persona_year_pairs
 
 
 @pytest.mark.parametrize(
