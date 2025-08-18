@@ -1,4 +1,5 @@
 import datetime
+from dataclasses import dataclass
 
 import numpy as np
 import pytest
@@ -10,6 +11,7 @@ from gettsim_personas.persona_elements import (
 )
 from gettsim_personas.persona_objects import (
     _fail_if_active_tt_qnames_overlap,
+    _fail_if_bruttolohn_m_linspace_grid_is_invalid,
     _fail_if_not_exactly_one_description_is_active,
 )
 from tests.personas_for_testing import (
@@ -206,3 +208,68 @@ def test_call_persona_with_evaluation_date():
         persona2014.input_data_tree["true_if_evaluation_year_at_least_2015"],
         np.array([False, False, False]),
     )
+
+
+def test_bruttolohn_m_linspace_grid_invalid_wrong_type():
+    with pytest.raises(
+        TypeError,
+        match="The LinspaceGridClass has not been instantiated correctly.",
+    ):
+        _fail_if_bruttolohn_m_linspace_grid_is_invalid(
+            linspace_grid={"a": 1},
+            p_id_array=np.array([1, 2, 3]),
+        )
+
+
+def test_bruttolohn_m_linspace_grid_invalid_wrong_number_of_p_ids():
+    @dataclass(frozen=True)
+    class InvalidLinspaceGrid:
+        p0: int
+        p1: int
+        n_points: int
+
+    with pytest.raises(
+        ValueError,
+        match="The number of p_ids in the linspace grid must match the number of p_ids",
+    ):
+        _fail_if_bruttolohn_m_linspace_grid_is_invalid(
+            linspace_grid=InvalidLinspaceGrid(p0=1, p1=2, n_points=10),
+            p_id_array=np.array([0, 1, 2, 3]),
+        )
+
+
+def test_bruttolohn_m_linspace_grid_invalid_bottom_larger_than_top():
+    linspace_grid = SamplePersona.LinspaceGridClass(
+        p0=SamplePersona.LinspaceRange(bottom=0, top=1),
+        p1=SamplePersona.LinspaceRange(bottom=0, top=1),
+        p2=SamplePersona.LinspaceRange(bottom=1, top=0),
+        n_points=10,
+    )
+    with pytest.raises(
+        ValueError,
+        match="The lower bound of the linspace must be less than the upper bound.",
+    ):
+        _fail_if_bruttolohn_m_linspace_grid_is_invalid(
+            linspace_grid=linspace_grid,
+            p_id_array=np.array([0, 1, 2]),
+        )
+
+
+def test_bruttolohn_m_linspace_grid_invalid_n_points_zero():
+    def call_invalid():
+        linspace_grid = SamplePersona.LinspaceGridClass(
+            p0=SamplePersona.LinspaceRange(bottom=0, top=1),
+            p1=SamplePersona.LinspaceRange(bottom=0, top=1),
+            p2=SamplePersona.LinspaceRange(bottom=0, top=1),
+            n_points=0,
+        )
+        _fail_if_bruttolohn_m_linspace_grid_is_invalid(
+            linspace_grid=linspace_grid,
+            p_id_array=np.array([0, 1, 2]),
+        )
+
+    with pytest.raises(
+        ValueError,
+        match="The number of points in the linspace must be greater than 0.",
+    ):
+        call_invalid()

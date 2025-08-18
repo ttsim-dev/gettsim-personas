@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import inspect
-from dataclasses import dataclass, make_dataclass
+from dataclasses import dataclass, fields, make_dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, TypeAlias
 
@@ -52,6 +52,8 @@ class Persona:
             el for el in self.orig_elements() if isinstance(el, PersonaPIDElement)
         )
         self.LinspaceGridClass = make_linspace_grid_class(p_id.persona_size)
+        # Make LinspaceRange available as attribute for convenience
+        self.LinspaceRange = LinspaceRange
 
     def __call__(
         self,
@@ -80,9 +82,9 @@ class Persona:
             ...     policy_date="2025-01-01",
             ...     evaluation_date="2025-01-01",
             ...     bruttolohn_m_linspace_grid=Couple1Child.LinspaceGridClass(
-            ...         p0=LinspaceRange(bottom=0, top=10000),
-            ...         p1=LinspaceRange(bottom=0, top=10000),
-            ...         p2=LinspaceRange(bottom=0, top=0),
+            ...         p0=Couple1Child.LinspaceRange(bottom=0, top=10000),
+            ...         p1=Couple1Child.LinspaceRange(bottom=0, top=10000),
+            ...         p2=Couple1Child.LinspaceRange(bottom=0, top=0),
             ...         n_points=100,
             ...     ),
             ... )
@@ -103,6 +105,17 @@ class Persona:
             evaluation_date=evaluation_date,
             persona_input_elements=active_persona_input_elements(active_elements),
         )
+
+        if bruttolohn_m_linspace_grid:
+            _fail_if_bruttolohn_m_linspace_grid_is_invalid(
+                linspace_grid=bruttolohn_m_linspace_grid,
+                p_id_array=qname_input_data["p_id"],
+            )
+            # qname_input_data = upsert_with_bruttolohn_m_linspace_grid(
+            #    qname_input_data=qname_input_data,
+            #    bruttolohn_m_linspace_grid=bruttolohn_m_linspace_grid,
+            # )
+
         return PersonaForDate(
             description=active_description(active_elements),
             input_data_tree=dt.unflatten_from_qnames(qname_input_data),
@@ -271,4 +284,51 @@ def _fail_if_active_tt_qnames_overlap(
             f"Active qnames overlap at {path_to_persona_elements!s}. "
             f"Overlapping qnames: {overlapping_qnames}"
         )
+        raise ValueError(msg)
+
+
+def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
+    linspace_grid: LinspaceGridClass,
+    p_id_array: np.ndarray,
+) -> None:
+    """Fail if the bruttolohn_m_linspace_spec is invalid."""
+    # Because the LinspaceGridClass is dynamically created, we cannot check for the
+    # correct type directly.
+    try:
+        pids_in_linspace_grid = [
+            f.name for f in fields(linspace_grid) if f.name != "n_points"
+        ]
+    except Exception as err:
+        msg = (
+            "The LinspaceGridClass has not been instantiated correctly. "
+            "Always instantiate via 'NameOfThePersona.LinspaceGridClass'."
+        )
+        raise TypeError(msg) from err
+    if not pids_in_linspace_grid or "n_points" not in [
+        f.name for f in fields(linspace_grid)
+    ]:
+        msg = (
+            "The LinspaceGridClass has not been instantiated correctly. "
+            "Always instantiate via 'NameOfThePersona.LinspaceGridClass'."
+        )
+        raise TypeError(msg)
+    if len(p_id_array) != len(pids_in_linspace_grid):
+        msg = (
+            f"The number of p_ids in the linspace grid must match the number of p_ids "
+            "in the persona. The number of p_ids in the linspace grid is "
+            f"{len(pids_in_linspace_grid)}, but the number of p_ids in the persona is "
+            f"{len(p_id_array)}."
+            "You likely used the wrong LinspaceGridClass. Always instantiate via "
+            "'NameOfThePersona.LinspaceGridClass'."
+        )
+        raise ValueError(msg)
+    for p_id in pids_in_linspace_grid:
+        if (
+            linspace_grid.__getattribute__(p_id).bottom
+            > linspace_grid.__getattribute__(p_id).top
+        ):
+            msg = "The lower bound of the linspace must be less than the upper bound."
+            raise ValueError(msg)
+    if linspace_grid.n_points <= 0:
+        msg = "The number of points in the linspace must be greater than 0."
         raise ValueError(msg)
