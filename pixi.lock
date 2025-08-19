@@ -5722,8 +5722,8 @@ packages:
   requires_python: '>=3.11'
 - pypi: ./
   name: gettsim-personas
-  version: 0.1.dev55+gf870cd4a6
-  sha256: 78a8530ad5ff298424fc29cc61575f2d043939949a190824f1fb1c9570e33605
+  version: 0.1.dev58+gd6fd514d7.d20250819
+  sha256: da8632af3c196d92abe5282cb8585366460a1902d002277db7e4baa085ffe01d
   requires_dist:
   - gettsim>=1.0a2
   requires_python: '>=3.11'
