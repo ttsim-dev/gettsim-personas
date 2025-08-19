@@ -11,6 +11,9 @@ ALL_PERSONA_SUBMODULES = [
     grundsicherung_für_erwerbsfähige,
 ]
 
+START_YEAR = 1950
+END_YEAR = datetime.date.today().year  # noqa: DTZ011
+
 
 def get_all_personas():
     persona_objs = []
@@ -22,7 +25,7 @@ def get_all_personas():
     return persona_objs
 
 
-def persona_year_pairs(start=2005, end=2025):
+def persona_year_pairs(start=START_YEAR, end=END_YEAR):
     all_personas = get_all_personas()
     return [
         (year, persona)

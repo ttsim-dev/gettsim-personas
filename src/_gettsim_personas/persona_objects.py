@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING, TypeAlias
 import dags
 import dags.tree as dt
 import numpy as np
+from ttsim.interface_dag_elements.orig_policy_objects import load_module
+from ttsim.interface_dag_elements.shared import to_datetime
 
 from _gettsim_personas.persona_elements import (
     DEFAULT_END_DATE,
@@ -20,7 +22,6 @@ from _gettsim_personas.persona_elements import (
 )
 from _gettsim_personas.typing import PersonaElement
 from _gettsim_personas.upsert import upsert_input_data
-from _gettsim_personas.utils import load_module, to_datetime
 
 if TYPE_CHECKING:
     import datetime

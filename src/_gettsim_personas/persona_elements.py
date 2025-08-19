@@ -6,8 +6,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, ParamSpec, TypeVar
 
 import numpy as np
-
-from _gettsim_personas.utils import convert_and_validate_dates
+from ttsim.tt.column_objects_param_function import _convert_and_validate_dates
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -93,7 +92,7 @@ def persona_input_element(
     end_date: DashedISOString | datetime.date = DEFAULT_END_DATE,
 ) -> Callable[[Callable[..., Any]], PersonaInputElement]:
     """Decorator to create an instance of PersonaInputElement."""
-    start_date, end_date = convert_and_validate_dates(
+    start_date, end_date = _convert_and_validate_dates(
         start_date=start_date,
         end_date=end_date,
     )
@@ -123,7 +122,7 @@ def persona_target_element(
     start_date: DashedISOString | datetime.date = DEFAULT_START_DATE,
     end_date: DashedISOString | datetime.date = DEFAULT_END_DATE,
 ) -> Callable[[Callable[..., Any]], PersonaTargetElement]:
-    start_date, end_date = convert_and_validate_dates(
+    start_date, end_date = _convert_and_validate_dates(
         start_date=start_date,
         end_date=end_date,
     )
@@ -153,7 +152,7 @@ def persona_description(
     start_date: DashedISOString | datetime.date = DEFAULT_START_DATE,
     end_date: DashedISOString | datetime.date = DEFAULT_END_DATE,
 ) -> PersonaDescription:
-    start_date, end_date = convert_and_validate_dates(
+    start_date, end_date = _convert_and_validate_dates(
         start_date=start_date,
         end_date=end_date,
     )
