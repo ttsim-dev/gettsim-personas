@@ -13,52 +13,7 @@ def upsert_input_data(
     input_data: NestedData,
     data_to_upsert: NestedData,
 ) -> NestedData:
-    """Upsert persona input data.
-
-    This function creates multiple copies of persona input data, varying them across one
-    or more dimensions. It is useful when you are interested in a base persona but want
-    to calculate taxes and transfers for several different values of one (or many) input
-    variables.
-
-    To use this function:
-        - Pass the persona's input data as the `input_data` argument.
-        - Pass the array to be used for upserting the input data as `data_to_upsert`.
-          Note that the length of this array must be a multiple of the length of the
-          persona input data (because this function creates copies of the persona
-          input data).
-
-    The new households will have the exact same configuration as the original household,
-    except for the variables you upserted and the IDs and pointers required by GETTSIM
-    (these are not copied but set to reflect the same household structure as the base
-    household for the copied households).
-
-    Example:
-    -------
-    >>> input_data = {
-    >>>     "p_id": np.array([0, 1, 2]),
-    >>>     "p_id_elternteil_1": np.array([-1, -1, 0]),
-    >>>     "einnahmen": {"bruttolohn_m": np.array([1, 2, 3])},
-    >>> }
-    >>> data_to_upsert = {
-    >>>     "einnahmen": {"bruttolohn_m": np.array([4, 5, 6, 7, 8, 9])},
-    >>> }
-    >>> upsert_input_data(input_data, data_to_upsert)
-    >>> {
-    >>>     "p_id": np.array([0, 1, 2, 3, 4, 5]),
-    >>>     "p_id_elternteil_1": np.array([-1, -1, 0, -1, -1, 3]),
-    >>>     "einnahmen": {"bruttolohn_m": np.array([4, 5, 6, 7, 8, 9])},
-    >>> }
-
-    Args:
-        input_data:
-            NestedData with input data for GETTSIM. Typically created from a persona
-            object via `get_personas`.
-        data_to_upsert:
-            NestedData with data to be upserted
-
-    Returns:
-        NestedData with upserted data
-    """
+    """Upsert persona input data."""
     _fail_if_data_to_upsert_is_not_dict_with_array_leafs(data_to_upsert)
     _fail_if_data_lengths_are_incompatible(data_to_upsert, input_data)
     flat_data_to_upsert = dt.flatten_to_tree_paths(data_to_upsert)

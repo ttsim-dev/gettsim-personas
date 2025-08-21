@@ -131,12 +131,10 @@ example_persona_with_evaluation_date = einkommensteuer_sozialabgaben.Couple1Chil
 
 ### Advanced Usage: Upserting Input Data
 
-You can also vary persona input data across dimensions other than earnings. The
-`upsert_input_data` function creates copies of the persona's input data, varying them
-over the dimensions you specify, while preserving the household structure of the
-original persona.
-
-#### How to Upsert Input Data
+You can also vary persona input data across dimensions other than earnings. `Persona`
+objects have a method called `upsert_input_data` that creates a new `Persona` and lets
+you modify any dimension of its input data, while preserving the household structure of
+the original persona.
 
 Suppose you are interested in households that receive basic subsistence benefits for the
 unemployed (Bürgergeld, formerly known as Arbeitslosengeld 2). You want to vary their
@@ -184,25 +182,23 @@ rent_to_upsert = {
 > household level, so every household member should have the same value for
 > `bruttokaltmiete_m_hh`.
 
-Now, upsert the input data:
+Now, we create a new persona object based on the original one, but with the modified
+input data:
 
 ```python
-from gettsim_personas import upsert_input_data
-
-upserted_input_data = upsert_input_data(
-    input_data=basic_subsistence_benefit_persona.input_data_tree,
-    data_to_upsert=rent_to_upsert,
+upserted_persona = basic_subsistence_benefit_persona.upsert_input_data(
+    input_data_to_upsert=rent_to_upsert,
 )
 ```
 
-The modified input data can then be used to compute taxes and transfers:
+The new persona can then be used to compute taxes and transfers:
 
 ```python
 result = main(
     main_target=MainTarget.results.df_with_nested_columns,
-    policy_date=basic_subsistence_benefit_persona.policy_date,
-    input_data=InputData.tree(upserted_input_data),
-    tt_targets=TTTargets.tree(basic_subsistence_benefit_persona.tt_targets_tree),
+    policy_date=upserted_persona.policy_date,
+    input_data=InputData.tree(upserted_persona.input_data_tree),
+    tt_targets=TTTargets.tree(upserted_persona.tt_targets_tree),
 )
 ```
 

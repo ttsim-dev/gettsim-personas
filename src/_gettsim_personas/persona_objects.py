@@ -40,6 +40,57 @@ class Persona:
     input_data_tree: NestedData
     tt_targets_tree: NestedStrings
 
+    def upsert_input_data(self, input_data_to_upsert: NestedData) -> Persona:
+        """Upsert persona input data.
+
+        Create a copy of this persona and **up**date or in**sert** input data. Useful if
+        you want to obtain input data columns that vary over a range of values other
+        than `('einnahmen', 'bruttolohn_m')`.
+
+        Pass the array to be used for upserting as `input_data_to_upsert`. Note that the
+        length of this array must be a multiple of the length of the original persona
+        input data (because this function creates copies of the persona input data).
+
+        The new households will have the exact same configuration as the original
+        household, except for the variables you upserted and the IDs and pointers
+        required by GETTSIM (these are not copied but set to reflect the same household
+        structure as the base household for the copied households).
+
+        Example:
+        -------
+        >>> from gettsim_personas import einkommensteuer_sozialabgaben
+        >>> base_persona = einkommensteuer_sozialabgaben.Couple1Child(
+        >>>     policy_date_str="2025-01-01",
+        >>> )
+        >>> data_to_upsert = {
+        >>>     "einnahmen": {"bruttolohn_m": np.array([4, 5, 6, 7, 8, 9])},
+        >>> }
+        >>> upserted_persona = base_persona.upsert_input_data(data_to_upsert)
+        >>> upserted_persona.input_data_tree
+        >>> {
+        >>>     "p_id": np.array([0, 1, 2, 3, 4, 5]),
+        >>>     "p_id_elternteil_1": np.array([-1, -1, 0, -1, -1, 3]),
+        >>>     "einnahmen": {"bruttolohn_m": np.array([4, 5, 6, 7, 8, 9])},
+        >>> }
+
+        Args:
+            input_data_to_upsert:
+                NestedData with data to be upserted.
+
+        Returns:
+            A new persona with upserted input data.
+        """
+        return Persona(
+            description=self.description,
+            policy_date=self.policy_date,
+            evaluation_date=self.evaluation_date,
+            input_data_tree=upsert_input_data(
+                input_data=self.input_data_tree,
+                data_to_upsert=input_data_to_upsert,
+            ),
+            tt_targets_tree=self.tt_targets_tree,
+        )
+
 
 @dataclass
 class OrigPersonaOverTime:

@@ -41,3 +41,20 @@ def test_can_create_persona_with_default_bruttolohn():
         policy_date_str=policy_date_str,
     )
     assert len(persona.input_data_tree["einnahmen"]["bruttolohn_m"]) == 3
+
+
+def test_can_upsert_input_data():
+    policy_date_str = "2020-01-01"
+    persona = Couple1Child(
+        policy_date_str=policy_date_str,
+    )
+    upserted_persona = persona.upsert_input_data(
+        input_data_to_upsert={
+            "einnahmen": {"bruttolohn_m": np.array([1, 2, 3, 4, 5, 6])}
+        }
+    )
+    assert len(upserted_persona.input_data_tree["einnahmen"]["bruttolohn_m"]) == 6
+    assert np.array_equal(
+        upserted_persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+        np.array([1, 2, 3, 4, 5, 6]),
+    )
