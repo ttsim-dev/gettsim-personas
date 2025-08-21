@@ -115,9 +115,10 @@ persona_with_varying_income_of_secondary_earner = (
 )
 ```
 
-Personas support different evaluation dates. If no evaluation date is provided, the
-policy date is used by default. Evaluation dates are required to set time-dependent
-input variables, such as birth years or the calendar year of retirement.
+Personas support different evaluation dates. Personas fix some input columns to constant
+values (e.g. age or age at retirement) and calculate the values of other input columns
+(e.g. birth year or year of retirement) based on these constant input columns plus an
+evaluation date. If no evaluation date is provided, the policy date is used by default.
 
 ```python
 example_persona_with_evaluation_date = einkommensteuer_sozialabgaben.Couple1Child(
