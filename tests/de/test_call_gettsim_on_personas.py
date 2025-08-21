@@ -13,7 +13,7 @@ from tests.de.all_personas import persona_year_pairs
 )
 def test_call_gettsim_on_personas(year, persona_class):
     policy_date_str = f"{year}-01-01"
-    persona = persona_class(policy_date=policy_date_str)
+    persona = persona_class(policy_date_str=policy_date_str)
     main(
         main_target=MainTarget.results.df_with_nested_columns,
         policy_date_str=policy_date_str,

@@ -153,7 +153,7 @@ def test_fail_if_active_tt_qnames_overlap():
 
 def test_fail_if_active_tt_qnames_overlap_via_persona_object():
     with pytest.raises(ValueError, match=r"Overlapping qnames: \{'input_1'\}"):
-        SamplePersonaWithOverlappingElements(policy_date="2015-01-01")
+        SamplePersonaWithOverlappingElements(policy_date_str="2015-01-01")
 
 
 def test_do_not_fail_if_active_qnames_do_not_overlap():
@@ -192,13 +192,13 @@ def test_sample_persona_raises_error_if_called_with_invalid_date():
     with pytest.raises(
         NotImplementedError, match="This Persona is not implemented before 2015."
     ):
-        SamplePersonaWithStartAndEndDate(policy_date="2014-01-01")
+        SamplePersonaWithStartAndEndDate(policy_date_str="2014-01-01")
 
 
 def test_call_persona_with_evaluation_date():
     persona2015 = SamplePersona(
-        policy_date="2015-01-01",
-        evaluation_date="2015-01-01",
+        policy_date_str="2015-01-01",
+        evaluation_date_str="2015-01-01",
     )
     assert_array_equal(
         persona2015.input_data_tree["true_if_evaluation_year_at_least_2015"],
@@ -206,8 +206,8 @@ def test_call_persona_with_evaluation_date():
     )
 
     persona2014 = SamplePersona(
-        policy_date="2015-01-01",
-        evaluation_date="2014-01-01",
+        policy_date_str="2015-01-01",
+        evaluation_date_str="2014-01-01",
     )
     assert_array_equal(
         persona2014.input_data_tree["true_if_evaluation_year_at_least_2015"],
@@ -282,8 +282,8 @@ def test_bruttolohn_m_linspace_grid_invalid_n_points_zero():
 
 def test_bruttolohn_m_is_default_value_if_no_linspace_grid_is_provided():
     persona = SamplePersona(
-        policy_date="2015-01-01",
-        evaluation_date="2015-01-01",
+        policy_date_str="2015-01-01",
+        evaluation_date_str="2015-01-01",
     )
     assert_array_equal(
         persona.input_data_tree["einnahmen"]["bruttolohn_m"],
@@ -293,8 +293,8 @@ def test_bruttolohn_m_is_default_value_if_no_linspace_grid_is_provided():
 
 def test_bruttolohn_m_is_upserted_if_linspace_grid_is_provided():
     persona = SamplePersona(
-        policy_date="2015-01-01",
-        evaluation_date="2015-01-01",
+        policy_date_str="2015-01-01",
+        evaluation_date_str="2015-01-01",
         bruttolohn_m_linspace_grid=SamplePersona.LinspaceGrid(
             p0=SamplePersona.LinspaceRange(bottom=0, top=1),
             p1=SamplePersona.LinspaceRange(bottom=0, top=1),
@@ -314,5 +314,5 @@ def test_persona_call_fails_if_input_data_differs_in_length_from_p_id_array():
         match="The input data for input_1 has a different length than the p_id array.",
     ):
         SamplePersonaWithInvalidLengthOfInputData(
-            policy_date="2015-01-01",
+            policy_date_str="2015-01-01",
         )

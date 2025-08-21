@@ -16,7 +16,7 @@ from tests.de.all_personas import persona_year_pairs
 )
 def test_persona_inputs_does_not_contain_unnecessary_inputs(year, persona_class):
     policy_date_str = f"{year}-01-01"
-    persona = persona_class(policy_date=policy_date_str)
+    persona = persona_class(policy_date_str=policy_date_str)
     root_nodes = main(
         main_target=MainTarget.labels.root_nodes,
         policy_date_str=policy_date_str,

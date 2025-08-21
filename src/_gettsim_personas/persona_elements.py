@@ -57,7 +57,7 @@ def persona_pid_element() -> Callable[[Callable[..., Any]], PersonaPIDElement]:
 
 @dataclass(frozen=True)
 class TimeDependentPersonaElement:
-    """An element of some Persona that depends on a policy date."""
+    """An element of some OrigPersonaOverTime that depends on a policy date."""
 
     start_date: datetime.date
     end_date: datetime.date

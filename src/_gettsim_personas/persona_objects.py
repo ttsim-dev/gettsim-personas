@@ -42,7 +42,7 @@ class PersonaForDate:
 
 
 @dataclass
-class Persona:
+class OrigPersonaOverTime:
     """A persona containing inputs and targets to use with GETTSIM."""
 
     path_to_persona_elements: Path
