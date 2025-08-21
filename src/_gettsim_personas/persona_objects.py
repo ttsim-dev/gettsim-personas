@@ -33,7 +33,7 @@ LinspaceGrid: TypeAlias = type
 
 
 @dataclass(frozen=True)
-class PersonaForDate:
+class Persona:
     description: str
     policy_date: datetime.date
     evaluation_date: datetime.date
@@ -63,7 +63,7 @@ class OrigPersonaOverTime:
         policy_date_str: DashedISOString,
         evaluation_date_str: DashedISOString | None = None,
         bruttolohn_m_linspace_grid: LinspaceGrid | None = None,
-    ) -> PersonaForDate:
+    ) -> Persona:
         """An instance of persona for a given policy and evaluation date.
 
         Args:
@@ -76,7 +76,7 @@ class OrigPersonaOverTime:
                 (Optional) A linspace grid of einnahmen__bruttolohn_m. Use if you
                 want to calculate taxes and transfers over a range of earnings.
                 The grid specifies for each p_id the range of earnings to be evaluated.
-                Create the grid via the LinspaceGrid (Persona.LinspaceGrid).
+                Create the grid via the LinspaceGrid method of this class.
 
         Example:
             >>> from gettsim_personas.de.einkommensteuer_sozialabgaben import Couple1Child
@@ -92,7 +92,7 @@ class OrigPersonaOverTime:
             ... )
 
         Returns:
-            A PersonaForDate object containing the persona's description, input data,
+            A Persona object containing the persona's description, input data,
             and targets.
         """  # noqa: E501
         policy_date = to_datetime(policy_date_str)
@@ -119,7 +119,7 @@ class OrigPersonaOverTime:
                 bruttolohn_m_linspace_grid=bruttolohn_m_linspace_grid,
             )
 
-        return PersonaForDate(
+        return Persona(
             description=active_description(active_elements),
             policy_date=policy_date,
             evaluation_date=evaluation_date,
@@ -353,7 +353,7 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
             f"{len(pids_in_linspace_grid)}, but the number of p_ids in the persona is "
             f"{len(p_id_array)}."
             "You likely used the wrong LinspaceGrid. Always instantiate via "
-            "'NameOfThePersona.LinspaceGrid'."
+            "the LinspaceGrid method of this class."
         )
         raise ValueError(msg)
     for p_id in pids_in_linspace_grid:
