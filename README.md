@@ -71,7 +71,7 @@ from gettsim import main, MainTarget, InputData, TTTargets
 
 result = main(
     main_target=MainTarget.results.df_with_nested_columns,
-    policy_date_str=example_persona.policy_date,
+    policy_date=example_persona.policy_date,
     input_data=InputData.tree(example_persona.input_data_tree),
     tt_targets=TTTargets.tree(example_persona.tt_targets_tree),
 )
@@ -200,7 +200,7 @@ The modified input data can then be used to compute taxes and transfers:
 ```python
 result = main(
     main_target=MainTarget.results.df_with_nested_columns,
-    policy_date_str=jan_2025,
+    policy_date=basic_subsistence_benefit_persona.policy_date,
     input_data=InputData.tree(upserted_input_data),
     tt_targets=TTTargets.tree(basic_subsistence_benefit_persona.tt_targets_tree),
 )
