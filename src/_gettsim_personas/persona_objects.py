@@ -35,6 +35,8 @@ LinspaceGrid: TypeAlias = type
 @dataclass(frozen=True)
 class PersonaForDate:
     description: str
+    policy_date: datetime.date
+    evaluation_date: datetime.date
     input_data_tree: NestedData
     tt_targets_tree: NestedStrings
 
@@ -58,16 +60,16 @@ class Persona:
     def __call__(
         self,
         *,
-        policy_date: DashedISOString | datetime.date,
-        evaluation_date: DashedISOString | datetime.date | None = None,
+        policy_date_str: DashedISOString,
+        evaluation_date_str: DashedISOString | None = None,
         bruttolohn_m_linspace_grid: LinspaceGrid | None = None,
     ) -> PersonaForDate:
         """An instance of persona for a given policy and evaluation date.
 
         Args:
-            policy_date:
+            policy_date_str:
                 The date of the policy environment.
-            evaluation_date:
+            evaluation_date_str:
                 (Optional) The date for which the persona is evaluated.
                 If not provided, the policy date is used.
             bruttolohn_m_linspace_grid:
@@ -79,8 +81,8 @@ class Persona:
         Example:
             >>> from gettsim_personas.de.einkommensteuer_sozialabgaben import Couple1Child
             >>> persona = Couple1Child(
-            ...     policy_date="2025-01-01",
-            ...     evaluation_date="2025-01-01",
+            ...     policy_date_str="2025-01-01",
+            ...     evaluation_date_str="2025-01-01",
             ...     bruttolohn_m_linspace_grid=Couple1Child.LinspaceGrid(
             ...         p0=Couple1Child.LinspaceRange(bottom=0, top=10000),
             ...         p1=Couple1Child.LinspaceRange(bottom=0, top=10000),
@@ -93,9 +95,9 @@ class Persona:
             A PersonaForDate object containing the persona's description, input data,
             and targets.
         """  # noqa: E501
-        policy_date = to_datetime(policy_date)
+        policy_date = to_datetime(policy_date_str)
         evaluation_date = (
-            policy_date if not evaluation_date else to_datetime(evaluation_date)
+            policy_date if not evaluation_date_str else to_datetime(evaluation_date_str)
         )
 
         self._fail_if_persona_not_implemented(policy_date)
@@ -119,6 +121,8 @@ class Persona:
 
         return PersonaForDate(
             description=active_description(active_elements),
+            policy_date=policy_date,
+            evaluation_date=evaluation_date,
             input_data_tree=dt.unflatten_from_qnames(qname_input_data),
             tt_targets_tree=dt.unflatten_from_qnames(
                 active_tt_targets(active_elements)

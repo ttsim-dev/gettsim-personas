@@ -36,7 +36,9 @@ transfers:
 ```python
 from gettsim_personas import einkommensteuer_sozialabgaben
 
-example_persona = einkommensteuer_sozialabgaben.Couple1Child(policy_date="2025-01-01")
+example_persona = einkommensteuer_sozialabgaben.Couple1Child(
+    policy_date_str="2025-01-01"
+)
 ```
 
 `example_persona` is a `Persona` object with the following attributes:
@@ -69,7 +71,7 @@ from gettsim import main, MainTarget, InputData, TTTargets
 
 result = main(
     main_target=MainTarget.results.df_with_nested_columns,
-    policy_date=example_persona.policy_date,
+    policy_date_str=example_persona.policy_date,
     input_data=InputData.tree(example_persona.input_data_tree),
     tt_targets=TTTargets.tree(example_persona.tt_targets_tree),
 )
@@ -100,16 +102,18 @@ To do this, create a `LinspaceGrid` object and specify the earnings range for ea
 ```python
 from gettsim_personas import einkommensteuer_sozialabgaben
 
-persona_with_varying_income_of_secondary_earner = (
-    einkommensteuer_sozialabgaben.Couple1Child(
-        policy_date="2025-01-01",
-        bruttolohn_m_linspace_grid=Couple1Child.LinspaceGrid(
-            p0=Couple1Child.LinspaceRange(bottom=4_000, top=4_000),
-            p1=Couple1Child.LinspaceRange(bottom=1_000, top=3_000),
-            p2=Couple1Child.LinspaceRange(bottom=0, top=0),
-            n_points=100,
+persona_with_varying_income_of_secondary_earner = einkommensteuer_sozialabgaben.Couple1Child(
+    policy_date_str="2025-01-01",
+    bruttolohn_m_linspace_grid=einkommensteuer_sozialabgaben.Couple1Child.LinspaceGrid(
+        p0=einkommensteuer_sozialabgaben.Couple1Child.LinspaceRange(
+            bottom=4_000, top=4_000
         ),
-    )
+        p1=einkommensteuer_sozialabgaben.Couple1Child.LinspaceRange(
+            bottom=1_000, top=3_000
+        ),
+        p2=einkommensteuer_sozialabgaben.Couple1Child.LinspaceRange(bottom=0, top=0),
+        n_points=100,
+    ),
 )
 ```
 
@@ -120,8 +124,8 @@ evaluation date. If no evaluation date is provided, the policy date is used by d
 
 ```python
 example_persona_with_evaluation_date = einkommensteuer_sozialabgaben.Couple1Child(
-    policy_date="2025-01-01",
-    evaluation_date="2026-01-01",
+    policy_date_str="2025-01-01",
+    evaluation_date_str="2026-01-01",
 )
 ```
 
@@ -145,7 +149,7 @@ First, instantiate the base persona:
 from gettsim_personas import grundsicherung_für_erwerbsfähige
 
 basic_subsistence_benefit_persona = grundsicherung_für_erwerbsfähige.Couple1Child(
-    policy_date="2025-01-01"
+    policy_date_str="2025-01-01"
 )
 ```
 
@@ -186,7 +190,7 @@ Now, upsert the input data:
 from gettsim_personas import upsert_input_data
 
 upserted_input_data = upsert_input_data(
-    input_data=persona.input_data_tree,
+    input_data=basic_subsistence_benefit_persona.input_data_tree,
     data_to_upsert=rent_to_upsert,
 )
 ```
@@ -196,9 +200,9 @@ The modified input data can then be used to compute taxes and transfers:
 ```python
 result = main(
     main_target=MainTarget.results.df_with_nested_columns,
-    policy_date=jan_2025,
+    policy_date_str=jan_2025,
     input_data=InputData.tree(upserted_input_data),
-    tt_targets=TTTargets.tree(persona.tt_targets_tree),
+    tt_targets=TTTargets.tree(basic_subsistence_benefit_persona.tt_targets_tree),
 )
 ```
 
