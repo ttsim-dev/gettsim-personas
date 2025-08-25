@@ -94,7 +94,7 @@ You can provide a grid of earnings levels to compute taxes and transfers across
 different earnings levels. For example, we may want to look at net income in our example
 household where the father earns 4,000 Euro per month. If working full-time, the mother
 would earn the same amount. We want to investigate how total net income varies as she
-changes her weekly ours between 25% and 75% of full-time work.
+changes her weekly hours between 25% and 75% of full-time work.
 
 To do this, create a `LinspaceGrid` object and specify the earnings range for each
 `p_id`:
@@ -186,7 +186,7 @@ Now, we create a new persona object based on the original one, but with the modi
 input data:
 
 ```python
-upserted_persona = basic_subsistence_benefit_persona.upsert_input_data(
+persona_with_varying_rent = basic_subsistence_benefit_persona.upsert_input_data(
     input_data_to_upsert=rent_to_upsert,
 )
 ```
@@ -196,9 +196,9 @@ The new persona can then be used to compute taxes and transfers:
 ```python
 result = main(
     main_target=MainTarget.results.df_with_nested_columns,
-    policy_date=upserted_persona.policy_date,
-    input_data=InputData.tree(upserted_persona.input_data_tree),
-    tt_targets=TTTargets.tree(upserted_persona.tt_targets_tree),
+    policy_date=persona_with_varying_rent.policy_date,
+    input_data=InputData.tree(persona_with_varying_rent.input_data_tree),
+    tt_targets=TTTargets.tree(persona_with_varying_rent.tt_targets_tree),
 )
 ```
 
