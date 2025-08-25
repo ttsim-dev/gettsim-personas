@@ -6,8 +6,8 @@ given policy date.
 
 Personas are helpful if you are interested in exploring how a specific part of the
 tax-transfer system works (e.g. the income tax) using example data. As the input data
-provided by a persona can be overriden, you can easily vary GETTSIM's inputs and explore
-how this affects the results.
+provided by a persona can be overridden, you can easily vary GETTSIM's inputs and
+explore how this affects the results.
 
 Even if you already have some data at hand, personas are a great way to find out how to
 prepare it for using it with GETTSIM. Currently, there are almost 100 input columns
@@ -47,8 +47,11 @@ example_persona = einkommensteuer_sozialabgaben.Couple1Child(
   suitable for your use case. (A proper documentation of the available personas is not
   yet implemented;
   [contributions are welcome!](https://github.com/ttsim-dev/gettsim-personas/issues/9))
-- `policy_date`: The policy date of this persona.
-- `evaluation_date`: The evaluation date of this persona.
+- `policy_date`: The policy date of this persona. The policy date reflects the policy
+  environment for which the persona was created.
+- `evaluation_date`: The evaluation date of this persona, i.e. the date at which taxes
+  and transfers should be computed. Used to calculate some of the persona's input data
+  columns endogenously, e.g. the age at retirement.
 - `input_data_tree`: The input data tree of this persona. This can be passed directly to
   GETTSIM's `main` function.
 - `tt_targets_tree`: The targets that can be computed for this persona. This can also be
@@ -118,9 +121,9 @@ persona_with_varying_income_of_secondary_earner = einkommensteuer_sozialabgaben.
 ```
 
 Personas support different evaluation dates. Personas fix some input columns to constant
-values (e.g. age or age at retirement) and calculate the values of other input columns
-(e.g. birth year or year of retirement) based on these constant input columns plus an
-evaluation date. If no evaluation date is provided, the policy date is used by default.
+values (e.g. age at 30 years) and calculate the values of other input columns (e.g.
+birth year as evaluation date minus 30 years). If no evaluation date is provided, the
+policy date is used by default.
 
 ```python
 example_persona_with_evaluation_date = einkommensteuer_sozialabgaben.Couple1Child(

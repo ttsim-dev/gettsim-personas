@@ -162,6 +162,7 @@ extend-ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "PD011", "PLR2004", "C408"]
 "src/_gettsim_personas/de/*" = ["E501", "PLC2401"]
+"sandbox/tutorial.ipynb" = ["E501"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
