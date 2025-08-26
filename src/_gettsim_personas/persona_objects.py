@@ -80,15 +80,27 @@ class Persona:
         Returns:
             A new persona with upserted input data.
         """
+        upserted_input_data = upsert_input_data(
+            input_data=self.input_data_tree,
+            data_to_upsert=input_data_to_upsert,
+        )
+
+        hh_id_array = upserted_input_data.get("hh_id")
+        multiple_households_in_persona = (
+            hh_id_array is not None and len(np.unique(hh_id_array)) > 1
+        )
+
         return Persona(
             description=self.description,
             policy_date=self.policy_date,
             evaluation_date=self.evaluation_date,
-            input_data_tree=upsert_input_data(
-                input_data=self.input_data_tree,
-                data_to_upsert=input_data_to_upsert,
-            ),
-            tt_targets_tree=self.tt_targets_tree,
+            input_data_tree=upserted_input_data,
+            tt_targets_tree={
+                "hh_id": None,
+                **self.tt_targets_tree,
+            }
+            if multiple_households_in_persona
+            else self.tt_targets_tree,
         )
 
 
@@ -170,14 +182,22 @@ class OrigPersonaOverTime:
                 bruttolohn_m_linspace_grid=bruttolohn_m_linspace_grid,
             )
 
+        hh_id_array = qname_input_data.get("hh_id")
+        multiple_households_in_persona = (
+            hh_id_array is not None and len(np.unique(hh_id_array)) > 1
+        )
+
         return Persona(
             description=active_description(active_elements).description,
             policy_date=policy_date,
             evaluation_date=evaluation_date,
             input_data_tree=dt.unflatten_from_qnames(qname_input_data),
-            tt_targets_tree=dt.unflatten_from_qnames(
-                active_tt_targets(active_elements)
-            ),
+            tt_targets_tree={
+                "hh_id": None,
+                **dt.unflatten_from_qnames(active_tt_targets(active_elements)),
+            }
+            if multiple_households_in_persona
+            else dt.unflatten_from_qnames(active_tt_targets(active_elements)),
         )
 
     def orig_elements(self) -> list[PersonaElement]:

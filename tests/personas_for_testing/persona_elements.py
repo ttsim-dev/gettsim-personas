@@ -37,6 +37,11 @@ def p_id() -> np.ndarray:
 
 
 @persona_input_element()
+def hh_id() -> np.ndarray:
+    return np.array([0, 0, 0])
+
+
+@persona_input_element()
 def some_time_dependent_persona_input_element() -> np.ndarray:
     return np.array([1, 2, 3])
 

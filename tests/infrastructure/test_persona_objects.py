@@ -62,6 +62,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "some_target_qname_until_2009",
         "some_target_qname_since_2010",
         "p_id",
+        "hh_id",
         "einnahmen__bruttolohn_m",
     }
     orig_names = {el.orig_name for el in SamplePersona.orig_elements()}
@@ -79,6 +80,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "some_target_qname_until_2009",
         "some_target_qname_since_2010",
         "p_id",
+        "hh_id",
         "einnahmen__bruttolohn_m",
     }
     tt_qnames = {
@@ -106,6 +108,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
                 "some_target_qname",
                 "some_target_qname_until_2009",
                 "p_id",
+                "hh_id",
                 "einnahmen__bruttolohn_m",
             },
         ),
@@ -122,6 +125,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
                 "some_target_qname",
                 "some_target_qname_since_2010",
                 "p_id",
+                "hh_id",
                 "einnahmen__bruttolohn_m",
             },
         ),
@@ -323,6 +327,29 @@ def test_bruttolohn_m_is_upserted_if_linspace_grid_is_provided_with_constant_val
         persona.input_data_tree["einnahmen"]["bruttolohn_m"],
         np.array([1, 0, 2, 1, 1, 2]),
     )
+
+
+def test_tt_targets_include_hh_id_if_multiple_households_in_persona():
+    persona = SamplePersona(
+        policy_date_str="2015-01-01",
+        evaluation_date_str="2015-01-01",
+    )
+
+    upserted_persona = persona.upsert_input_data({"x": np.array([0, 0, 1, 1, 2, 2])})
+    assert "hh_id" in upserted_persona.tt_targets_tree
+
+    persona_with_bruttolohn_m_linspace_grid = SamplePersona(
+        policy_date_str="2015-01-01",
+        evaluation_date_str="2015-01-01",
+        bruttolohn_m_linspace_grid=SamplePersona.LinspaceGrid(
+            p0=SamplePersona.LinspaceRange(bottom=0, top=1),
+            p1=SamplePersona.LinspaceRange(bottom=0, top=1),
+            p2=SamplePersona.LinspaceRange(bottom=0, top=0),
+            n_points=2,
+        ),
+    )
+
+    assert "hh_id" in persona_with_bruttolohn_m_linspace_grid.tt_targets_tree
 
 
 def test_persona_call_fails_if_input_data_differs_in_length_from_p_id_array():
