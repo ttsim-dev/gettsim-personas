@@ -28,6 +28,11 @@ def p_id() -> np.ndarray:
 
 
 @persona_input_element()
+def hh_id() -> np.ndarray:
+    return np.array([0, 0, 0])
+
+
+@persona_input_element()
 def alter() -> np.ndarray:
     return np.array([30, 30, 10])
 
