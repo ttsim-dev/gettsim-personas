@@ -121,13 +121,13 @@ class OrigPersonaOverTime:
             policy_date_str:
                 The date of the policy environment.
             evaluation_date_str:
-                (Optional) The date for which the persona is evaluated.
-                If not provided, the policy date is used.
+                (Optional) The date for which the persona is evaluated. If not provided,
+                the policy date is used.
             bruttolohn_m_linspace_grid:
-                (Optional) A linspace grid of einnahmen__bruttolohn_m. Use if you
-                want to calculate taxes and transfers over a range of earnings.
-                The grid specifies for each p_id the range of earnings to be evaluated.
-                Create the grid via the LinspaceGrid method of this class.
+                (Optional) A linspace grid of einnahmen__bruttolohn_m. Use if you want
+                to calculate taxes and transfers over a range of earnings. The grid
+                specifies for each p_id a constant value or the range of earnings to be
+                evaluated. Create the grid via the LinspaceGrid method of this class.
 
         Example:
             >>> from gettsim_personas.de.einkommensteuer_sozialabgaben import Couple1Child
@@ -137,14 +137,14 @@ class OrigPersonaOverTime:
             ...     bruttolohn_m_linspace_grid=Couple1Child.LinspaceGrid(
             ...         p0=Couple1Child.LinspaceRange(bottom=0, top=10000),
             ...         p1=Couple1Child.LinspaceRange(bottom=0, top=10000),
-            ...         p2=Couple1Child.LinspaceRange(bottom=0, top=0),
+            ...         p2=0,
             ...         n_points=100,
             ...     ),
             ... )
 
         Returns:
-            A Persona object containing the persona's description, input data,
-            and targets.
+            A Persona object containing the persona's description, input data, and
+            targets.
         """  # noqa: E501
         policy_date = to_datetime(policy_date_str)
         evaluation_date = (
