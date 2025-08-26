@@ -224,6 +224,9 @@ class LinspaceRange:
     top: float
 
 
+LinspaceParameter: TypeAlias = LinspaceRange | float | int
+
+
 def active_persona_input_elements(
     active_elements: list[PersonaElement],
 ) -> dict[str, PersonaInputElement | PersonaPIDElement]:
@@ -255,8 +258,12 @@ def make_linspace_grid_class(size: int):
     Example:
         LinspaceGrid = make_linspace_grid_class(3)
         grid = LinspaceGrid(p0=..., p1=..., p2=..., n_points=...)
+
+    Parameters can be either LinspaceRange objects or numeric values:
+        - LinspaceRange(bottom=1000, top=3000): creates a range from 1000 to 3000
+        - 4000: creates a constant value of 4000 (no range)
     """
-    fields = [(f"p{i}", LinspaceRange) for i in range(size)]
+    fields = [(f"p{i}", LinspaceParameter) for i in range(size)]
     fields.append(("n_points", int))
     return make_dataclass(f"LinspaceGrid{size}PIDs", fields, frozen=True)
 
@@ -266,15 +273,27 @@ def upsert_with_bruttolohn_m_linspace_grid(
     bruttolohn_m_linspace_grid: LinspaceGrid,
 ) -> dict[str, np.ndarray]:
     """Upsert the bruttolohn_m_linspace_grid into the qname_input_data."""
-    linspace_by_p_id = {
-        p_id: np.linspace(
-            bruttolohn_m_linspace_grid.__getattribute__(p_id).bottom,
-            bruttolohn_m_linspace_grid.__getattribute__(p_id).top,
-            bruttolohn_m_linspace_grid.n_points,
-        )
-        for p_id in bruttolohn_m_linspace_grid.__dict__
-        if p_id != "n_points"
-    }
+    linspace_by_p_id = {}
+    for p_id in bruttolohn_m_linspace_grid.__dict__:
+        if p_id == "n_points":
+            continue
+
+        param_value = bruttolohn_m_linspace_grid.__getattribute__(p_id)
+
+        if isinstance(param_value, LinspaceRange):
+            # Create a range from bottom to top
+            linspace_by_p_id[p_id] = np.linspace(
+                param_value.bottom,
+                param_value.top,
+                bruttolohn_m_linspace_grid.n_points,
+            )
+        else:
+            # Create a constant array with the same value
+            linspace_by_p_id[p_id] = np.full(
+                bruttolohn_m_linspace_grid.n_points,
+                float(param_value),
+            )
+
     bruttolohn_m_grid = np.array(
         [
             value
@@ -408,12 +427,19 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
         )
         raise ValueError(msg)
     for p_id in pids_in_linspace_grid:
-        if (
-            linspace_grid.__getattribute__(p_id).bottom
-            > linspace_grid.__getattribute__(p_id).top
-        ):
-            msg = "The lower bound of the linspace must be less than the upper bound."
-            raise ValueError(msg)
+        param_value = linspace_grid.__getattribute__(p_id)
+        if isinstance(param_value, LinspaceRange):
+            if param_value.bottom > param_value.top:
+                msg = (
+                    "The lower bound of the linspace must be less than the upper bound."
+                )
+                raise ValueError(msg)
+        elif not isinstance(param_value, (int, float)):
+            msg = (
+                f"Parameter {p_id} must be either a LinspaceRange object or a numeric "
+                "value."
+            )
+            raise TypeError(msg)
     if linspace_grid.n_points <= 0:
         msg = "The number of points in the linspace must be greater than 0."
         raise ValueError(msg)

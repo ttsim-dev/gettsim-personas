@@ -308,6 +308,23 @@ def test_bruttolohn_m_is_upserted_if_linspace_grid_is_provided():
     )
 
 
+def test_bruttolohn_m_is_upserted_if_linspace_grid_is_provided_with_constant_value():
+    persona = SamplePersona(
+        policy_date_str="2015-01-01",
+        evaluation_date_str="2015-01-01",
+        bruttolohn_m_linspace_grid=SamplePersona.LinspaceGrid(
+            p0=1,
+            p1=SamplePersona.LinspaceRange(bottom=0, top=1),
+            p2=2,
+            n_points=2,
+        ),
+    )
+    assert_array_equal(
+        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+        np.array([1, 0, 2, 1, 1, 2]),
+    )
+
+
 def test_persona_call_fails_if_input_data_differs_in_length_from_p_id_array():
     with pytest.raises(
         ValueError,
