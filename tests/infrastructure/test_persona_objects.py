@@ -316,3 +316,11 @@ def test_persona_call_fails_if_input_data_differs_in_length_from_p_id_array():
         SamplePersonaWithInvalidLengthOfInputData(
             policy_date_str="2015-01-01",
         )
+
+
+def test_persona_description_is_string_after_instantiation():
+    persona = SamplePersona(
+        policy_date_str="2015-01-01",
+        evaluation_date_str="2015-01-01",
+    )
+    assert isinstance(persona.description, str)

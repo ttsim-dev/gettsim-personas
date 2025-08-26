@@ -171,7 +171,7 @@ class OrigPersonaOverTime:
             )
 
         return Persona(
-            description=active_description(active_elements),
+            description=active_description(active_elements).description,
             policy_date=policy_date,
             evaluation_date=evaluation_date,
             input_data_tree=dt.unflatten_from_qnames(qname_input_data),
