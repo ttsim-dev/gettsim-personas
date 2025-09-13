@@ -139,7 +139,19 @@ def einnahmen__renten__sonstige_private_vorsorge_m() -> np.ndarray:
 
 
 @persona_input_element()
+def einnahmen__renten__alter_beginn_leistungsbezug_sonstige_private_vorsorge() -> (
+    np.ndarray
+):
+    return np.array([65, 65, 65])
+
+
+@persona_input_element()
 def einnahmen__renten__betriebliche_altersvorsorge_m() -> np.ndarray:
+    return np.array([0, 0, 0])
+
+
+@persona_input_element()
+def einnahmen__renten__aus_berufsständischen_versicherungen_m() -> np.ndarray:
     return np.array([0, 0, 0])
 
 
