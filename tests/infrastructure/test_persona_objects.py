@@ -194,7 +194,7 @@ def test_do_not_fail_if_only_one_description_is_active():
 
 def test_sample_persona_raises_error_if_called_with_invalid_date():
     with pytest.raises(
-        NotImplementedError, match="This Persona is not implemented before 2015."
+        NotImplementedError, match=r"This Persona is not implemented before 2015."
     ):
         SamplePersonaWithStartAndEndDate(policy_date_str="2014-01-01")
 
@@ -222,7 +222,7 @@ def test_call_persona_with_evaluation_date():
 def test_bruttolohn_m_linspace_grid_invalid_wrong_type():
     with pytest.raises(
         TypeError,
-        match="The LinspaceGrid has not been instantiated correctly.",
+        match=r"The LinspaceGrid has not been instantiated correctly.",
     ):
         _fail_if_bruttolohn_m_linspace_grid_is_invalid(
             linspace_grid={"a": 1},
@@ -256,7 +256,7 @@ def test_bruttolohn_m_linspace_grid_invalid_bottom_larger_than_top():
     )
     with pytest.raises(
         ValueError,
-        match="The lower bound of the linspace must be less than the upper bound.",
+        match=r"The lower bound of the linspace must be less than the upper bound.",
     ):
         _fail_if_bruttolohn_m_linspace_grid_is_invalid(
             linspace_grid=linspace_grid,
@@ -279,7 +279,7 @@ def test_bruttolohn_m_linspace_grid_invalid_n_points_zero():
 
     with pytest.raises(
         ValueError,
-        match="The number of points in the linspace must be greater than 0.",
+        match=r"The number of points in the linspace must be greater than 0.",
     ):
         call_invalid()
 
@@ -355,7 +355,7 @@ def test_tt_targets_include_hh_id_if_multiple_households_in_persona():
 def test_persona_call_fails_if_input_data_differs_in_length_from_p_id_array():
     with pytest.raises(
         ValueError,
-        match="The input data for input_1 has a different length than the p_id array.",
+        match=r"The input data for input_1 has a different length than the p_id array.",
     ):
         SamplePersonaWithInvalidLengthOfInputData(
             policy_date_str="2015-01-01",
