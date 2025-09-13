@@ -6,7 +6,7 @@
 name = "gettsim_personas"
 description = "Personas to use as example inputs for GETTSIM."
 requires-python = ">=3.11"
-dependencies = ["gettsim>=1.0a2"]
+#dependencies = ["gettsim>=1.0a2"]
 dynamic = ["version"]
 keywords = [
     "Economics",
@@ -92,6 +92,7 @@ pygraphviz = "*"
 
 [tool.pixi.pypi-dependencies]
 gettsim_personas = {path = ".", editable = true}
+gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="wachstumschancengesetz"}
 kaleido = ">=1.0.0"
 pdbp = "*"
 pytest-cov = "*"
