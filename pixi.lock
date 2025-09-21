@@ -228,7 +228,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -447,7 +447,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -666,7 +666,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -891,7 +891,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -1146,7 +1146,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -1370,7 +1370,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -1594,7 +1594,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -1824,7 +1824,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -2084,7 +2084,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -2303,7 +2303,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -2522,7 +2522,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -2747,7 +2747,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -3002,7 +3002,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -3221,7 +3221,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -3440,7 +3440,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -3665,7 +3665,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -3920,7 +3920,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -4139,7 +4139,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -4358,7 +4358,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -4583,7 +4583,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/47/85/048b6f1779f0d46f594122b1c73e016500098560b570fd81c5b5578a4d47/dags-0.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f5/ee39c6e92acc742c052f137b47c210cd0a1b72dcd3f98495528bb4d27761/flatten_dict-0.4.2-py2.py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+      - pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
       - pypi: https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/58/6a/9166369a2f092bd286d24e6307de555d63616e8ddb373ebad2b5635ca4cd/ipywidgets-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/6a/ca128561b22b60bd5a0c4ea26649e68c8556b82bc70a0c396eebc977fe86/jupyterlab_widgets-3.0.15-py3-none-any.whl
@@ -5804,16 +5804,16 @@ packages:
   purls: []
   size: 26238
   timestamp: 1750744808182
-- pypi: git+https://github.com/ttsim-dev/gettsim?branch=wachstumschancengesetz#f5d1bad7e925b89cad4583799c1170c333e7a9b4
+- pypi: git+https://github.com/ttsim-dev/gettsim?branch=main#e4b1cdf58c5715df0aa5dd7c33879979e7039bfe
   name: gettsim
-  version: 1.1.dev31+gf5d1bad7e
+  version: 1.1.dev7+ge4b1cdf58
   requires_dist:
   - ttsim-backend>=1.1.0
   requires_python: '>=3.11'
 - pypi: ./
   name: gettsim-personas
-  version: 0.1.dev9+gc66128140
-  sha256: 35427fd38083427882d6720355713ccfa5dd14d6e322e3d9525214511120c0e0
+  version: 0.1.dev12+g625d7a29b.d20250921
+  sha256: 22dc5cf80462c0228707630ae883d0d1c26fc38f6bd86607f9a2a946869b5ad2
   requires_python: '>=3.11'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.86.0-hf516916_0.conda

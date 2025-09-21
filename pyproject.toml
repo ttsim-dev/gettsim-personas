@@ -92,7 +92,7 @@ pygraphviz = "*"
 
 [tool.pixi.pypi-dependencies]
 gettsim_personas = {path = ".", editable = true}
-gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="wachstumschancengesetz"}
+gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="main"}
 kaleido = ">=1.0.0"
 pdbp = "*"
 pytest-cov = "*"
