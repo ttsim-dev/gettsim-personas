@@ -71,22 +71,12 @@ def einnahmen__kapitalerträge_y() -> np.ndarray:
 
 
 @persona_input_element()
-def einnahmen__renten__gesetzliche_m() -> np.ndarray:
+def einkommensteuer__einkünfte__sonstige__rente__betrag_m() -> np.ndarray:
     return np.array([0, 0, 0])
 
 
 @persona_input_element()
-def einnahmen__renten__geförderte_private_vorsorge_m() -> np.ndarray:
-    return np.array([0, 0, 0])
-
-
-@persona_input_element()
-def einnahmen__renten__sonstige_private_vorsorge_m() -> np.ndarray:
-    return np.array([0, 0, 0])
-
-
-@persona_input_element()
-def einnahmen__renten__betriebliche_altersvorsorge_m() -> np.ndarray:
+def sozialversicherung__kranken__beitrag__bemessungsgrundlage_rente_m() -> np.ndarray:
     return np.array([0, 0, 0])
 
 
@@ -140,14 +130,6 @@ def einkommensteuer__abzüge__p_id_kinderbetreuungskostenträger() -> np.ndarray
 @persona_input_element()
 def einkommensteuer__gemeinsam_veranlagt() -> np.ndarray:
     return np.array([True, True, False])
-
-
-@persona_input_element()
-def sozialversicherung__rente__jahr_renteneintritt(
-    evaluation_date: datetime.date,
-    alter: np.ndarray,
-) -> np.ndarray:
-    return evaluation_date.year - alter + 65
 
 
 @persona_input_element()
