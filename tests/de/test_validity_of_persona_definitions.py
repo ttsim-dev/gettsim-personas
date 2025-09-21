@@ -25,7 +25,8 @@ def test_persona_inputs_does_not_contain_unnecessary_inputs(year, persona_class)
         include_warn_nodes=False,
     )
     input_qnames = dt.flatten_to_qnames(persona.input_data_tree)
-    assert not set(input_qnames) - set(root_nodes) - {"hh_id", "p_id"}
+    unnecessary_inputs = set(input_qnames) - set(root_nodes) - {"hh_id", "p_id"}
+    assert not unnecessary_inputs
 
 
 @pytest.mark.parametrize(

@@ -127,35 +127,18 @@ def einnahmen__kapitalerträge_y() -> np.ndarray:
     return np.array([0.0, 0.0, 0])
 
 
-@persona_input_element(start_date="2005-01-01")
-def einnahmen__renten__gesetzliche_m() -> np.ndarray:
-    return np.array([0, 0, 0])
-
-
-@persona_input_element(start_date="2005-01-01")
-def einnahmen__renten__geförderte_private_vorsorge_m() -> np.ndarray:
-    return np.array([0, 0, 0])
-
-
-@persona_input_element(start_date="2005-01-01")
-def einnahmen__renten__sonstige_private_vorsorge_m() -> np.ndarray:
+@persona_input_element()
+def einnahmen__renten__gesamt_m() -> np.ndarray:
     return np.array([0, 0, 0])
 
 
 @persona_input_element()
-def einnahmen__renten__alter_beginn_leistungsbezug_sonstige_private_vorsorge() -> (
-    np.ndarray
-):
-    return np.array([65, 65, 65])
-
-
-@persona_input_element()
-def einnahmen__renten__betriebliche_altersvorsorge_m() -> np.ndarray:
+def einkommensteuer__einkünfte__sonstige__rente__betrag_m() -> np.ndarray:
     return np.array([0, 0, 0])
 
 
 @persona_input_element()
-def einnahmen__renten__aus_berufsständischen_versicherungen_m() -> np.ndarray:
+def sozialversicherung__kranken__beitrag__bemessungsgrundlage_rente_m() -> np.ndarray:
     return np.array([0, 0, 0])
 
 
@@ -248,14 +231,6 @@ def sozialversicherung__pflege__beitrag__hat_kinder() -> np.ndarray:
 @persona_input_element(start_date="2005-01-01")
 def sozialversicherung__rente__bezieht_rente() -> np.ndarray:
     return np.array([False, False, False])
-
-
-@persona_input_element(start_date="2005-01-01")
-def sozialversicherung__rente__jahr_renteneintritt(
-    evaluation_date: datetime.date,
-    alter: np.ndarray,
-) -> np.ndarray:
-    return evaluation_date.year - alter + 65
 
 
 @persona_input_element(start_date="2005-01-01")
