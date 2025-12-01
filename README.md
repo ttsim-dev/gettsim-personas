@@ -23,4 +23,4 @@ If no existing persona corresponds to your use case, feel free to open an
 [make a contribution](https://gettsim.readthedocs.io/en/stable/gettsim_developer/how-to-contribute.html)!
 
 You can find a tutorial on how to use the personas in
-[GETTSIM's documentation](https://gettsim.readthedocs.io/en/stable/how_to_guides/personas.html).
+[GETTSIM's documentation](https://gettsim.readthedocs.io/en/stable/tutorials/personas.html).
