@@ -22,7 +22,7 @@ Couple1ChildInKarenzzeit = OrigPersonaOverTime(
     ),
 )
 
-Single = OrigPersonaOverTime(
+SingleAdult = OrigPersonaOverTime(
     path_to_persona_elements=Path(__file__).parent / "single.py",
     start_date=datetime.date(2005, 1, 1),
     error_if_not_implemented=(
