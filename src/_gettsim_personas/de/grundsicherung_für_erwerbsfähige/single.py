@@ -90,7 +90,6 @@ def einkommensteuer__einkünfte__sonstige__alle_weiteren_y() -> np.ndarray:
     return np.array([0])
 
 
-
 @persona_input_element(start_date="2005-01-01")
 def einnahmen__bruttolohn_m() -> np.ndarray:
     return np.array([1000])
@@ -136,15 +135,12 @@ def sozialversicherung__kranken__beitrag__bemessungsgrundlage_rente_m() -> np.nd
     return np.array([0])
 
 
-
-
 @persona_input_element(start_date="2005-01-01")
 def geburtsjahr(
     evaluation_date: datetime.date,
     alter: np.ndarray,
 ) -> np.ndarray:
     return evaluation_date.year - alter
-
 
 
 @persona_input_element(start_date="2005-01-01")
@@ -178,7 +174,6 @@ def sozialversicherung__arbeitslosen__monate_sozialversicherungspflichtiger_besc
     np.ndarray
 ):
     return np.array([0])
-
 
 
 @persona_input_element(start_date="2005-01-01")
@@ -246,7 +241,7 @@ def wohnort_ost_hh() -> np.ndarray:
     return np.array([False])
 
 
-#last added 
+# last added
 @persona_input_element(start_date="2005-01-01", end_date="2022-12-31")
 def arbeitslosengeld_2__p_id_einstandspartner() -> np.ndarray:
     return np.array([-1])
@@ -257,8 +252,6 @@ def bürgergeld__p_id_einstandspartner() -> np.ndarray:
     return np.array([-1])
 
 
-
-
 @persona_input_element(start_date="2005-01-01")
 def einkommensteuer__abzüge__kinderbetreuungskosten_m() -> np.ndarray:
     return np.array([0])
@@ -267,7 +260,6 @@ def einkommensteuer__abzüge__kinderbetreuungskosten_m() -> np.ndarray:
 @persona_input_element(start_date="2005-01-01")
 def einkommensteuer__abzüge__p_id_kinderbetreuungskostenträger() -> np.ndarray:
     return np.array([-1])
-
 
 
 @persona_input_element(start_date="2005-01-01")
@@ -300,8 +292,6 @@ def familie__p_id_elternteil_2() -> np.ndarray:
     return np.array([-1])
 
 
-
-
 @persona_input_element(start_date="2005-01-01")
 def kindergeld__in_ausbildung() -> np.ndarray:
     return np.array([False])
@@ -310,18 +300,6 @@ def kindergeld__in_ausbildung() -> np.ndarray:
 @persona_input_element(start_date="2005-01-01")
 def kindergeld__p_id_empfänger() -> np.ndarray:
     return np.array([-1])
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @persona_target_element(start_date="2005-01-01")
@@ -367,4 +345,3 @@ def bürgergeld__betrag_m_bg() -> None:
 @persona_target_element(start_date="2005-01-01")
 def wohngeld__betrag_m_wthh() -> None:
     pass
-
