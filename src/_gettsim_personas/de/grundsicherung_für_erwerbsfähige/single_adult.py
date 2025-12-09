@@ -9,13 +9,13 @@ from _gettsim_personas.persona_elements import (
     persona_target_element,
 )
 
+
 @persona_description(
-    description="""Persona to compute mean-tested transfers for low-income single adults. 
-        Income from pensions, parental leave benefits, child-related transfers, 
+    description="""Persona to compute mean-tested transfers for low-income single adults.
+        Income from pensions, parental leave benefits, child-related transfers,
         and subsistence benefits for the elderly are set to zero.""",
     start_date="2005-01-01",
 )
-
 def description() -> None:
     pass
 
@@ -24,10 +24,12 @@ def description() -> None:
 def p_id() -> np.ndarray:
     return np.array([0])
 
+
 # For this case hh_id would be similar to p_id since it's a single individual.
 @persona_input_element()
 def hh_id() -> np.ndarray:
     return np.array([0])
+
 
 @persona_input_element()
 def alter() -> np.ndarray:
@@ -118,6 +120,7 @@ def einkommensteuer__abzüge__beitrag_private_rentenversicherung_m() -> np.ndarr
 def sozialversicherung__kranken__beitrag__privat_versichert() -> np.ndarray:
     return np.array([False])
 
+
 @persona_input_element()
 def einkommensteuer__gemeinsam_veranlagt() -> np.ndarray:
     # Single -> keine Zusammenveranlagung
@@ -141,51 +144,63 @@ def familie__alleinerziehend() -> np.ndarray:
     # Single ohne Kinder -> nicht alleinerziehend im gettsim-Sinn
     return np.array([False])
 
+
 # Für Bürgergeld / alg 2
 @persona_input_element(start_date="2005-01-01", end_date="2022-12-31")
 def arbeitslosengeld_2__p_id_einstandspartner() -> np.ndarray:
     return np.array([-1])  # Single -> kein Partner
 
+
 @persona_input_element(start_date="2023-01-01")
 def bürgergeld__p_id_einstandspartner() -> np.ndarray:
     return np.array([-1])
+
 
 @persona_input_element(start_date="2023-01-01")
 def bürgergeld__bezug_im_vorjahr() -> np.ndarray:
     return np.array([False])
 
-# Wohngeld 
+
+# Wohngeld
 @persona_input_element()
 def wohnen__bewohnt_eigentum_hh() -> np.ndarray:
     return np.array([False])
+
 
 @persona_input_element()
 def wohnen__bruttokaltmiete_m_hh() -> np.ndarray:
     return np.array([450])  # Beispiel
 
+
 @persona_input_element()
 def wohnen__heizkosten_m_hh() -> np.ndarray:
     return np.array([50])
+
 
 @persona_input_element()
 def wohnen__wohnfläche_hh() -> np.ndarray:
     return np.array([45])
 
+
 @persona_input_element(start_date="2005-01-01", end_date="2008-12-31")
 def wohnen__baujahr_immobilie_hh() -> np.ndarray:
     return np.array([2000])
+
 
 @persona_input_element()
 def wohngeld__mietstufe_hh() -> np.ndarray:
     return np.array([3])  # Beispiel-Mietstufe
 
+
 @persona_input_element()
 def vermögen() -> np.ndarray:
     return np.array([0])
 
+
 @persona_input_element()
 def unterhalt__tatsächlich_erhaltener_betrag_m() -> np.ndarray:
     return np.array([0])
+
 
 @persona_input_element()
 def unterhaltsvorschuss__betrag_m() -> np.ndarray:
@@ -196,35 +211,48 @@ def unterhaltsvorschuss__betrag_m() -> np.ndarray:
 def sozialversicherung__arbeitslosen__arbeitssuchend() -> np.ndarray:
     return np.array([False])
 
-@persona_input_element()
-def sozialversicherung__arbeitslosen__mean_nettoeinkommen_in_12_monaten_vor_arbeitslosigkeit_m() -> np.ndarray:
-    return np.array([0])
 
 @persona_input_element()
-def sozialversicherung__arbeitslosen__monate_beitragspflichtig_versichert_in_letzten_30_monaten() -> np.ndarray:
+def sozialversicherung__arbeitslosen__mean_nettoeinkommen_in_12_monaten_vor_arbeitslosigkeit_m() -> (
+    np.ndarray
+):
     return np.array([0])
 
-@persona_input_element()
-def sozialversicherung__arbeitslosen__monate_durchgängigen_bezugs_von_arbeitslosengeld() -> np.ndarray:
-    return np.array([0])
 
 @persona_input_element()
-def sozialversicherung__arbeitslosen__monate_sozialversicherungspflichtiger_beschäftigung_in_letzten_5_jahren() -> np.ndarray:
+def sozialversicherung__arbeitslosen__monate_beitragspflichtig_versichert_in_letzten_30_monaten() -> (
+    np.ndarray
+):
     return np.array([0])
+
+
+@persona_input_element()
+def sozialversicherung__arbeitslosen__monate_durchgängigen_bezugs_von_arbeitslosengeld() -> (
+    np.ndarray
+):
+    return np.array([0])
+
+
+@persona_input_element()
+def sozialversicherung__arbeitslosen__monate_sozialversicherungspflichtiger_beschäftigung_in_letzten_5_jahren() -> (
+    np.ndarray
+):
+    return np.array([0])
+
 
 @persona_input_element()
 def elterngeld__betrag_m() -> np.ndarray:
     return np.array([0])
 
+
 @persona_input_element()
 def kindergeld__in_ausbildung() -> np.ndarray:
     return np.array([False])
 
+
 @persona_input_element()
 def kindergeld__p_id_empfänger() -> np.ndarray:
     return np.array([-1])
-
-
 
 
 # Target columns
@@ -252,20 +280,22 @@ def sozialversicherung__rente__beitrag__betrag_versicherter_m() -> None:
 def sozialversicherung__arbeitslosen__beitrag__betrag_versicherter_m() -> None:
     return None
 
+
 @persona_target_element()
 def sozialversicherung__arbeitslosen__betrag_m() -> None:
     pass
+
 
 @persona_target_element(start_date="2005-01-01", end_date="2022-12-31")
 def arbeitslosengeld_2__betrag_m_bg() -> None:
     pass
 
+
 @persona_target_element(start_date="2023-01-01")
 def bürgergeld__betrag_m_bg() -> None:
     pass
 
+
 @persona_target_element()
 def wohngeld__betrag_m_wthh() -> None:
     pass
-
-
