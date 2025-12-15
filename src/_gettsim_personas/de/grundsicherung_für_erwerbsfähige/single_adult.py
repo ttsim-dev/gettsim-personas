@@ -155,7 +155,6 @@ def bürgergeld__bezug_im_vorjahr() -> np.ndarray:
     return np.array([False])
 
 
-
 @persona_input_element()
 def wohnen__bewohnt_eigentum_hh() -> np.ndarray:
     return np.array([False])
@@ -163,7 +162,7 @@ def wohnen__bewohnt_eigentum_hh() -> np.ndarray:
 
 @persona_input_element()
 def wohnen__bruttokaltmiete_m_hh() -> np.ndarray:
-    return np.array([450])  
+    return np.array([450])
 
 
 @persona_input_element()
@@ -183,7 +182,7 @@ def wohnen__baujahr_immobilie_hh() -> np.ndarray:
 
 @persona_input_element()
 def wohngeld__mietstufe_hh() -> np.ndarray:
-    return np.array([3])  
+    return np.array([3])
 
 
 @persona_input_element()
@@ -247,7 +246,6 @@ def kindergeld__in_ausbildung() -> np.ndarray:
 @persona_input_element()
 def kindergeld__p_id_empfänger() -> np.ndarray:
     return np.array([-1])
-
 
 
 @persona_target_element()
