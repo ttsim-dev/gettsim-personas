@@ -22,5 +22,13 @@ Couple1ChildInKarenzzeit = OrigPersonaOverTime(
     ),
 )
 
+SingleAdult = OrigPersonaOverTime(
+    path_to_persona_elements=Path(__file__).parent / "single_adult.py",
+    start_date=datetime.date(2005, 1, 1),
+    error_if_not_implemented=(
+        "These personas are available from 2005 because basic income support is not "
+        "implemented in GETTSIM before 2005."
+    ),
+)
 
-__all__ = ["Couple1Child", "Couple1ChildInKarenzzeit"]
+__all__ = ["Couple1Child", "Couple1ChildInKarenzzeit", "SingleAdult"]
