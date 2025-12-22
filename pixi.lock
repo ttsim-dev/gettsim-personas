@@ -6085,8 +6085,8 @@ packages:
   requires_python: '>=3.11'
 - pypi: ./
   name: gettsim-personas
-  version: 0.1.dev16+g886e12ae3.d20251222
-  sha256: 6006af69fb5ae324444aeb7d944b363566b73eabe7cde039a51dc5948bd242f7
+  version: 0.1.dev17+g868c1461e.d20251222
+  sha256: d1ed0a46b3125ca9dccc85a950b8684d4567c70cdd6e47e29274c445fb5a116f
   requires_python: '>=3.11'
 - conda: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.86.2-hf516916_1.conda
   sha256: b98cee0297f90cdbcb27ac61d12c346acc8cff432ffca33a8cffdfd8152f24b8
