@@ -263,7 +263,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f1/b392952200f3393bb06fbc4dd975fc63a6843261705839355560b7264eb2/simplejson-3.20.2-cp313-cp313-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       osx-64:
@@ -480,7 +480,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/35/28/5a4b8f3483fbfb68f3f460bc002cef3a5735ef30950e7c4adce9c8da15c7/simplejson-3.20.2-cp313-cp313-macosx_10_13_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       osx-arm64:
@@ -697,7 +697,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/7a/4d/30dfef83b9ac48afae1cf1ab19c2867e27b8d22b5d9f8ca7ce5a0a157d8c/simplejson-3.20.2-cp313-cp313-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       win-64:
@@ -921,7 +921,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/87/10/d42ad61230436735c68af1120622b28a782877146a83d714da7b6a2a1c4e/simplejson-3.20.2-cp313-cp313-win_amd64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
   py311:
@@ -1187,7 +1187,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f1/b392952200f3393bb06fbc4dd975fc63a6843261705839355560b7264eb2/simplejson-3.20.2-cp313-cp313-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       osx-64:
@@ -1404,7 +1404,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/35/28/5a4b8f3483fbfb68f3f460bc002cef3a5735ef30950e7c4adce9c8da15c7/simplejson-3.20.2-cp313-cp313-macosx_10_13_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       osx-arm64:
@@ -1621,7 +1621,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/7a/4d/30dfef83b9ac48afae1cf1ab19c2867e27b8d22b5d9f8ca7ce5a0a157d8c/simplejson-3.20.2-cp313-cp313-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       win-64:
@@ -1845,7 +1845,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/87/10/d42ad61230436735c68af1120622b28a782877146a83d714da7b6a2a1c4e/simplejson-3.20.2-cp313-cp313-win_amd64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
   py312:
@@ -2111,7 +2111,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f1/b392952200f3393bb06fbc4dd975fc63a6843261705839355560b7264eb2/simplejson-3.20.2-cp313-cp313-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       osx-64:
@@ -2328,7 +2328,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/35/28/5a4b8f3483fbfb68f3f460bc002cef3a5735ef30950e7c4adce9c8da15c7/simplejson-3.20.2-cp313-cp313-macosx_10_13_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       osx-arm64:
@@ -2545,7 +2545,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/7a/4d/30dfef83b9ac48afae1cf1ab19c2867e27b8d22b5d9f8ca7ce5a0a157d8c/simplejson-3.20.2-cp313-cp313-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       win-64:
@@ -2769,7 +2769,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/87/10/d42ad61230436735c68af1120622b28a782877146a83d714da7b6a2a1c4e/simplejson-3.20.2-cp313-cp313-win_amd64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
   py313:
@@ -3035,7 +3035,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f1/b392952200f3393bb06fbc4dd975fc63a6843261705839355560b7264eb2/simplejson-3.20.2-cp313-cp313-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       osx-64:
@@ -3252,7 +3252,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/35/28/5a4b8f3483fbfb68f3f460bc002cef3a5735ef30950e7c4adce9c8da15c7/simplejson-3.20.2-cp313-cp313-macosx_10_13_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       osx-arm64:
@@ -3469,7 +3469,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/7a/4d/30dfef83b9ac48afae1cf1ab19c2867e27b8d22b5d9f8ca7ce5a0a157d8c/simplejson-3.20.2-cp313-cp313-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
       win-64:
@@ -3693,7 +3693,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/87/10/d42ad61230436735c68af1120622b28a782877146a83d714da7b6a2a1c4e/simplejson-3.20.2-cp313-cp313-win_amd64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl
       - pypi: ./
   ty:
@@ -3959,7 +3959,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/f1/b392952200f3393bb06fbc4dd975fc63a6843261705839355560b7264eb2/simplejson-3.20.2-cp313-cp313-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/27/21/1cbcd0d3b1182172f099e88218137943e0970603492fb10c7c9342369d9a/ty-0.0.5-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/e7/c1/56ef16bf5dcd255155cc736d276efa6ae0a5c26fd685e28f0412a4013c01/types_pytz-2025.2.0.20251108-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bd/e0/1eed384f02555dde685fff1a1ac805c1c7dcb6dd019c916fe659b1c1f9ec/types_pyyaml-6.0.12.20250915-py3-none-any.whl
@@ -4179,7 +4179,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/35/28/5a4b8f3483fbfb68f3f460bc002cef3a5735ef30950e7c4adce9c8da15c7/simplejson-3.20.2-cp313-cp313-macosx_10_13_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/ab/f9/b37b77c03396bd779c1397dae4279b7ad79315e005b3412feed8812a4256/ty-0.0.5-py3-none-macosx_10_12_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/e7/c1/56ef16bf5dcd255155cc736d276efa6ae0a5c26fd685e28f0412a4013c01/types_pytz-2025.2.0.20251108-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bd/e0/1eed384f02555dde685fff1a1ac805c1c7dcb6dd019c916fe659b1c1f9ec/types_pyyaml-6.0.12.20250915-py3-none-any.whl
@@ -4399,7 +4399,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/7a/4d/30dfef83b9ac48afae1cf1ab19c2867e27b8d22b5d9f8ca7ce5a0a157d8c/simplejson-3.20.2-cp313-cp313-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/7d/70/4e75c11903b0e986c0203040472627cb61d6a709e1797fb08cdf9d565743/ty-0.0.5-py3-none-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/e7/c1/56ef16bf5dcd255155cc736d276efa6ae0a5c26fd685e28f0412a4013c01/types_pytz-2025.2.0.20251108-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bd/e0/1eed384f02555dde685fff1a1ac805c1c7dcb6dd019c916fe659b1c1f9ec/types_pyyaml-6.0.12.20250915-py3-none-any.whl
@@ -4626,7 +4626,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/fa/b6/3127540ecdf1464a00e5a01ee60a1b09175f6913f0644ac748494d9c4b21/pytest_timeout-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/87/10/d42ad61230436735c68af1120622b28a782877146a83d714da7b6a2a1c4e/simplejson-3.20.2-cp313-cp313-win_amd64.whl
       - pypi: https://files.pythonhosted.org/packages/65/44/bb509c3d2c0b5a87e7a5af1d5917a402a32ff026f777a6d7cb6990746cbb/tabcompleter-1.4.0-py3-none-any.whl
-      - pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+      - pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
       - pypi: https://files.pythonhosted.org/packages/68/b6/05c35f6dea29122e54af0e9f8dfedd0a100c721affc8cc801ebe2bc2ed13/ty-0.0.5-py3-none-win_amd64.whl
       - pypi: https://files.pythonhosted.org/packages/e7/c1/56ef16bf5dcd255155cc736d276efa6ae0a5c26fd685e28f0412a4013c01/types_pytz-2025.2.0.20251108-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bd/e0/1eed384f02555dde685fff1a1ac805c1c7dcb6dd019c916fe659b1c1f9ec/types_pyyaml-6.0.12.20250915-py3-none-any.whl
@@ -6085,8 +6085,8 @@ packages:
   requires_python: '>=3.11'
 - pypi: ./
   name: gettsim-personas
-  version: 0.1.dev15+gc700768fd.d20251222
-  sha256: e1290c30d8212031d003393119ab84cfcc5589ec4c7bf3d32c8f089a171526fe
+  version: 0.1.dev16+g886e12ae3.d20251222
+  sha256: 6006af69fb5ae324444aeb7d944b363566b73eabe7cde039a51dc5948bd242f7
   requires_python: '>=3.11'
 - conda: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.86.2-hf516916_1.conda
   sha256: b98cee0297f90cdbcb27ac61d12c346acc8cff432ffca33a8cffdfd8152f24b8
@@ -11973,7 +11973,7 @@ packages:
   - pkg:pypi/traitlets?source=hash-mapping
   size: 110051
   timestamp: 1733367480074
-- pypi: git+https://github.com/ttsim-dev/ttsim?branch=ty#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
+- pypi: git+https://github.com/ttsim-dev/ttsim#851b8e1d8e99d45020a0ef5547cce6fbf96a5ac6
   name: ttsim-backend
   version: 1.1.1.dev37+g851b8e1d8
   requires_dist:

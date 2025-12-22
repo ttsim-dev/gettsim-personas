@@ -1,5 +1,6 @@
 import datetime
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -135,8 +136,8 @@ def test_sample_persona_has_expected_active_persona_elements(
     policy_date, expected_tt_qnames
 ):
     active_tt_qnames = {
-        el.orig_name
-        for el in SamplePersona.active_elements(policy_date)  # ty: ignore[possibly-missing-attribute]
+        el.orig_name  # ty: ignore[possibly-missing-attribute]
+        for el in SamplePersona.active_elements(policy_date)
     }
     assert active_tt_qnames == expected_tt_qnames
 
@@ -152,7 +153,7 @@ def test_fail_if_active_tt_qnames_overlap():
                 another_input_element_always_active,
                 time_dependent_persona_input_element_active_since_2010,
             ],
-            path_to_persona_elements="",  # ty: ignore[invalid-argument-type]
+            path_to_persona_elements=Path.cwd(),
         )
 
 
@@ -167,7 +168,7 @@ def test_do_not_fail_if_active_qnames_do_not_overlap():
             input_element_always_active,
             time_dependent_persona_input_element_active_since_2010,
         ],
-        path_to_persona_elements="",  # ty: ignore[invalid-argument-type]
+        path_to_persona_elements=Path.cwd(),
     )
 
 
@@ -179,7 +180,7 @@ def test_fail_if_multiple_descriptions_are_active():
                 another_active_description,
                 input_element_always_active,
             ],
-            path_to_persona_elements="",  # ty: ignore[invalid-argument-type]
+            path_to_persona_elements=Path.cwd(),
         )
 
 
@@ -189,7 +190,7 @@ def test_do_not_fail_if_only_one_description_is_active():
             active_description,
             input_element_always_active,
         ],
-        path_to_persona_elements="",  # ty: ignore[invalid-argument-type]
+        path_to_persona_elements=Path.cwd(),
     )
 
 
