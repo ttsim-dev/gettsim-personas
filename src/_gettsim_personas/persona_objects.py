@@ -406,10 +406,13 @@ def _fail_if_active_tt_qnames_overlap(
         if isinstance(el, PersonaDescription):
             # Should be unique, see _fail_if_not_exactly_one_description_is_active
             continue
-        if el.tt_qname in all_qnames:  # ty: ignore[possibly-missing-attribute]
-            overlapping_qnames.add(el.tt_qname)  # ty: ignore[possibly-missing-attribute]
-        else:
-            all_qnames.add(el.tt_qname)  # ty: ignore[possibly-missing-attribute]
+        if isinstance(
+            el, (PersonaInputElement, PersonaTargetElement, PersonaPIDElement)
+        ):
+            if el.tt_qname in all_qnames:
+                overlapping_qnames.add(el.tt_qname)
+            else:
+                all_qnames.add(el.tt_qname)
 
     if overlapping_qnames:
         msg = (

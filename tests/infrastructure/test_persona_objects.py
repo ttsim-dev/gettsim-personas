@@ -66,7 +66,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "hh_id",
         "einnahmen__bruttolohn_m",
     }
-    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}
+    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}  # ty: ignore[possibly-missing-attribute]
     assert expected_orig_names == orig_names
 
     expected_tt_qnames = {
