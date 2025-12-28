@@ -3,7 +3,7 @@ from __future__ import annotations
 import inspect
 from dataclasses import dataclass, fields, make_dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TYPE_CHECKING, Any, TypeAlias, cast
 
 import dags
 import dags.tree as dt
@@ -191,7 +191,9 @@ class OrigPersonaOverTime:
             description=active_description(active_elements).description,
             policy_date=policy_date,
             evaluation_date=evaluation_date,
-            input_data_tree=dt.unflatten_from_qnames(qname_input_data),
+            input_data_tree=dt.unflatten_from_qnames(
+                cast("dict[str, Any]", qname_input_data)
+            ),
             tt_targets_tree={
                 "hh_id": None,
                 **dt.unflatten_from_qnames(active_tt_targets(active_elements)),
@@ -260,7 +262,7 @@ def active_persona_input_elements(
 
 def active_tt_targets(
     active_elements: list[PersonaElement],
-) -> dict[str, PersonaTargetElement]:
+) -> dict[str, None]:
     """Active target elements of a persona."""
     return {
         s.tt_qname: None for s in active_elements if isinstance(s, PersonaTargetElement)
@@ -291,7 +293,7 @@ def make_linspace_grid_class(size: int):
 def upsert_with_bruttolohn_m_linspace_grid(
     qname_input_data: dict[str, np.ndarray],
     bruttolohn_m_linspace_grid: LinspaceGrid,
-) -> dict[str, np.ndarray]:
+) -> NestedData:
     """Upsert the bruttolohn_m_linspace_grid into the qname_input_data."""
     linspace_by_p_id = {}
     for p_id in bruttolohn_m_linspace_grid.__dict__:
