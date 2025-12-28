@@ -66,7 +66,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "hh_id",
         "einnahmen__bruttolohn_m",
     }
-    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}  # ty: ignore[possibly-missing-attribute]
+    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}
     assert expected_orig_names == orig_names
 
     expected_tt_qnames = {
@@ -227,7 +227,9 @@ def test_bruttolohn_m_linspace_grid_invalid_wrong_type():
         match=r"The LinspaceGrid has not been instantiated correctly.",
     ):
         _fail_if_bruttolohn_m_linspace_grid_is_invalid(
-            linspace_grid={"a": 1},  # ty: ignore[invalid-argument-type]
+            linspace_grid={
+                "n_points": 10,
+            },  # ty: ignore[invalid-argument-type]
             p_id_array=np.array([1, 2, 3]),
         )
 
@@ -244,7 +246,7 @@ def test_bruttolohn_m_linspace_grid_invalid_wrong_number_of_p_ids():
         match="The number of p_ids in the linspace grid must match the number of p_ids",
     ):
         _fail_if_bruttolohn_m_linspace_grid_is_invalid(
-            linspace_grid=InvalidLinspaceGrid(p0=1, p1=2, n_points=10),  # ty: ignore[invalid-argument-type]
+            linspace_grid=InvalidLinspaceGrid(p0=1, p1=2, n_points=10),
             p_id_array=np.array([0, 1, 2, 3]),
         )
 

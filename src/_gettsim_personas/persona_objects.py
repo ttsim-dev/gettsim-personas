@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import inspect
-from dataclasses import dataclass, fields, make_dataclass
+from dataclasses import dataclass, field, fields, make_dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, TypeAlias, cast
+from typing import TYPE_CHECKING, Any, Protocol, TypeAlias, cast
 
 import dags
 import dags.tree as dt
@@ -29,7 +29,19 @@ if TYPE_CHECKING:
 
     from _gettsim_personas.typing import DashedISOString, NestedData, NestedStrings
 
-LinspaceGrid: TypeAlias = type
+
+class LinspaceGridProtocol(Protocol):
+    n_points: int
+
+
+@dataclass(frozen=True)
+class LinspaceRange:
+    bottom: float
+    top: float
+
+
+LinspaceParameter: TypeAlias = LinspaceRange | float | int
+LinspaceRangeClass: TypeAlias = LinspaceRange
 
 
 @dataclass(frozen=True)
@@ -112,6 +124,8 @@ class OrigPersonaOverTime:
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
+    LinspaceGrid: type[LinspaceGridProtocol] = field(init=False)
+    LinspaceRange: type[LinspaceRangeClass] = field(init=False)
 
     def __post_init__(self):
         p_id = next(
@@ -125,7 +139,7 @@ class OrigPersonaOverTime:
         *,
         policy_date_str: DashedISOString,
         evaluation_date_str: DashedISOString | None = None,
-        bruttolohn_m_linspace_grid: LinspaceGrid | None = None,
+        bruttolohn_m_linspace_grid: LinspaceGridProtocol | None = None,
     ) -> Persona:
         """An instance of persona for a given policy and evaluation date.
 
@@ -168,7 +182,7 @@ class OrigPersonaOverTime:
         active_elements = self.active_elements(policy_date)
         qname_input_data = _get_qname_input_data(
             evaluation_date=evaluation_date,
-            persona_input_elements=active_persona_input_elements(active_elements),  # ty: ignore[invalid-argument-type]
+            persona_input_elements=active_persona_input_elements(active_elements),
         )
         _fail_if_qname_input_data_differs_in_length_from_p_id_array(qname_input_data)
 
@@ -223,11 +237,11 @@ class OrigPersonaOverTime:
             elif isinstance(el, PersonaPIDElement):
                 active_elements.append(el)
         _fail_if_active_tt_qnames_overlap(
-            active_elements=active_elements,  # ty: ignore[invalid-argument-type]
+            active_elements=active_elements,
             path_to_persona_elements=self.path_to_persona_elements,
         )
         _fail_if_not_exactly_one_description_is_active(
-            active_elements=active_elements,  # ty: ignore[invalid-argument-type]
+            active_elements=active_elements,
             path_to_persona_elements=self.path_to_persona_elements,
         )
         return active_elements
@@ -238,15 +252,6 @@ class OrigPersonaOverTime:
     ) -> None:
         if not (self.start_date <= policy_date <= self.end_date):
             raise NotImplementedError(self.error_if_not_implemented)
-
-
-@dataclass(frozen=True)
-class LinspaceRange:
-    bottom: float
-    top: float
-
-
-LinspaceParameter: TypeAlias = LinspaceRange | float | int
 
 
 def active_persona_input_elements(
@@ -292,7 +297,7 @@ def make_linspace_grid_class(size: int):
 
 def upsert_with_bruttolohn_m_linspace_grid(
     qname_input_data: dict[str, np.ndarray],
-    bruttolohn_m_linspace_grid: LinspaceGrid,
+    bruttolohn_m_linspace_grid: LinspaceGridProtocol,
 ) -> NestedData:
     """Upsert the bruttolohn_m_linspace_grid into the qname_input_data."""
     linspace_by_p_id = {}
@@ -307,12 +312,12 @@ def upsert_with_bruttolohn_m_linspace_grid(
             linspace_by_p_id[p_id] = np.linspace(
                 param_value.bottom,
                 param_value.top,
-                bruttolohn_m_linspace_grid.n_points,  # ty: ignore[unresolved-attribute]
+                bruttolohn_m_linspace_grid.n_points,
             )
         else:
             # Create a constant array with the same value
             linspace_by_p_id[p_id] = np.full(
-                bruttolohn_m_linspace_grid.n_points,  # ty: ignore[unresolved-attribute]
+                bruttolohn_m_linspace_grid.n_points,
                 float(param_value),
             )
 
@@ -333,7 +338,7 @@ def upsert_with_bruttolohn_m_linspace_grid(
 
 def _get_qname_input_data(
     evaluation_date: datetime.date,
-    persona_input_elements: dict[str, PersonaInputElement],
+    persona_input_elements: dict[str, PersonaInputElement | PersonaPIDElement],
 ) -> dict[str, np.ndarray]:
     f = dags.concatenate_functions(
         functions=persona_input_elements,  # ty: ignore[invalid-argument-type]
@@ -378,7 +383,7 @@ def _fail_if_not_exactly_one_p_id_array_in_persona_elements(
 
 
 def _fail_if_not_exactly_one_description_is_active(
-    active_elements: list[TimeDependentPersonaElement], path_to_persona_elements: Path
+    active_elements: list[PersonaElement], path_to_persona_elements: Path
 ) -> None:
     descriptions = [s for s in active_elements if isinstance(s, PersonaDescription)]
     if len(descriptions) > 1:
@@ -393,7 +398,7 @@ def _fail_if_not_exactly_one_description_is_active(
 
 
 def _fail_if_active_tt_qnames_overlap(
-    active_elements: list[TimeDependentPersonaElement], path_to_persona_elements: Path
+    active_elements: list[PersonaElement], path_to_persona_elements: Path
 ) -> None:
     all_qnames: set[str] = set()
     overlapping_qnames: set[str] = set()
@@ -401,10 +406,11 @@ def _fail_if_active_tt_qnames_overlap(
         if isinstance(el, PersonaDescription):
             # Should be unique, see _fail_if_not_exactly_one_description_is_active
             continue
-        if el.tt_qname in all_qnames:  # ty: ignore[unresolved-attribute]
-            overlapping_qnames.add(el.tt_qname)  # ty: ignore[unresolved-attribute]
+        if el.tt_qname in all_qnames:  # ty: ignore[possibly-missing-attribute]
+            overlapping_qnames.add(el.tt_qname)  # ty: ignore[possibly-missing-attribute]
         else:
-            all_qnames.add(el.tt_qname)  # ty: ignore[unresolved-attribute]
+            all_qnames.add(el.tt_qname)  # ty: ignore[possibly-missing-attribute]
+
     if overlapping_qnames:
         msg = (
             f"Active qnames overlap at {path_to_persona_elements!s}. "
@@ -414,7 +420,7 @@ def _fail_if_active_tt_qnames_overlap(
 
 
 def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
-    linspace_grid: LinspaceGrid,
+    linspace_grid: LinspaceGridProtocol,
     p_id_array: np.ndarray,
 ) -> None:
     """Fail if the bruttolohn_m_linspace_spec is invalid."""
@@ -422,7 +428,9 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
     # correct type directly.
     try:
         pids_in_linspace_grid = [
-            f.name for f in fields(linspace_grid) if f.name != "n_points"
+            f.name
+            for f in fields(linspace_grid)  # ty: ignore[invalid-argument-type]
+            if f.name != "n_points"
         ]
     except Exception as err:
         msg = (
@@ -431,7 +439,8 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
         )
         raise TypeError(msg) from err
     if not pids_in_linspace_grid or "n_points" not in [
-        f.name for f in fields(linspace_grid)
+        f.name
+        for f in fields(linspace_grid)  # ty: ignore[invalid-argument-type]
     ]:
         msg = (
             "The LinspaceGrid has not been instantiated correctly. "
@@ -450,6 +459,7 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
         raise ValueError(msg)
     for p_id in pids_in_linspace_grid:
         param_value = linspace_grid.__getattribute__(p_id)
+
         if isinstance(param_value, LinspaceRange):
             if param_value.bottom > param_value.top:
                 msg = (
@@ -462,7 +472,8 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
                 "value."
             )
             raise TypeError(msg)
-    if linspace_grid.n_points <= 0:  # ty: ignore[unresolved-attribute]
+
+    if linspace_grid.n_points <= 0:
         msg = "The number of points in the linspace must be greater than 0."
         raise ValueError(msg)
 
