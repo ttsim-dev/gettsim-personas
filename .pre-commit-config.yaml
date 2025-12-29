@@ -2,7 +2,9 @@
 repos:
   - repo: meta
     hooks:
+      # - id: check-hooks-apply  # Leave nbstripout in here.
       - id: check-useless-excludes
+      # - id: identity  # Prints all files passed to pre-commits. Debugging.
   - repo: https://github.com/lyz-code/yamlfix
     rev: 1.19.1
     hooks:
@@ -11,7 +13,8 @@ repos:
     rev: v6.0.0
     hooks:
       - id: check-added-large-files
-        args: [--maxkb=1000]
+        args:
+          - --maxkb=10000
       - id: check-case-conflict
       - id: check-merge-conflict
       - id: check-vcs-permalinks
@@ -20,11 +23,17 @@ repos:
       - id: debug-statements
       - id: end-of-file-fixer
       - id: fix-byte-order-marker
-        types: [text]
+        types:
+          - text
       - id: forbid-submodules
       - id: mixed-line-ending
-        args: [--fix=lf]
+        args:
+          - --fix=lf
         description: Forces to replace line ending by the UNIX 'lf' character.
+      - id: no-commit-to-branch
+        args:
+          - --branch
+          - main
       - id: trailing-whitespace
       - id: check-ast
       - id: check-docstring-first
@@ -35,11 +44,16 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.10
     hooks:
-      - id: ruff
-        types_or: [python, jupyter]
-        args: [--fix]
+      - id: ruff-check
+        types_or:
+          - python
+          - jupyter
+        args:
+          - --fix
       - id: ruff-format
-        types_or: [python, jupyter]
+        types_or:
+          - python
+          - jupyter
   - repo: https://github.com/kynan/nbstripout
     rev: 0.8.2
     hooks:
@@ -51,8 +65,20 @@ repos:
     rev: 1.0.0
     hooks:
       - id: mdformat
-        additional_dependencies: [mdformat-gfm, mdformat-gfm-alerts, mdformat-ruff]
-        args: [--wrap, '88']
+        additional_dependencies:
+          - mdformat-gfm
+          - mdformat-ruff
+        args:
+          - --wrap
+          - '88'
         files: (README\.md)
+  # - repo: local
+  #   hooks:
+  #     - id: ty
+  #       name: ty
+  #       entry: ty
+  #       language: system
+  #       types: [python]
+  #       args: [--config-file=pyproject.toml]
 ci:
   autoupdate_schedule: monthly

@@ -194,13 +194,18 @@ useless-overload-body = "error"
 
 
 # ======================================================================================
-# Miscellaneous tools configuration
+# pytest configuration
 # ======================================================================================
 
 
 [tool.pytest.ini_options]
-addopts = "--pdbcls=pdbp:Pdb"
+addopts = ["--pdbcls=pdbp:Pdb"]
+
+# ======================================================================================
+# yamlfix configuration
+# ======================================================================================
 
 [tool.yamlfix]
 line_length = 88
+sequence_style = "block_style"
 none_representation = "null"
