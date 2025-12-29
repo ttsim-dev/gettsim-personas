@@ -11,6 +11,7 @@ from _gettsim_personas.persona_elements import (
     persona_input_element,
 )
 from _gettsim_personas.persona_objects import (
+    LinspaceGridProtocol,
     _fail_if_active_tt_qnames_overlap,
     _fail_if_bruttolohn_m_linspace_grid_is_invalid,
     _fail_if_not_exactly_one_description_is_active,
@@ -236,7 +237,7 @@ def test_bruttolohn_m_linspace_grid_invalid_wrong_type():
 
 def test_bruttolohn_m_linspace_grid_invalid_wrong_number_of_p_ids():
     @dataclass(frozen=True)
-    class InvalidLinspaceGrid:
+    class InvalidLinspaceGrid(LinspaceGridProtocol):
         p0: int
         p1: int
         n_points: int
@@ -306,7 +307,7 @@ def test_bruttolohn_m_is_upserted_if_linspace_grid_is_provided():
         bruttolohn_m_linspace_grid=SamplePersona.LinspaceGrid(
             p0=SamplePersona.LinspaceRange(bottom=0, top=1),
             p1=SamplePersona.LinspaceRange(bottom=0, top=1),
-            p2=SamplePersona.LinspaceRange(bottom=0, top=0),
+            p2=0,
             n_points=2,
         ),
     )
@@ -348,7 +349,7 @@ def test_tt_targets_include_hh_id_if_multiple_households_in_persona():
         bruttolohn_m_linspace_grid=SamplePersona.LinspaceGrid(
             p0=SamplePersona.LinspaceRange(bottom=0, top=1),
             p1=SamplePersona.LinspaceRange(bottom=0, top=1),
-            p2=SamplePersona.LinspaceRange(bottom=0, top=0),
+            p2=0,
             n_points=2,
         ),
     )

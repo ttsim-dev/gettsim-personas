@@ -11,7 +11,7 @@ def test_end_to_end():
         bruttolohn_m_linspace_grid=Couple1Child.LinspaceGrid(
             p0=Couple1Child.LinspaceRange(bottom=0, top=5000),
             p1=Couple1Child.LinspaceRange(bottom=0, top=5000),
-            p2=Couple1Child.LinspaceRange(bottom=0, top=0),
+            p2=0,
             n_points=10,
         ),
     )

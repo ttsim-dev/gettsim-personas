@@ -3,7 +3,7 @@ from __future__ import annotations
 import inspect
 from dataclasses import dataclass, field, fields, make_dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Protocol, TypeAlias, cast
+from typing import TYPE_CHECKING, Any, Protocol, cast
 
 import dags
 import dags.tree as dt
@@ -30,18 +30,21 @@ if TYPE_CHECKING:
     from _gettsim_personas.typing import DashedISOString, NestedData, NestedStrings
 
 
-class LinspaceGridProtocol(Protocol):
-    n_points: int
-
-
 @dataclass(frozen=True)
 class LinspaceRange:
     bottom: float
     top: float
 
 
-LinspaceParameter: TypeAlias = LinspaceRange | float | int
-LinspaceRangeClass: TypeAlias = LinspaceRange
+class LinspaceGridProtocol(Protocol):
+    """Protocol for a dynamically created linspace grid.
+
+    p0 exists for sure, more p_ids will be created as p1, p2, ..., pN depending on the
+    number of members in the persona.
+    """
+
+    n_points: int
+    p0: LinspaceRange | float | int
 
 
 @dataclass(frozen=True)
@@ -125,13 +128,13 @@ class OrigPersonaOverTime:
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
     LinspaceGrid: type[LinspaceGridProtocol] = field(init=False)
-    LinspaceRange: type[LinspaceRangeClass] = field(init=False)
+    LinspaceRange: LinspaceRange = field(init=False)
 
     def __post_init__(self):
         p_id = next(
             el for el in self.orig_elements() if isinstance(el, PersonaPIDElement)
         )
-        self.LinspaceGrid = make_linspace_grid_class(p_id.persona_size)
+        self.LinspaceGrid = _make_linspace_grid_class(p_id.persona_size)
         self.LinspaceRange = LinspaceRange
 
     def __call__(
@@ -279,20 +282,24 @@ def active_description(active_elements: list[PersonaElement]) -> PersonaDescript
     return next(s for s in active_elements if isinstance(s, PersonaDescription))
 
 
-def make_linspace_grid_class(size: int):
-    """Dynamically create a LinspaceGrid dataclass for the given persona size.
+def _make_linspace_grid_class(n_members: int):
+    """Create a LinspaceGrid dataclass for a persona of size *n_members*.
 
     Example:
-        LinspaceGrid = make_linspace_grid_class(3)
-        grid = LinspaceGrid(p0=..., p1=..., p2=..., n_points=...)
+        >>> _make_linspace_grid_class(3)
+        LinspaceGrid(p0=..., p1=..., p2=..., n_points=...)
 
     Parameters can be either LinspaceRange objects or numeric values:
         - LinspaceRange(bottom=1000, top=3000): creates a range from 1000 to 3000
         - 4000: creates a constant value of 4000 (no range)
     """
-    fields = [(f"p{i}", LinspaceParameter) for i in range(size)]
-    fields.append(("n_points", int))
-    return make_dataclass(f"LinspaceGrid{size}PIDs", fields, frozen=True)
+    fields = [
+        *[(f"p{i}", LinspaceRange | float | int) for i in range(n_members)],
+        ("n_points", int),
+    ]
+    return make_dataclass(
+        cls_name=f"LinspaceGrid{n_members}PIDs", fields=fields, frozen=True
+    )
 
 
 def upsert_with_bruttolohn_m_linspace_grid(
