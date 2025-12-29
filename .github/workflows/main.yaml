@@ -6,9 +6,11 @@ concurrency:
   cancel-in-progress: true
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: ['*']
+    branches:
+      - '*'
 jobs:
   run-tests:
     name: Run tests for ${{ matrix.os }} on Python 3.13
@@ -16,7 +18,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
     steps:
       - uses: actions/checkout@v6
       - uses: prefix-dev/setup-pixi@v0.9.3
