@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import inspect
-from dataclasses import dataclass, fields, make_dataclass
+from dataclasses import dataclass, field, fields, make_dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TYPE_CHECKING, Any, Protocol, cast
 
 import dags
 import dags.tree as dt
@@ -29,7 +29,22 @@ if TYPE_CHECKING:
 
     from _gettsim_personas.typing import DashedISOString, NestedData, NestedStrings
 
-LinspaceGrid: TypeAlias = type
+
+@dataclass(frozen=True)
+class LinspaceRange:
+    bottom: float
+    top: float
+
+
+class LinspaceGridProtocol(Protocol):
+    """Protocol for a dynamically created linspace grid.
+
+    p0 exists for sure, more p_ids will be created as p1, p2, ..., pN depending on the
+    number of members in the persona.
+    """
+
+    n_points: int
+    p0: LinspaceRange | float | int
 
 
 @dataclass(frozen=True)
@@ -112,12 +127,14 @@ class OrigPersonaOverTime:
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
+    LinspaceGrid: type[LinspaceGridProtocol] = field(init=False)
+    LinspaceRange: LinspaceRange = field(init=False)
 
     def __post_init__(self):
         p_id = next(
             el for el in self.orig_elements() if isinstance(el, PersonaPIDElement)
         )
-        self.LinspaceGrid = make_linspace_grid_class(p_id.persona_size)
+        self.LinspaceGrid = _make_linspace_grid_class(p_id.persona_size)
         self.LinspaceRange = LinspaceRange
 
     def __call__(
@@ -125,7 +142,7 @@ class OrigPersonaOverTime:
         *,
         policy_date_str: DashedISOString,
         evaluation_date_str: DashedISOString | None = None,
-        bruttolohn_m_linspace_grid: LinspaceGrid | None = None,
+        bruttolohn_m_linspace_grid: LinspaceGridProtocol | None = None,
     ) -> Persona:
         """An instance of persona for a given policy and evaluation date.
 
@@ -191,7 +208,9 @@ class OrigPersonaOverTime:
             description=active_description(active_elements).description,
             policy_date=policy_date,
             evaluation_date=evaluation_date,
-            input_data_tree=dt.unflatten_from_qnames(qname_input_data),
+            input_data_tree=dt.unflatten_from_qnames(
+                cast("dict[str, Any]", qname_input_data)
+            ),
             tt_targets_tree={
                 "hh_id": None,
                 **dt.unflatten_from_qnames(active_tt_targets(active_elements)),
@@ -238,15 +257,6 @@ class OrigPersonaOverTime:
             raise NotImplementedError(self.error_if_not_implemented)
 
 
-@dataclass(frozen=True)
-class LinspaceRange:
-    bottom: float
-    top: float
-
-
-LinspaceParameter: TypeAlias = LinspaceRange | float | int
-
-
 def active_persona_input_elements(
     active_elements: list[PersonaElement],
 ) -> dict[str, PersonaInputElement | PersonaPIDElement]:
@@ -260,7 +270,7 @@ def active_persona_input_elements(
 
 def active_tt_targets(
     active_elements: list[PersonaElement],
-) -> dict[str, PersonaTargetElement]:
+) -> dict[str, None]:
     """Active target elements of a persona."""
     return {
         s.tt_qname: None for s in active_elements if isinstance(s, PersonaTargetElement)
@@ -272,26 +282,30 @@ def active_description(active_elements: list[PersonaElement]) -> PersonaDescript
     return next(s for s in active_elements if isinstance(s, PersonaDescription))
 
 
-def make_linspace_grid_class(size: int):
-    """Dynamically create a LinspaceGrid dataclass for the given persona size.
+def _make_linspace_grid_class(n_members: int):
+    """Create a LinspaceGrid dataclass for a persona of size *n_members*.
 
     Example:
-        LinspaceGrid = make_linspace_grid_class(3)
-        grid = LinspaceGrid(p0=..., p1=..., p2=..., n_points=...)
+        >>> _make_linspace_grid_class(3)
+        LinspaceGrid(p0=..., p1=..., p2=..., n_points=...)
 
     Parameters can be either LinspaceRange objects or numeric values:
         - LinspaceRange(bottom=1000, top=3000): creates a range from 1000 to 3000
         - 4000: creates a constant value of 4000 (no range)
     """
-    fields = [(f"p{i}", LinspaceParameter) for i in range(size)]
-    fields.append(("n_points", int))
-    return make_dataclass(f"LinspaceGrid{size}PIDs", fields, frozen=True)
+    fields = [
+        *[(f"p{i}", LinspaceRange | float | int) for i in range(n_members)],
+        ("n_points", int),
+    ]
+    return make_dataclass(
+        cls_name=f"LinspaceGrid{n_members}PIDs", fields=fields, frozen=True
+    )
 
 
 def upsert_with_bruttolohn_m_linspace_grid(
     qname_input_data: dict[str, np.ndarray],
-    bruttolohn_m_linspace_grid: LinspaceGrid,
-) -> dict[str, np.ndarray]:
+    bruttolohn_m_linspace_grid: LinspaceGridProtocol,
+) -> NestedData:
     """Upsert the bruttolohn_m_linspace_grid into the qname_input_data."""
     linspace_by_p_id = {}
     for p_id in bruttolohn_m_linspace_grid.__dict__:
@@ -331,10 +345,10 @@ def upsert_with_bruttolohn_m_linspace_grid(
 
 def _get_qname_input_data(
     evaluation_date: datetime.date,
-    persona_input_elements: dict[str, PersonaInputElement],
+    persona_input_elements: dict[str, PersonaInputElement | PersonaPIDElement],
 ) -> dict[str, np.ndarray]:
     f = dags.concatenate_functions(
-        functions=persona_input_elements,
+        functions=persona_input_elements,  # ty: ignore[invalid-argument-type]
         targets=list(persona_input_elements.keys()),
         return_type="dict",
     )
@@ -376,7 +390,7 @@ def _fail_if_not_exactly_one_p_id_array_in_persona_elements(
 
 
 def _fail_if_not_exactly_one_description_is_active(
-    active_elements: list[TimeDependentPersonaElement], path_to_persona_elements: Path
+    active_elements: list[PersonaElement], path_to_persona_elements: Path
 ) -> None:
     descriptions = [s for s in active_elements if isinstance(s, PersonaDescription)]
     if len(descriptions) > 1:
@@ -391,7 +405,7 @@ def _fail_if_not_exactly_one_description_is_active(
 
 
 def _fail_if_active_tt_qnames_overlap(
-    active_elements: list[TimeDependentPersonaElement], path_to_persona_elements: Path
+    active_elements: list[PersonaElement], path_to_persona_elements: Path
 ) -> None:
     all_qnames: set[str] = set()
     overlapping_qnames: set[str] = set()
@@ -399,10 +413,14 @@ def _fail_if_active_tt_qnames_overlap(
         if isinstance(el, PersonaDescription):
             # Should be unique, see _fail_if_not_exactly_one_description_is_active
             continue
-        if el.tt_qname in all_qnames:
-            overlapping_qnames.add(el.tt_qname)
-        else:
-            all_qnames.add(el.tt_qname)
+        if isinstance(
+            el, (PersonaInputElement, PersonaTargetElement, PersonaPIDElement)
+        ):
+            if el.tt_qname in all_qnames:
+                overlapping_qnames.add(el.tt_qname)
+            else:
+                all_qnames.add(el.tt_qname)
+
     if overlapping_qnames:
         msg = (
             f"Active qnames overlap at {path_to_persona_elements!s}. "
@@ -412,7 +430,7 @@ def _fail_if_active_tt_qnames_overlap(
 
 
 def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
-    linspace_grid: LinspaceGrid,
+    linspace_grid: LinspaceGridProtocol,
     p_id_array: np.ndarray,
 ) -> None:
     """Fail if the bruttolohn_m_linspace_spec is invalid."""
@@ -420,7 +438,9 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
     # correct type directly.
     try:
         pids_in_linspace_grid = [
-            f.name for f in fields(linspace_grid) if f.name != "n_points"
+            f.name
+            for f in fields(linspace_grid)  # ty: ignore[invalid-argument-type]
+            if f.name != "n_points"
         ]
     except Exception as err:
         msg = (
@@ -429,7 +449,8 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
         )
         raise TypeError(msg) from err
     if not pids_in_linspace_grid or "n_points" not in [
-        f.name for f in fields(linspace_grid)
+        f.name
+        for f in fields(linspace_grid)  # ty: ignore[invalid-argument-type]
     ]:
         msg = (
             "The LinspaceGrid has not been instantiated correctly. "
@@ -448,6 +469,7 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
         raise ValueError(msg)
     for p_id in pids_in_linspace_grid:
         param_value = linspace_grid.__getattribute__(p_id)
+
         if isinstance(param_value, LinspaceRange):
             if param_value.bottom > param_value.top:
                 msg = (
@@ -460,6 +482,7 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
                 "value."
             )
             raise TypeError(msg)
+
     if linspace_grid.n_points <= 0:
         msg = "The number of points in the linspace must be greater than 0."
         raise ValueError(msg)

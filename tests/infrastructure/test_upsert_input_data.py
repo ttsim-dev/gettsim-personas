@@ -174,7 +174,7 @@ def test_upsert_input_data_fails_if_upserted_data_is_not_dict():
     data_to_upsert = "not a dict"
     match = "data_to_upsert must be a dictionary."
     with pytest.raises(TypeError, match=match):
-        upsert_input_data(data_from_persona, data_to_upsert)
+        upsert_input_data(data_from_persona, data_to_upsert)  # ty: ignore[invalid-argument-type]
 
 
 def test_upsert_input_data_fails_if_data_to_upsert_is_not_dict_with_array_leafs():

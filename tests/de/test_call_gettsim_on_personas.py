@@ -18,6 +18,6 @@ def test_call_gettsim_on_personas(year, persona_class):
         main_target=MainTarget.results.df_with_nested_columns,
         policy_date_str=policy_date_str,
         input_data=InputData.tree(persona.input_data_tree),
-        tt_targets=TTTargets(tree=persona.tt_targets_tree),
+        tt_targets=TTTargets.tree(persona.tt_targets_tree),
         include_warn_nodes=False,
     )

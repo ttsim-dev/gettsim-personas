@@ -80,7 +80,7 @@ allow-direct-references = true
 # Pixi configuration
 # ======================================================================================
 
-[tool.pixi.project]
+[tool.pixi.workspace]
 channels = ["conda-forge"]
 platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 
@@ -92,6 +92,7 @@ pygraphviz = "*"
 
 [tool.pixi.pypi-dependencies]
 gettsim_personas = {path = ".", editable = true}
+ttsim-backend = {git="https://github.com/ttsim-dev/ttsim", branch="main"}
 gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="main"}
 kaleido = ">=1.0.0"
 pdbp = "*"
@@ -110,8 +111,8 @@ python = "~=3.12"
 [tool.pixi.feature.py313.dependencies]
 python = "~=3.13"
 
-[tool.pixi.feature.mypy.pypi-dependencies]
-mypy = ">=1.17"
+[tool.pixi.feature.ty.pypi-dependencies]
+ty = "*"
 types-PyYAML = "*"
 types-pytz = "*"
 
@@ -125,14 +126,14 @@ tests = "pytest"
 [tool.pixi.feature.test.pypi-dependencies]
 pytest-cov = "*"
 
-[tool.pixi.feature.mypy.tasks]
-mypy = "mypy --ignore-missing-imports"
+[tool.pixi.feature.ty.tasks]
+ty = "ty check"
 
 # Environments
 # --------------------------------------------------------------------------------------
 
 [tool.pixi.environments]
-mypy = ["mypy"]
+ty = ["ty"]
 py311 = ["test", "py311"]
 py312 = ["test", "py312"]
 py313 = ["test", "py313"]
@@ -152,7 +153,6 @@ extend-ignore = [
     "COM812", # Conflict with ruff-format
     "D10",  # Missing docstrings
     "ISC001", # Conflict with ruff-format
-    "PD901", # df is a great name with functional data management
     "PLR0913",  # Too many arguments in function definition
     "RET504", # Don't force to calculate upon return
     "S101",  # Use of `assert` detected.
@@ -168,14 +168,44 @@ extend-ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+
 # ======================================================================================
-# Miscellaneous tools configuration
+# ty configuration
+# ======================================================================================
+
+[tool.ty.rules]
+invalid-return-type = "error"
+ambiguous-protocol-member = "error"
+deprecated = "error"
+division-by-zero = "error"
+ignore-comment-unknown-rule = "error"
+invalid-argument-type = "error"
+invalid-ignore-comment = "error"
+possibly-missing-attribute = "error"
+possibly-missing-implicit-call = "error"
+possibly-missing-import = "error"
+possibly-unresolved-reference = "error"
+redundant-cast = "error"
+undefined-reveal = "error"
+unresolved-global = "error"
+unsupported-base = "error"
+unused-ignore-comment = "error"
+useless-overload-body = "error"
+
+
+# ======================================================================================
+# pytest configuration
 # ======================================================================================
 
 
 [tool.pytest.ini_options]
-addopts = "--pdbcls=pdbp:Pdb"
+addopts = ["--pdbcls=pdbp:Pdb"]
+
+# ======================================================================================
+# yamlfix configuration
+# ======================================================================================
 
 [tool.yamlfix]
 line_length = 88
+sequence_style = "block_style"
 none_representation = "null"

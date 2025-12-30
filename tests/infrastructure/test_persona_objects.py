@@ -1,5 +1,6 @@
 import datetime
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -10,6 +11,7 @@ from _gettsim_personas.persona_elements import (
     persona_input_element,
 )
 from _gettsim_personas.persona_objects import (
+    LinspaceGridProtocol,
     _fail_if_active_tt_qnames_overlap,
     _fail_if_bruttolohn_m_linspace_grid_is_invalid,
     _fail_if_not_exactly_one_description_is_active,
@@ -65,7 +67,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "hh_id",
         "einnahmen__bruttolohn_m",
     }
-    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}
+    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}  # ty: ignore[possibly-missing-attribute]
     assert expected_orig_names == orig_names
 
     expected_tt_qnames = {
@@ -135,7 +137,8 @@ def test_sample_persona_has_expected_active_persona_elements(
     policy_date, expected_tt_qnames
 ):
     active_tt_qnames = {
-        el.orig_name for el in SamplePersona.active_elements(policy_date)
+        el.orig_name  # ty: ignore[possibly-missing-attribute]
+        for el in SamplePersona.active_elements(policy_date)
     }
     assert active_tt_qnames == expected_tt_qnames
 
@@ -151,7 +154,7 @@ def test_fail_if_active_tt_qnames_overlap():
                 another_input_element_always_active,
                 time_dependent_persona_input_element_active_since_2010,
             ],
-            path_to_persona_elements="",
+            path_to_persona_elements=Path(),
         )
 
 
@@ -166,7 +169,7 @@ def test_do_not_fail_if_active_qnames_do_not_overlap():
             input_element_always_active,
             time_dependent_persona_input_element_active_since_2010,
         ],
-        path_to_persona_elements="",
+        path_to_persona_elements=Path(),
     )
 
 
@@ -178,7 +181,7 @@ def test_fail_if_multiple_descriptions_are_active():
                 another_active_description,
                 input_element_always_active,
             ],
-            path_to_persona_elements="",
+            path_to_persona_elements=Path(),
         )
 
 
@@ -188,7 +191,7 @@ def test_do_not_fail_if_only_one_description_is_active():
             active_description,
             input_element_always_active,
         ],
-        path_to_persona_elements="",
+        path_to_persona_elements=Path(),
     )
 
 
@@ -225,14 +228,16 @@ def test_bruttolohn_m_linspace_grid_invalid_wrong_type():
         match=r"The LinspaceGrid has not been instantiated correctly.",
     ):
         _fail_if_bruttolohn_m_linspace_grid_is_invalid(
-            linspace_grid={"a": 1},
+            linspace_grid={
+                "n_points": 10,
+            },  # ty: ignore[invalid-argument-type]
             p_id_array=np.array([1, 2, 3]),
         )
 
 
 def test_bruttolohn_m_linspace_grid_invalid_wrong_number_of_p_ids():
     @dataclass(frozen=True)
-    class InvalidLinspaceGrid:
+    class InvalidLinspaceGrid(LinspaceGridProtocol):
         p0: int
         p1: int
         n_points: int
@@ -302,7 +307,7 @@ def test_bruttolohn_m_is_upserted_if_linspace_grid_is_provided():
         bruttolohn_m_linspace_grid=SamplePersona.LinspaceGrid(
             p0=SamplePersona.LinspaceRange(bottom=0, top=1),
             p1=SamplePersona.LinspaceRange(bottom=0, top=1),
-            p2=SamplePersona.LinspaceRange(bottom=0, top=0),
+            p2=0,
             n_points=2,
         ),
     )
@@ -344,7 +349,7 @@ def test_tt_targets_include_hh_id_if_multiple_households_in_persona():
         bruttolohn_m_linspace_grid=SamplePersona.LinspaceGrid(
             p0=SamplePersona.LinspaceRange(bottom=0, top=1),
             p1=SamplePersona.LinspaceRange(bottom=0, top=1),
-            p2=SamplePersona.LinspaceRange(bottom=0, top=0),
+            p2=0,
             n_points=2,
         ),
     )
