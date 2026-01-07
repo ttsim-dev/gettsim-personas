@@ -16,7 +16,7 @@ from _gettsim_personas.persona_objects import (
     _fail_if_bruttolohn_m_linspace_grid_is_invalid,
     _fail_if_not_exactly_one_description_is_active,
 )
-from tests.personas_for_testing import (
+from _personas_for_testing import (
     SamplePersona,
     SamplePersonaWithInvalidLengthOfInputData,
     SamplePersonaWithOverlappingElements,

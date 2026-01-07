@@ -4,7 +4,7 @@ import dags.tree as dt
 import pytest
 from gettsim import InputData, MainTarget, TTTargets, main
 
-from tests.de.all_personas import persona_year_pairs
+from _personas_for_testing.de.all_personas import persona_year_pairs
 
 
 @pytest.mark.parametrize(

@@ -6,7 +6,7 @@
 name = "gettsim_personas"
 description = "Personas to use as example inputs for GETTSIM."
 requires-python = ">=3.11"
-#dependencies = ["gettsim>=1.0a2"]
+dependencies = ["gettsim>=1.0"]
 dynamic = ["version"]
 keywords = [
     "Economics",
@@ -85,15 +85,15 @@ channels = ["conda-forge"]
 platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 
 [tool.pixi.dependencies]
-python = ">=3.11,<3.14"
 jupyterlab = "*"
 pre-commit = "*"
 pygraphviz = "*"
 
 [tool.pixi.pypi-dependencies]
 gettsim_personas = {path = ".", editable = true}
-ttsim-backend = {git="https://github.com/ttsim-dev/ttsim", branch="main"}
-gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="main"}
+ttsim-backend = {git="https://github.com/ttsim-dev/ttsim", branch="py-314"}
+gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="py-314"}
+dags = { git = "https://github.com/opensourceeconomics/dags.git", branch = "py-3.14" }
 kaleido = ">=1.0.0"
 pdbp = "*"
 pytest-cov = "*"
@@ -103,16 +103,19 @@ pytest-cov = "*"
 # --------------------------------------------------------------------------------------
 
 [tool.pixi.feature.py311.dependencies]
-python = "~=3.11"
+python = "~=3.11.0"
 
 [tool.pixi.feature.py312.dependencies]
-python = "~=3.12"
+python = "~=3.12.0"
 
 [tool.pixi.feature.py313.dependencies]
-python = "~=3.13"
+python = "~=3.13.0"
+
+[tool.pixi.feature.py314.dependencies]
+python = "~=3.14.0"
 
 [tool.pixi.feature.ty.pypi-dependencies]
-ty = "*"
+ty = ">=0.0.9"
 types-PyYAML = "*"
 types-pytz = "*"
 
@@ -137,6 +140,7 @@ ty = ["ty"]
 py311 = ["test", "py311"]
 py312 = ["test", "py312"]
 py313 = ["test", "py313"]
+py314 = ["test", "py314"]
 
 # ======================================================================================
 # Ruff configuration
