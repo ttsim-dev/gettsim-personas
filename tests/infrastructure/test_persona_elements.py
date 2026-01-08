@@ -10,7 +10,7 @@ from _gettsim_personas.persona_elements import (
     persona_input_element,
     persona_target_element,
 )
-from _personas_for_testing.persona_elements import (
+from tests.personas_for_testing.persona_elements import (
     description_since_2010,
     description_until_2009,
     p_id,
