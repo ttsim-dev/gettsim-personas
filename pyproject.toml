@@ -91,8 +91,8 @@ pygraphviz = "*"
 
 [tool.pixi.pypi-dependencies]
 gettsim_personas = {path = ".", editable = true}
-ttsim-backend = {git="https://github.com/ttsim-dev/ttsim", branch="py-314"}
-gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="py-314"}
+ttsim-backend = {git="https://github.com/ttsim-dev/ttsim", branch="main"}
+gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="main"}
 kaleido = ">=1.0.0"
 pdbp = "*"
 pytest-cov = "*"
