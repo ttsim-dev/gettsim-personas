@@ -93,7 +93,6 @@ pygraphviz = "*"
 gettsim_personas = {path = ".", editable = true}
 ttsim-backend = {git="https://github.com/ttsim-dev/ttsim", branch="py-314"}
 gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="py-314"}
-dags = { git = "https://github.com/opensourceeconomics/dags.git", branch = "py-3.14" }
 kaleido = ">=1.0.0"
 pdbp = "*"
 pytest-cov = "*"
