@@ -55,7 +55,7 @@ def geburtsjahr(
     return evaluation_date.year - alter
 
 
-@persona_input_element()
+@persona_input_element(end_date="2024-12-31")
 def wohnort_ost_hh() -> np.ndarray:
     return np.array([False, False, False])
 
