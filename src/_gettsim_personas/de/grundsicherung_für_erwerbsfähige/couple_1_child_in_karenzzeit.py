@@ -269,7 +269,7 @@ def wohngeld__mietstufe_hh() -> np.ndarray:
     return np.array([5, 5, 5])
 
 
-@persona_input_element(end_date="2024-01-01")
+@persona_input_element(end_date="2024-12-31")
 def wohnort_ost_hh() -> np.ndarray:
     return np.array([False, False, False])
 

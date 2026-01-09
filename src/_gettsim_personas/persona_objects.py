@@ -128,7 +128,7 @@ class OrigPersonaOverTime:
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
     LinspaceGrid: type[LinspaceGridProtocol] = field(init=False)
-    LinspaceRange: LinspaceRange = field(init=False)
+    LinspaceRange: Any = field(init=False)
 
     def __post_init__(self):
         p_id = next(
