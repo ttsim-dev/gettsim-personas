@@ -35,6 +35,11 @@ def alter() -> np.ndarray:
     return np.array([30])
 
 
+@persona_input_element(start_date="2005-01-01")
+def alter_monate(alter: np.ndarray) -> np.ndarray:
+    return alter * 12
+
+
 @persona_input_element()
 def arbeitsstunden_w() -> np.ndarray:
     return np.array([39])
@@ -69,6 +74,31 @@ def einnahmen__kapitalerträge_y() -> np.ndarray:
 
 
 @persona_input_element()
+def einnahmen__renten__gesetzliche_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element()
+def einnahmen__renten__aus_berufsständischen_versicherungen_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element()
+def einnahmen__renten__betriebliche_altersvorsorge_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element()
+def einnahmen__renten__sonstige_private_vorsorge_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element()
+def einnahmen__renten__geförderte_private_vorsorge_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element()
 def einkommensteuer__einkünfte__sonstige__rente__betrag_m() -> np.ndarray:
     return np.array([0])
 
@@ -76,6 +106,16 @@ def einkommensteuer__einkünfte__sonstige__rente__betrag_m() -> np.ndarray:
 @persona_input_element()
 def sozialversicherung__kranken__beitrag__bemessungsgrundlage_rente_m() -> np.ndarray:
     return np.array([0])
+
+
+@persona_input_element(start_date="2005-01-01")
+def einkommensteuer__abzüge__kinderbetreuungskosten_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element(start_date="2005-01-01")
+def einkommensteuer__abzüge__p_id_kinderbetreuungskostenträger() -> np.ndarray:
+    return np.array([-1])
 
 
 @persona_input_element()
@@ -127,6 +167,16 @@ def einkommensteuer__gemeinsam_veranlagt() -> np.ndarray:
 
 @persona_input_element()
 def familie__p_id_ehepartner() -> np.ndarray:
+    return np.array([-1])
+
+
+@persona_input_element(start_date="2005-01-01")
+def familie__p_id_elternteil_1() -> np.ndarray:
+    return np.array([-1])
+
+
+@persona_input_element(start_date="2005-01-01")
+def familie__p_id_elternteil_2() -> np.ndarray:
     return np.array([-1])
 
 
@@ -231,6 +281,11 @@ def sozialversicherung__arbeitslosen__monate_sozialversicherungspflichtiger_besc
     np.ndarray
 ):
     return np.array([0])
+
+
+@persona_input_element(start_date="2005-01-01")
+def sozialversicherung__rente__bezieht_rente() -> np.ndarray:
+    return np.array([False])
 
 
 @persona_input_element()
