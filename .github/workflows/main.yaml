@@ -31,17 +31,17 @@ jobs:
           cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
           activate-environment: true
           frozen: true
-      - name: Run pytest on MacOS
+      - name: Run tests on MacOS
         shell: bash {0}
-        run: pixi run pytest
+        run: pixi run tests
         if: runner.os == 'MacOS'
       - name: Run tests on Windows
         shell: bash {0}
-        run: pixi run pytest
+        run: pixi run tests
         if: runner.os == 'Windows'
-      - name: Run pytest (with coverage) on Linux
+      - name: Run tests (with coverage) on Linux
         shell: bash {0}
-        run: pixi run pytest --cov-report=xml --cov=./
+        run: pixi run tests --cov-report=xml --cov=./
         if: runner.os == 'Linux'
       - name: Upload coverage reports
         uses: codecov/codecov-action@v5
