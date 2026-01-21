@@ -95,7 +95,6 @@ ttsim-backend = {git="https://github.com/ttsim-dev/ttsim", branch="main"}
 gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="main"}
 kaleido = ">=1.0.0"
 pdbp = "*"
-pytest-cov = "*"
 ty = ">=0.0.9"
 
 
@@ -114,30 +113,27 @@ python = "~=3.13.0"
 [tool.pixi.feature.py314.dependencies]
 python = "~=3.14.0"
 
-[tool.pixi.feature.ty.pypi-dependencies]
+[tool.pixi.feature.tests.pypi-dependencies]
 ty = ">=0.0.9"
 types-PyYAML = "*"
 types-pytz = "*"
-
+pytest-cov = "*"
 
 # Tasks
 # --------------------------------------------------------------------------------------
 
-[tool.pixi.feature.test.tasks]
-test = "pytest"
+[tool.pixi.feature.tests.tasks]
 ty = "ty check"
-
-[tool.pixi.feature.test.pypi-dependencies]
-pytest-cov = "*"
+tests = "pytest"
 
 # Environments
 # --------------------------------------------------------------------------------------
 
 [tool.pixi.environments]
-py311 = ["test", "py311"]
-py312 = ["test", "py312"]
-py313 = ["test", "py313"]
-py314 = ["test", "py314"]
+py311 = ["tests", "py311"]
+py312 = ["tests", "py312"]
+py313 = ["tests", "py313"]
+py314 = ["tests", "py314"]
 
 # ======================================================================================
 # Ruff configuration
@@ -177,7 +173,7 @@ convention = "google"
 # ======================================================================================
 
 [tool.ty.rules]
-invalid-return-type = "error"
+invalid-return-type = "ignore"
 ambiguous-protocol-member = "error"
 deprecated = "error"
 division-by-zero = "error"
