@@ -1,19 +1,9 @@
-# python
-*.egg-info
-*_version.py
-*.pyc
-*__pycache__
-*.ipynb_checkpoints
-
-# python tools
-.pytest_cache
-.ruff_cache
-.pytask.sqlite3
-.pytask
-.pixi
-
 # bld
 bld/
+
+# documentation
+docs_template/build/
+docs_template/scripts/latex/*.png
 
 # latex
 *.aux
@@ -23,18 +13,28 @@ bld/
 *.fdb_latexmk
 *.fls
 *.log
+*.nav
 *.out
 *.pdf
 *.run.xml
-*.synctex.gz
-*.nav
 *.snm
+*.synctex.gz
 *.toc
 
-# documentation
-docs_template/build/
-docs_template/scripts/latex/*.png
-
 # local
-.vscode
 .DS_Store
+.vscode
+
+# python
+*.egg-info
+*.ipynb_checkpoints
+*.pyc
+*__pycache__
+*_version.py
+
+# python tools
+.pixi
+.pytest_cache
+.pytask
+.pytask.sqlite3
+.ruff_cache

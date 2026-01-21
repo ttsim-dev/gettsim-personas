@@ -96,6 +96,7 @@ gettsim = {git="https://github.com/ttsim-dev/gettsim", branch="main"}
 kaleido = ">=1.0.0"
 pdbp = "*"
 pytest-cov = "*"
+ty = ">=0.0.9"
 
 
 # Features
@@ -123,19 +124,16 @@ types-pytz = "*"
 # --------------------------------------------------------------------------------------
 
 [tool.pixi.feature.test.tasks]
-tests = "pytest"
+test = "pytest"
+ty = "ty check"
 
 [tool.pixi.feature.test.pypi-dependencies]
 pytest-cov = "*"
-
-[tool.pixi.feature.ty.tasks]
-ty = "ty check"
 
 # Environments
 # --------------------------------------------------------------------------------------
 
 [tool.pixi.environments]
-ty = ["ty"]
 py311 = ["test", "py311"]
 py312 = ["test", "py312"]
 py313 = ["test", "py313"]
@@ -156,11 +154,13 @@ extend-ignore = [
     "COM812", # Conflict with ruff-format
     "D10",  # Missing docstrings
     "ISC001", # Conflict with ruff-format
+    "PLC2403", # Modules may contain non-ASCII characters
     "PLR0913",  # Too many arguments in function definition
     "RET504", # Don't force to calculate upon return
     "S101",  # Use of `assert` detected.
     "S301",  # pickle module is unsafe
-    "PLC2403", # Modules may contain non-ASCII characters
+    "TC002", # Move third-party import into a type-checking block
+    "TC003", # Move standard library import into a type-checking block
 ]
 
 [tool.ruff.lint.per-file-ignores]
