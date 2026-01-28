@@ -1,40 +1,57 @@
-# bld
-bld/
+# Claude Code
+.claude/
 
-# documentation
-docs_template/build/
-docs_template/scripts/latex/*.png
-
-# latex
-*.aux
-*.bbl
-*.bcf*
-*.blg
-*.fdb_latexmk
-*.fls
-*.log
-*.nav
-*.out
-*.pdf
-*.run.xml
-*.snm
-*.synctex.gz
-*.toc
-
-# local
-.DS_Store
-.vscode
-
-# python
+# Distribution / packaging
+*.egg
 *.egg-info
-*.ipynb_checkpoints
-*.pyc
-*__pycache__
-*_version.py
+*.manifest
+*.so
+*.spec
+*$py.class
+_version.py
+.eggs/
+.installed.cfg
+bld/
+build/
+dist/
+MANIFEST
+sdist/
+wheels/
 
-# python tools
-.pixi
-.pytest_cache
+# IDE
+.cursor/
+.idea/
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+Thumbs.db
+
+# Pickle
+*.pickle
+*.pkl
+
+# pixi
+.pixi/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# pytask
 .pytask
 .pytask.sqlite3
-.ruff_cache
+
+# Ruff
+.ruff_cache/
+
+# Testing
+.cache/
+.coverage
+.coverage.*
+.pytest_cache/
+coverage.xml
+htmlcov/

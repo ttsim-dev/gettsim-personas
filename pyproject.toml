@@ -56,8 +56,8 @@ Tracker = "https://github.com/ttsim-dev/gettsim-personas/issues"
 # ======================================================================================
 
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+requires = ["hatchling", "hatch-vcs"]
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/gettsim_personas/_version.py"
@@ -86,7 +86,7 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 
 [tool.pixi.dependencies]
 jupyterlab = "*"
-pre-commit = "*"
+prek = "*"
 pygraphviz = "*"
 
 [tool.pixi.pypi-dependencies]
@@ -138,8 +138,9 @@ py314 = ["tests", "py314"]
 # ======================================================================================
 
 [tool.ruff]
-target-version = "py313"
 fix = true
+target-version = "py311"
+unsafe-fixes = false
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -153,6 +154,7 @@ extend-ignore = [
     "RET504", # Don't force to calculate upon return
     "S101",  # Use of `assert` detected.
     "S301",  # pickle module is unsafe
+    "TC001", # Move application import into a type-checking block
     "TC002", # Move third-party import into a type-checking block
     "TC003", # Move standard library import into a type-checking block
 ]
