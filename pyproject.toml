@@ -1,22 +1,32 @@
-# ======================================================================================
-# Project metadata
-# ======================================================================================
+[build-system]
+build-backend = "hatchling.build"
+requires = [ "hatch-vcs", "hatchling" ]
 
 [project]
-name = "gettsim_personas"
+name = "gettsim-personas"
 description = "Personas to use as example inputs for GETTSIM."
-requires-python = ">=3.11"
-dependencies = [ "gettsim>=1.0" ]
-dynamic = [ "version" ]
+readme.content-type = "text/markdown"
+readme.file = "README.md"
 keywords = [
-  "Economics",
-  "Taxes",
   "Benefits",
-  "Transfers",
-  "Pensions",
+  "Economics",
   "Germany",
   "GETTSIM",
+  "Pensions",
+  "Taxes",
+  "Transfers",
 ]
+license.text = "GNU Affero General Public License v3"
+maintainers = [
+  { name = "Hans-Martin von Gaudecker", email = "hmgaudecker@uni-bonn.de" },
+  { name = "Marvin Immesberger", email = "immesberger@uni-bonn.de" },
+]
+
+authors = [
+  { name = "Hans-Martin von Gaudecker", email = "hmgaudecker@uni-bonn.de" },
+  { name = "Marvin Immesberger", email = "immesberger@uni-bonn.de" },
+]
+requires-python = ">=3.11"
 classifiers = [
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: GNU Affero General Public License v3",
@@ -25,39 +35,20 @@ classifiers = [
   "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX",
   "Operating System :: Unix",
-  "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
-# About the project
-authors = [
-  { name = "Hans-Martin von Gaudecker", email = "hmgaudecker@uni-bonn.de" },
-  { name = "Marvin Immesberger", email = "immesberger@uni-bonn.de" },
+dynamic = [ "version" ]
+dependencies = [
+  # "gettsim>=1"
 ]
-maintainers = [
-  { name = "Hans-Martin von Gaudecker", email = "hmgaudecker@uni-bonn.de" },
-  { name = "Marvin Immesberger", email = "immesberger@uni-bonn.de" },
-]
-
-[project.readme]
-file = "README.md"
-content-type = "text/markdown"
-
-[project.license]
-text = "GNU Affero General Public License v3"
-
-[project.urls]
-Changelog = "https://github.com/ttsim-dev/gettsim-personas"
-Documentation = "https://github.com/ttsim-dev/gettsim-personas"
-Github = "https://github.com/ttsim-dev/gettsim-personas"
-Tracker = "https://github.com/ttsim-dev/gettsim-personas/issues"
-
-# ======================================================================================
-# Build system configuration
-# ======================================================================================
-
-[build-system]
-build-backend = "hatchling.build"
-requires = [ "hatchling", "hatch-vcs" ]
+urls.Changelog = "https://github.com/ttsim-dev/gettsim-personas"
+urls.Documentation = "https://github.com/ttsim-dev/gettsim-personas"
+urls.Github = "https://github.com/ttsim-dev/gettsim-personas"
+urls.Tracker = "https://github.com/ttsim-dev/gettsim-personas/issues"
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/gettsim_personas/_version.py"
@@ -70,81 +61,19 @@ only-packages = true
 only-include = [ "src" ]
 sources = [ "src" ]
 
-[tool.hatch.version]
-source = "vcs"
-
 [tool.hatch.metadata]
 allow-direct-references = true
 
-# ======================================================================================
-# Pixi configuration
-# ======================================================================================
-
-[tool.pixi.workspace]
-channels = [ "conda-forge" ]
-platforms = [ "linux-64", "osx-64", "osx-arm64", "win-64" ]
-
-[tool.pixi.dependencies]
-jupyterlab = "*"
-prek = "*"
-pygraphviz = "*"
-
-[tool.pixi.pypi-dependencies]
-gettsim_personas = { path = ".", editable = true }
-ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim", branch = "main" }
-gettsim = { git = "https://github.com/ttsim-dev/gettsim", branch = "main" }
-kaleido = ">=1.0.0"
-pdbp = "*"
-
-# Features
-# --------------------------------------------------------------------------------------
-
-[tool.pixi.feature.py311.dependencies]
-python = "~=3.11.0"
-
-[tool.pixi.feature.py312.dependencies]
-python = "~=3.12.0"
-
-[tool.pixi.feature.py313.dependencies]
-python = "~=3.13.0"
-
-[tool.pixi.feature.py314.dependencies]
-python = "~=3.14.0"
-
-[tool.pixi.feature.tests.pypi-dependencies]
-ty = ">=0.0.9"
-types-PyYAML = "*"
-types-pytz = "*"
-pytest-cov = "*"
-
-# Tasks
-# --------------------------------------------------------------------------------------
-
-[tool.pixi.feature.tests.tasks]
-ty = "ty check"
-tests = "pytest"
-
-# Environments
-# --------------------------------------------------------------------------------------
-
-[tool.pixi.environments]
-py311 = [ "tests", "py311" ]
-py312 = [ "tests", "py312" ]
-py313 = [ "tests", "py313" ]
-py314 = [ "tests", "py314" ]
-
-# ======================================================================================
-# Ruff configuration
-# ======================================================================================
+[tool.hatch.version]
+source = "vcs"
 
 [tool.ruff]
-fix = true
 target-version = "py311"
+fix = true
 unsafe-fixes = false
 
-[tool.ruff.lint]
-select = [ "ALL" ]
-extend-ignore = [
+lint.select = [ "ALL" ]
+lint.extend-ignore = [
   "ANN",     # Missing type annotations
   "COM812",  # Conflict with ruff-format
   "D10",     # Missing docstrings
@@ -158,18 +87,13 @@ extend-ignore = [
   "TC002",   # Move third-party import into a type-checking block
   "TC003",   # Move standard library import into a type-checking block
 ]
+lint.per-file-ignores."sandbox/tutorial.ipynb" = [ "E501" ]
+lint.per-file-ignores."src/_gettsim_personas/de/*" = [ "E501", "PLC2401" ]
+lint.per-file-ignores."tests/*" = [ "C408", "D", "PD011", "PLR2004" ]
+lint.pydocstyle.convention = "google"
 
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = [ "D", "PD011", "PLR2004", "C408" ]
-"src/_gettsim_personas/de/*" = [ "E501", "PLC2401" ]
-"sandbox/tutorial.ipynb" = [ "E501" ]
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
-
-# ======================================================================================
-# ty configuration
-# ======================================================================================
+[tool.pytest.ini_options]
+addopts = [ "--pdbcls=pdbp:Pdb" ]
 
 [tool.ty.rules]
 invalid-return-type = "ignore"
@@ -190,16 +114,50 @@ unsupported-base = "error"
 unused-ignore-comment = "error"
 useless-overload-body = "error"
 
-# ======================================================================================
-# pytest configuration
-# ======================================================================================
+[tool.pixi.dependencies]
+jupyterlab = "*"
+prek = "*"
+pygraphviz = "*"
 
-[tool.pytest.ini_options]
-addopts = [ "--pdbcls=pdbp:Pdb" ]
+[tool.pixi.environments]
+py311 = [ "tests", "py311" ]
+py312 = [ "tests", "py312" ]
+py313 = [ "tests", "py313" ]
+py314 = [ "tests", "py314" ]
 
-# ======================================================================================
-# yamlfix configuration
-# ======================================================================================
+[tool.pixi.feature.py311.dependencies]
+python = "~=3.11.0"
+
+[tool.pixi.feature.py312.dependencies]
+python = "~=3.12.0"
+
+[tool.pixi.feature.py313.dependencies]
+python = "~=3.13.0"
+
+[tool.pixi.feature.py314.dependencies]
+python = "~=3.14.0"
+
+[tool.pixi.feature.tests.pypi-dependencies]
+ty = ">=0.0.9"
+types-PyYAML = "*"
+types-pytz = "*"
+pytest-cov = "*"
+pytest-xdist = "*"
+
+[tool.pixi.feature.tests.tasks]
+ty = "ty check"
+tests = "pytest"
+
+[tool.pixi.pypi-dependencies]
+gettsim_personas = { path = ".", editable = true }
+ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim", branch = "main" }
+gettsim = { git = "https://github.com/ttsim-dev/gettsim", branch = "boilerplate-x" }
+kaleido = ">=1.0.0"
+pdbp = "*"
+
+[tool.pixi.workspace]
+channels = [ "conda-forge" ]
+platforms = [ "linux-64", "osx-64", "osx-arm64", "win-64" ]
 
 [tool.yamlfix]
 line_length = 88

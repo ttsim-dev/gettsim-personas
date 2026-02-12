@@ -307,26 +307,20 @@ def upsert_with_bruttolohn_m_linspace_grid(
     bruttolohn_m_linspace_grid: LinspaceGridProtocol,
 ) -> NestedData:
     """Upsert the bruttolohn_m_linspace_grid into the qname_input_data."""
+    n_points = bruttolohn_m_linspace_grid.n_points
     linspace_by_p_id = {}
-    for p_id in bruttolohn_m_linspace_grid.__dict__:
+    for p_id, param_value in bruttolohn_m_linspace_grid.__dict__.items():
         if p_id == "n_points":
             continue
 
-        param_value = bruttolohn_m_linspace_grid.__getattribute__(p_id)
-
         if isinstance(param_value, LinspaceRange):
-            # Create a range from bottom to top
             linspace_by_p_id[p_id] = np.linspace(
                 param_value.bottom,
                 param_value.top,
-                bruttolohn_m_linspace_grid.n_points,
+                n_points,
             )
         else:
-            # Create a constant array with the same value
-            linspace_by_p_id[p_id] = np.full(
-                bruttolohn_m_linspace_grid.n_points,
-                float(param_value),
-            )
+            linspace_by_p_id[p_id] = np.full(n_points, float(param_value))
 
     bruttolohn_m_grid = np.array(
         [
@@ -337,9 +331,7 @@ def upsert_with_bruttolohn_m_linspace_grid(
     )
     return upsert_input_data(
         input_data=qname_input_data,
-        data_to_upsert={
-            "einnahmen__bruttolohn_m": bruttolohn_m_grid,
-        },
+        data_to_upsert={"einnahmen__bruttolohn_m": bruttolohn_m_grid},
     )
 
 
@@ -369,11 +361,9 @@ def _get_qname_input_data(
 def load_persona_elements_from_module(
     module: ModuleType,
 ) -> list[PersonaElement]:
-    persona_elements_in_this_module: list[PersonaElement] = []
-    for _, obj in inspect.getmembers(module):
-        if isinstance(obj, PersonaElement):
-            persona_elements_in_this_module.append(obj)
-    return persona_elements_in_this_module
+    return [
+        obj for _, obj in inspect.getmembers(module) if isinstance(obj, PersonaElement)
+    ]
 
 
 def _fail_if_not_exactly_one_p_id_array_in_persona_elements(
@@ -434,41 +424,36 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
     p_id_array: np.ndarray,
 ) -> None:
     """Fail if the bruttolohn_m_linspace_spec is invalid."""
+    instantiation_error_msg = (
+        "The LinspaceGrid has not been instantiated correctly. "
+        "Always instantiate via 'NameOfThePersona.LinspaceGrid'."
+    )
     # Because the LinspaceGrid is dynamically created, we cannot check for the
     # correct type directly.
     try:
-        pids_in_linspace_grid = [
-            f.name
-            for f in fields(linspace_grid)  # ty: ignore[invalid-argument-type]
-            if f.name != "n_points"
-        ]
+        grid_fields = fields(linspace_grid)  # ty: ignore[invalid-argument-type]
     except Exception as err:
-        msg = (
-            "The LinspaceGrid has not been instantiated correctly. "
-            "Always instantiate via 'NameOfThePersona.LinspaceGrid'."
-        )
-        raise TypeError(msg) from err
-    if not pids_in_linspace_grid or "n_points" not in [
-        f.name
-        for f in fields(linspace_grid)  # ty: ignore[invalid-argument-type]
-    ]:
-        msg = (
-            "The LinspaceGrid has not been instantiated correctly. "
-            "Always instantiate via 'NameOfThePersona.LinspaceGrid'."
-        )
-        raise TypeError(msg)
+        raise TypeError(instantiation_error_msg) from err
+
+    field_names = [f.name for f in grid_fields]
+    pids_in_linspace_grid = [name for name in field_names if name != "n_points"]
+
+    if not pids_in_linspace_grid or "n_points" not in field_names:
+        raise TypeError(instantiation_error_msg)
+
     if len(p_id_array) != len(pids_in_linspace_grid):
         msg = (
             f"The number of p_ids in the linspace grid must match the number of p_ids "
             "in the persona. The number of p_ids in the linspace grid is "
             f"{len(pids_in_linspace_grid)}, but the number of p_ids in the persona is "
-            f"{len(p_id_array)}."
+            f"{len(p_id_array)}. "
             "You likely used the wrong LinspaceGrid. Always instantiate via "
             "the LinspaceGrid method of this class."
         )
         raise ValueError(msg)
+
     for p_id in pids_in_linspace_grid:
-        param_value = linspace_grid.__getattribute__(p_id)
+        param_value = getattr(linspace_grid, p_id)
 
         if isinstance(param_value, LinspaceRange):
             if param_value.bottom > param_value.top:
@@ -478,8 +463,8 @@ def _fail_if_bruttolohn_m_linspace_grid_is_invalid(
                 raise ValueError(msg)
         elif not isinstance(param_value, (int, float)):
             msg = (
-                f"Parameter {p_id} must be either a LinspaceRange object or a numeric "
-                "value."
+                f"Parameter {p_id} must be either a LinspaceRange object or a "
+                "numeric value."
             )
             raise TypeError(msg)
 

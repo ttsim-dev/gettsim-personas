@@ -5,10 +5,10 @@ repos:
       # - id: check-hooks-apply  # Leave nbstripout in here.
       - id: check-useless-excludes
       # - id: identity  # Prints all files passed to pre-commits. Debugging.
-  - repo: https://github.com/tox-dev/tox-toml-fmt
-    rev: v1.2.2
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: v2.12.1
     hooks:
-      - id: tox-toml-fmt
+      - id: pyproject-fmt
   - repo: https://github.com/lyz-code/yamlfix
     rev: 1.19.1
     hooks:
@@ -49,12 +49,12 @@ repos:
     rev: v0.14.14
     hooks:
       - id: ruff-check
+        args:
+          - --fix
         types_or:
           - jupyter
           - pyi
           - python
-        args:
-          - --fix
       - id: ruff-format
         types_or:
           - jupyter
@@ -79,13 +79,5 @@ repos:
           - --wrap
           - '88'
         files: (CLAUDE\.md|README\.md)
-  # - repo: local
-  #   hooks:
-  #     - id: ty
-  #       name: ty
-  #       entry: ty
-  #       language: system
-  #       types: [python]
-  #       args: [--config-file=pyproject.toml]
 ci:
   autoupdate_schedule: monthly
