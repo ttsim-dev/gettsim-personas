@@ -102,7 +102,7 @@ def persona_input_element(
         func_name = getattr(func, "__name__", "")
         return PersonaInputElement(
             orig_name=func_name,
-            tt_qname=tt_qname if tt_qname else func_name,
+            tt_qname=tt_qname or func_name,
             function=func,
             start_date=start_date,
             end_date=end_date,

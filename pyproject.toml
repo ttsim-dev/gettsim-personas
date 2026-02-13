@@ -5,8 +5,6 @@ requires = [ "hatch-vcs", "hatchling" ]
 [project]
 name = "gettsim-personas"
 description = "Personas to use as example inputs for GETTSIM."
-readme.content-type = "text/markdown"
-readme.file = "README.md"
 keywords = [
   "Benefits",
   "Economics",
@@ -15,16 +13,6 @@ keywords = [
   "Pensions",
   "Taxes",
   "Transfers",
-]
-license.text = "GNU Affero General Public License v3"
-maintainers = [
-  { name = "Hans-Martin von Gaudecker", email = "hmgaudecker@uni-bonn.de" },
-  { name = "Marvin Immesberger", email = "immesberger@uni-bonn.de" },
-]
-
-authors = [
-  { name = "Hans-Martin von Gaudecker", email = "hmgaudecker@uni-bonn.de" },
-  { name = "Marvin Immesberger", email = "immesberger@uni-bonn.de" },
 ]
 requires-python = ">=3.11"
 classifiers = [
@@ -45,35 +33,45 @@ dynamic = [ "version" ]
 dependencies = [
   # "gettsim>=1"
 ]
-urls.Changelog = "https://github.com/ttsim-dev/gettsim-personas"
-urls.Documentation = "https://github.com/ttsim-dev/gettsim-personas"
-urls.Github = "https://github.com/ttsim-dev/gettsim-personas"
-urls.Tracker = "https://github.com/ttsim-dev/gettsim-personas/issues"
+[[project.authors]]
+name = "Hans-Martin von Gaudecker"
+email = "hmgaudecker@uni-bonn.de"
+[[project.authors]]
+name = "Marvin Immesberger"
+email = "immesberger@uni-bonn.de"
+[project.license]
+text = "GNU Affero General Public License v3"
+[[project.maintainers]]
+name = "Hans-Martin von Gaudecker"
+email = "hmgaudecker@uni-bonn.de"
+[[project.maintainers]]
+name = "Marvin Immesberger"
+email = "immesberger@uni-bonn.de"
+[project.readme]
+content-type = "text/markdown"
+file = "README.md"
+[project.urls]
+Changelog = "https://github.com/ttsim-dev/gettsim-personas"
+Documentation = "https://github.com/ttsim-dev/gettsim-personas"
+Github = "https://github.com/ttsim-dev/gettsim-personas"
+Tracker = "https://github.com/ttsim-dev/gettsim-personas/issues"
 
-[tool.hatch.build.hooks.vcs]
-version-file = "src/gettsim_personas/_version.py"
-
-[tool.hatch.build.targets.sdist]
-exclude = [ "tests" ]
-only-packages = true
-
-[tool.hatch.build.targets.wheel]
-only-include = [ "src" ]
-sources = [ "src" ]
-
-[tool.hatch.metadata]
-allow-direct-references = true
-
-[tool.hatch.version]
-source = "vcs"
+[tool.hatch]
+build.hooks.vcs.version-file = "src/gettsim_personas/_version.py"
+build.targets.sdist.exclude = [ "tests" ]
+build.targets.sdist.only-packages = true
+build.targets.wheel.only-include = [ "src" ]
+build.targets.wheel.sources = [ "src" ]
+metadata.allow-direct-references = true
+version.source = "vcs"
 
 [tool.ruff]
 target-version = "py311"
 fix = true
 unsafe-fixes = false
-
-lint.select = [ "ALL" ]
-lint.extend-ignore = [
+[tool.ruff.lint]
+select = [ "ALL" ]
+extend-ignore = [
   "ANN",     # Missing type annotations
   "COM812",  # Conflict with ruff-format
   "D10",     # Missing docstrings
@@ -87,10 +85,16 @@ lint.extend-ignore = [
   "TC002",   # Move third-party import into a type-checking block
   "TC003",   # Move standard library import into a type-checking block
 ]
-lint.per-file-ignores."sandbox/tutorial.ipynb" = [ "E501" ]
-lint.per-file-ignores."src/_gettsim_personas/de/*" = [ "E501", "PLC2401" ]
-lint.per-file-ignores."tests/*" = [ "C408", "D", "PD011", "PLR2004" ]
-lint.pydocstyle.convention = "google"
+per-file-ignores."sandbox/tutorial.ipynb" = [ "E501" ]
+per-file-ignores."src/_gettsim_personas/de/*" = [ "E501", "PLC2401" ]
+per-file-ignores."tests/*" = [ "C408", "D", "PD011", "PLR2004" ]
+pydocstyle.convention = "google"
+
+[tool.pyproject-fmt]
+column_width = 88
+max_supported_python = "3.14"
+table_format = "long"
+collapse_tables = [ "tool.hatch" ]
 
 [tool.pytest.ini_options]
 addopts = [ "--pdbcls=pdbp:Pdb" ]
@@ -118,43 +122,34 @@ useless-overload-body = "error"
 jupyterlab = "*"
 prek = "*"
 pygraphviz = "*"
-
 [tool.pixi.environments]
 py311 = [ "tests", "py311" ]
 py312 = [ "tests", "py312" ]
 py313 = [ "tests", "py313" ]
 py314 = [ "tests", "py314" ]
-
 [tool.pixi.feature.py311.dependencies]
 python = "~=3.11.0"
-
 [tool.pixi.feature.py312.dependencies]
 python = "~=3.12.0"
-
 [tool.pixi.feature.py313.dependencies]
 python = "~=3.13.0"
-
 [tool.pixi.feature.py314.dependencies]
 python = "~=3.14.0"
-
 [tool.pixi.feature.tests.pypi-dependencies]
 ty = ">=0.0.9"
 types-PyYAML = "*"
 types-pytz = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
-
 [tool.pixi.feature.tests.tasks]
 ty = "ty check"
 tests = "pytest"
-
 [tool.pixi.pypi-dependencies]
 gettsim_personas = { path = ".", editable = true }
 ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim", branch = "main" }
 gettsim = { git = "https://github.com/ttsim-dev/gettsim", branch = "boilerplate-x" }
 kaleido = ">=1.0.0"
 pdbp = "*"
-
 [tool.pixi.workspace]
 channels = [ "conda-forge" ]
 platforms = [ "linux-64", "osx-64", "osx-arm64", "win-64" ]
