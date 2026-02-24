@@ -6,7 +6,7 @@
 name = "gettsim_personas"
 description = "Personas to use as example inputs for GETTSIM."
 requires-python = ">=3.11"
-dependencies = ["gettsim>=1.0"]
+dependencies = ["gettsim>=1.1"]
 dynamic = ["version"]
 keywords = [
     "Economics",
