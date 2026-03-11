@@ -28,7 +28,7 @@ pixi run -e py314 tests -k "test_end_to_end"
 pixi run -e py314 tests tests/infrastructure/test_persona_objects.py
 
 # Type checking
-pixi run -e type-checking ty
+pixi run ty
 
 # Quality checks
 prek run --all-files
@@ -39,7 +39,7 @@ prek run --all-files
 Before finishing any task that modifies code, always run these three verification steps
 in order:
 
-1. `pixi run -e type-checking ty` (type checker)
+1. `pixi run ty` (type checker)
 1. `prek run --all-files` (quality checks)
 1. `pixi run -e py314 tests -n 7` (full test suite)
 

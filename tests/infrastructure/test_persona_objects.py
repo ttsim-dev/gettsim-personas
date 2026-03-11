@@ -67,7 +67,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "hh_id",
         "einnahmen__bruttolohn_m",
     }
-    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}  # ty: ignore[possibly-missing-attribute]
+    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}  # ty: ignore[unresolved-attribute]
     assert expected_orig_names == orig_names
 
     expected_tt_qnames = {
@@ -137,7 +137,7 @@ def test_sample_persona_has_expected_active_persona_elements(
     policy_date, expected_tt_qnames
 ):
     active_tt_qnames = {
-        el.orig_name  # ty: ignore[possibly-missing-attribute]
+        el.orig_name  # ty: ignore[unresolved-attribute]
         for el in SamplePersona.active_elements(policy_date)
     }
     assert active_tt_qnames == expected_tt_qnames

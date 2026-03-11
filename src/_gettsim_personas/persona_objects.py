@@ -340,7 +340,7 @@ def _get_qname_input_data(
     persona_input_elements: dict[str, PersonaInputElement | PersonaPIDElement],
 ) -> dict[str, np.ndarray]:
     f = dags.concatenate_functions(
-        functions=persona_input_elements,  # ty: ignore[invalid-argument-type]
+        functions=persona_input_elements,
         targets=list(persona_input_elements.keys()),
         return_type="dict",
     )

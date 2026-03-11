@@ -3,14 +3,13 @@ from __future__ import annotations
 import datetime
 import inspect
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, ParamSpec, TypeVar
+from typing import TYPE_CHECKING
 
 import numpy as np
 from ttsim.tt.column_objects_param_function import _convert_and_validate_dates
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-    from types import FunctionType
     from typing import Any
 
     from _gettsim_personas.typing import DashedISOString
@@ -20,24 +19,18 @@ DEFAULT_START_DATE = datetime.date(1900, 1, 1)
 DEFAULT_END_DATE = datetime.date(2100, 12, 31)
 
 
-FunArgTypes = ParamSpec("FunArgTypes")
-ReturnType = TypeVar("ReturnType")
-
-
 @dataclass(frozen=True)
 class PersonaPIDElement:
     """An object that returns a p_id array for a persona."""
 
-    function: FunctionType[..., Any]
+    function: Callable[..., Any]
     tt_qname: str = "p_id"
     orig_name: str = "p_id"
 
     def __post_init__(self):
         _fail_if_p_ids_not_consecutive_starting_at_zero(self.function())
 
-    def __call__(
-        self, *args: FunArgTypes.args, **kwargs: FunArgTypes.kwargs
-    ) -> ReturnType:
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
         return self.function(*args, **kwargs)
 
     @property
@@ -49,8 +42,8 @@ class PersonaPIDElement:
         return len(self.function())
 
 
-def persona_pid_element() -> Callable[[FunctionType[..., Any]], PersonaPIDElement]:
-    def inner(func: FunctionType[..., Any]) -> PersonaPIDElement:
+def persona_pid_element() -> Callable[[Callable[..., Any]], PersonaPIDElement]:
+    def inner(func: Callable[..., Any]) -> PersonaPIDElement:
         return PersonaPIDElement(function=func)
 
     return inner
@@ -74,11 +67,9 @@ class PersonaInputElement(TimeDependentPersonaElement):
 
     orig_name: str
     tt_qname: str
-    function: FunctionType[FunArgTypes, ReturnType]
+    function: Callable[..., Any]
 
-    def __call__(
-        self, *args: FunArgTypes.args, **kwargs: FunArgTypes.kwargs
-    ) -> ReturnType:
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
         return self.function(*args, **kwargs)
 
     @property
@@ -98,7 +89,7 @@ def persona_input_element(
         end_date=end_date,
     )
 
-    def inner(func: FunctionType[..., Any]) -> PersonaInputElement:
+    def inner(func: Callable[..., Any]) -> PersonaInputElement:
         func_name = getattr(func, "__name__", "")
         return PersonaInputElement(
             orig_name=func_name,
@@ -123,13 +114,13 @@ def persona_target_element(
     *,
     start_date: DashedISOString | datetime.date = DEFAULT_START_DATE,
     end_date: DashedISOString | datetime.date = DEFAULT_END_DATE,
-) -> Callable[[FunctionType[..., Any]], PersonaTargetElement]:
+) -> Callable[[Callable[..., Any]], PersonaTargetElement]:
     start_date, end_date = _convert_and_validate_dates(
         start_date=start_date,
         end_date=end_date,
     )
 
-    def inner(func: FunctionType[..., Any]) -> PersonaTargetElement:
+    def inner(func: Callable[..., Any]) -> PersonaTargetElement:
         func_name = getattr(func, "__name__", "")
         return PersonaTargetElement(
             orig_name=func_name,
@@ -154,13 +145,13 @@ def persona_description(
     description: str,
     start_date: DashedISOString | datetime.date = DEFAULT_START_DATE,
     end_date: DashedISOString | datetime.date = DEFAULT_END_DATE,
-) -> Callable[[FunctionType[..., Any]], PersonaDescription]:
+) -> Callable[[Callable[..., Any]], PersonaDescription]:
     start_date, end_date = _convert_and_validate_dates(
         start_date=start_date,
         end_date=end_date,
     )
 
-    def inner(func: FunctionType[..., Any]) -> PersonaDescription:
+    def inner(func: Callable[..., Any]) -> PersonaDescription:
         func_name = getattr(func, "__name__", "")
         return PersonaDescription(
             orig_name=func_name,
