@@ -1,6 +1,10 @@
 # Claude Code
 .claude/
 
+# Data files
+*.parquet
+*.pkl
+
 # Distribution / packaging
 *.egg
 *.egg-info/
@@ -24,17 +28,44 @@ docs/_build/
 # Jupyter
 .ipynb_checkpoints/
 
+# LaTeX
+*-blx.bib
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.xdv
+
 # macOS
 .DS_Store
 
 # pixi
 .pixi/
+node_modules/
 
 # Python
 __pycache__/
 *.py[cod]
 *.so
 *$py.class
+
+# pytask
+.pytask/
+.pytask.sqlite3
+bld/
+out/
 
 # Ruff
 .ruff_cache/
