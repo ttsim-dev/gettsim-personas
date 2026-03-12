@@ -86,9 +86,20 @@ extend-ignore = [
   "TC003",   # Move standard library import into a type-checking block
   "TRY003",  # Long messages outside exception class
 ]
-per-file-ignores."sandbox/tutorial.ipynb" = [ "E501" ]
-per-file-ignores."src/_gettsim_personas/de/*" = [ "E501", "PLC2401" ]
-per-file-ignores."tests/*" = [ "C408", "D", "INP001", "PD011", "PLR2004" ]
+per-file-ignores."sandbox/tutorial.ipynb" = [
+  "E501", # Line too long
+]
+per-file-ignores."src/_gettsim_personas/de/*" = [
+  "E501",    # Line too long
+  "PLC2401", # Non-ASCII variable name
+]
+per-file-ignores."tests/*" = [
+  "C408",    # Unnecessary dict/list/tuple call
+  "D",       # Missing docstrings
+  "INP001",  # Implicit namespace packages
+  "PD011",   # Use .to_numpy() instead of .values
+  "PLR2004", # Magic value used in comparison
+]
 pydocstyle.convention = "google"
 
 [tool.pyproject-fmt]
@@ -149,6 +160,7 @@ python = "~=3.13.0"
 [tool.pixi.feature.py314.dependencies]
 python = "~=3.14.0"
 [tool.pixi.feature.tests.pypi-dependencies]
+pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
 types-PyYAML = "*"
