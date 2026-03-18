@@ -18,8 +18,8 @@ MANIFEST
 sdist/
 wheels/
 
-# Documentation
-docs/_build/
+# Jupyter / Jupyter Book
+_build
 
 # IDE
 .idea/
