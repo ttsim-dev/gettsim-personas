@@ -119,9 +119,6 @@ expand_tables = [
   "tool.pixi.workspace",
 ]
 
-[tool.pytest]
-ini_options.addopts = [ "--pdbcls=pdbp:Pdb" ]
-
 [tool.ty]
 rules.ambiguous-protocol-member = "error"
 rules.deprecated = "error"
@@ -135,6 +132,9 @@ rules.possibly-missing-submodule = "error"
 rules.redundant-cast = "error"
 rules.unused-awaitable = "error"
 rules.unused-ignore-comment = "error"
+
+[tool.pytest]
+ini_options.addopts = [ "--pdbcls=pdbp:Pdb" ]
 
 [tool.pixi.dependencies]
 jupyterlab = "*"

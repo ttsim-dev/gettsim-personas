@@ -28,7 +28,7 @@ pixi run -e py314 tests tests/infrastructure/test_persona_objects.py
 pixi run ty
 
 # Quality checks
-prek run --all-files
+pixi run prek run --all-files
 
 # Available environments: py311, py312, py313, py314, type-checking
 ```
@@ -37,7 +37,7 @@ Before finishing any task that modifies code, always run these three verificatio
 in order:
 
 1. `pixi run ty` (type checker)
-1. `prek run --all-files` (quality checks)
+1. `pixi run prek run --all-files` (quality checks)
 1. `pixi run -e py314 tests -n 7` (full test suite)
 
 ## Architecture
