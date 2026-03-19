@@ -72,21 +72,20 @@ class Persona:
         structure as the base household for the copied households).
 
         Example:
-        -------
-        >>> from gettsim_personas import einkommensteuer_sozialabgaben
-        >>> base_persona = einkommensteuer_sozialabgaben.Couple1Child(
-        >>>     policy_date_str="2025-01-01",
-        >>> )
-        >>> data_to_upsert = {
-        >>>     "einnahmen": {"bruttolohn_m": np.array([4, 5, 6, 7, 8, 9])},
-        >>> }
-        >>> upserted_persona = base_persona.upsert_input_data(data_to_upsert)
-        >>> upserted_persona.input_data_tree
-        >>> {
-        >>>     "p_id": np.array([0, 1, 2, 3, 4, 5]),
-        >>>     "p_id_elternteil_1": np.array([-1, -1, 0, -1, -1, 3]),
-        >>>     "einnahmen": {"bruttolohn_m": np.array([4, 5, 6, 7, 8, 9])},
-        >>> }
+            >>> from gettsim_personas import einkommensteuer_sozialabgaben
+            >>> base_persona = einkommensteuer_sozialabgaben.Couple1Child(
+            >>>     policy_date_str="2025-01-01",
+            >>> )
+            >>> data_to_upsert = {
+            >>>     "einnahmen": {"bruttolohn_m": np.array([4, 5, 6, 7, 8, 9])},
+            >>> }
+            >>> upserted_persona = base_persona.upsert_input_data(data_to_upsert)
+            >>> upserted_persona.input_data_tree
+            >>> {
+            >>>     "p_id": np.array([0, 1, 2, 3, 4, 5]),
+            >>>     "p_id_elternteil_1": np.array([-1, -1, 0, -1, -1, 3]),
+            >>>     "einnahmen": {"bruttolohn_m": np.array([4, 5, 6, 7, 8, 9])},
+            >>> }
 
         Args:
             input_data_to_upsert:
