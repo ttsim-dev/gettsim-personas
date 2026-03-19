@@ -66,16 +66,15 @@ def broadcast_group_ids(original_array: np.ndarray, expected_length: int) -> np.
     The exact values don't matter as long as they maintain the same grouping pattern.
 
     Example:
-    -------
-    >>> original_array = np.array([0, 1, 1])
-    >>> expected_length = 6
-    >>> broadcast_group_ids(original_array, expected_length)
-    >>> 0    0
-    >>> 1    1
-    >>> 2    1
-    >>> 3    2
-    >>> 4    3
-    >>> 5    3
+        >>> original_array = np.array([0, 1, 1])
+        >>> expected_length = 6
+        >>> broadcast_group_ids(original_array, expected_length)
+        >>> 0    0
+        >>> 1    1
+        >>> 2    1
+        >>> 3    2
+        >>> 4    3
+        >>> 5    3
     """
     number_of_personas = expected_length // len(original_array)
 
@@ -100,16 +99,15 @@ def broadcast_foreign_keys(
     Foreign keys are used to reference specific rows in another table.
 
     Example:
-    -------
-    >>> original_array = np.array([1, 0, -1])
-    >>> expected_length = 6
-    >>> broadcast_foreign_keys(original_array, expected_length)
-    >>> 0    1
-    >>> 1    0
-    >>> 2    -1
-    >>> 3    4
-    >>> 4    3
-    >>> 5    -1
+        >>> original_array = np.array([1, 0, -1])
+        >>> expected_length = 6
+        >>> broadcast_foreign_keys(original_array, expected_length)
+        >>> 0    1
+        >>> 1    0
+        >>> 2    -1
+        >>> 3    4
+        >>> 4    3
+        >>> 5    -1
     """
     number_of_personas = expected_length // len(original_array)
 
