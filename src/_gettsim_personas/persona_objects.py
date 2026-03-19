@@ -118,7 +118,7 @@ class Persona:
         )
 
 
-@dataclass
+@dataclass(frozen=True)
 class OrigPersonaOverTime:
     """A persona containing inputs and targets to use with GETTSIM."""
 
@@ -129,12 +129,14 @@ class OrigPersonaOverTime:
     LinspaceGrid: type[LinspaceGridProtocol] = field(init=False)
     LinspaceRange: Any = field(init=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         p_id = next(
             el for el in self.orig_elements() if isinstance(el, PersonaPIDElement)
         )
-        self.LinspaceGrid = _make_linspace_grid_class(p_id.persona_size)
-        self.LinspaceRange = LinspaceRange
+        object.__setattr__(
+            self, "LinspaceGrid", _make_linspace_grid_class(p_id.persona_size)
+        )
+        object.__setattr__(self, "LinspaceRange", LinspaceRange)
 
     def __call__(
         self,
