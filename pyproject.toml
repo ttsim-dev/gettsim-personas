@@ -63,6 +63,47 @@ build.targets.wheel.sources = [ "src" ]
 metadata.allow-direct-references = true
 version.source = "vcs"
 
+[tool.pixi.dependencies]
+jupyterlab = "*"
+prek = "*"
+pygraphviz = "*"
+[tool.pixi.environments]
+py311 = [ "tests", "py311" ]
+py312 = [ "tests", "py312" ]
+py313 = [ "tests", "py313" ]
+py314 = [ "tests", "py314" ]
+type-checking = [ "py314", "type-checking" ]
+[tool.pixi.feature.py311.dependencies]
+python = "~=3.11.0"
+[tool.pixi.feature.py312.dependencies]
+python = "~=3.12.0"
+[tool.pixi.feature.py313.dependencies]
+python = "~=3.13.0"
+[tool.pixi.feature.py314.dependencies]
+python = "~=3.14.0"
+[tool.pixi.feature.tests.pypi-dependencies]
+pytest = "*"
+pytest-cov = "*"
+pytest-xdist = "*"
+types-PyYAML = "*"
+types-pytz = "*"
+[tool.pixi.feature.tests.tasks]
+tests = "pytest"
+tests-with-cov = "pytest --cov-report=xml --cov=./"
+[tool.pixi.feature.type-checking.pypi-dependencies]
+ty = "*"
+[tool.pixi.feature.type-checking.tasks]
+ty = "ty check"
+[tool.pixi.pypi-dependencies]
+gettsim_personas = { path = ".", editable = true }
+ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim", branch = "refactor-piecewise-polynomial" }
+gettsim = { git = "https://github.com/ttsim-dev/gettsim", branch = "refactor-piecewise-polynomial" }
+kaleido = ">=1.0.0"
+pdbp = "*"
+[tool.pixi.workspace]
+channels = [ "conda-forge" ]
+platforms = [ "linux-64", "osx-64", "osx-arm64", "win-64" ]
+
 [tool.ruff]
 fix = true
 unsafe-fixes = false
@@ -135,47 +176,6 @@ rules.unused-ignore-comment = "error"
 
 [tool.pytest]
 ini_options.addopts = [ "--pdbcls=pdbp:Pdb" ]
-
-[tool.pixi.dependencies]
-jupyterlab = "*"
-prek = "*"
-pygraphviz = "*"
-[tool.pixi.environments]
-py311 = [ "tests", "py311" ]
-py312 = [ "tests", "py312" ]
-py313 = [ "tests", "py313" ]
-py314 = [ "tests", "py314" ]
-type-checking = [ "py314", "type-checking" ]
-[tool.pixi.feature.py311.dependencies]
-python = "~=3.11.0"
-[tool.pixi.feature.py312.dependencies]
-python = "~=3.12.0"
-[tool.pixi.feature.py313.dependencies]
-python = "~=3.13.0"
-[tool.pixi.feature.py314.dependencies]
-python = "~=3.14.0"
-[tool.pixi.feature.tests.pypi-dependencies]
-pytest = "*"
-pytest-cov = "*"
-pytest-xdist = "*"
-types-PyYAML = "*"
-types-pytz = "*"
-[tool.pixi.feature.tests.tasks]
-tests = "pytest"
-tests-with-cov = "pytest --cov-report=xml --cov=./"
-[tool.pixi.feature.type-checking.pypi-dependencies]
-ty = "*"
-[tool.pixi.feature.type-checking.tasks]
-ty = "ty check"
-[tool.pixi.pypi-dependencies]
-gettsim_personas = { path = ".", editable = true }
-ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim", branch = "refactor-piecewise-polynomial" }
-gettsim = { git = "https://github.com/ttsim-dev/gettsim", branch = "refactor-piecewise-polynomial" }
-kaleido = ">=1.0.0"
-pdbp = "*"
-[tool.pixi.workspace]
-channels = [ "conda-forge" ]
-platforms = [ "linux-64", "osx-64", "osx-arm64", "win-64" ]
 
 [tool.yamlfix]
 line_length = 88
