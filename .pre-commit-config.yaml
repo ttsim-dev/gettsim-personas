@@ -17,8 +17,7 @@ repos:
     rev: v6.0.0
     hooks:
       - id: check-added-large-files
-        args:
-          - --maxkb=10000
+        args: [--maxkb=10000]
       - id: check-ast
       - id: check-case-conflict
       - id: check-docstring-first
@@ -29,20 +28,15 @@ repos:
       - id: debug-statements
       - id: end-of-file-fixer
       - id: fix-byte-order-marker
-        types:
-          - text
+        types: [text]
       - id: mixed-line-ending
-        args:
-          - --fix=lf
+        args: [--fix=lf]
         description: Forces to replace line ending by the UNIX 'lf' character.
       - id: name-tests-test
-        args:
-          - --pytest-test-first
+        args: [--pytest-test-first]
         exclude: tests/personas_for_testing/|tests/de/all_personas\.py
       - id: no-commit-to-branch
-        args:
-          - --branch
-          - main
+        args: [--branch, main]
       - id: trailing-whitespace
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.38.0
@@ -56,17 +50,10 @@ repos:
     rev: v0.15.9
     hooks:
       - id: ruff-check
-        args:
-          - --fix
-        types_or:
-          - jupyter
-          - pyi
-          - python
+        args: [--fix]
+        types_or: [jupyter, pyi, python]
       - id: ruff-format
-        types_or:
-          - jupyter
-          - pyi
-          - python
+        types_or: [jupyter, pyi, python]
   - repo: https://github.com/executablebooks/mdformat
     rev: 1.0.0
     hooks:
@@ -75,9 +62,7 @@ repos:
           - mdformat-gfm
           - mdformat-gfm-alerts
           - mdformat-ruff
-        args:
-          - --wrap
-          - '88'
+        args: [--wrap, '88']
         files: (AGENTS\.md|CLAUDE\.md|README\.md|modules/.*\.md|profiles/.*\.md)
 ci:
   autoupdate_schedule: monthly
