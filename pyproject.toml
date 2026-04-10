@@ -169,8 +169,8 @@ ty = "*"
 ty = "ty check"
 [tool.pixi.pypi-dependencies]
 gettsim_personas = { path = ".", editable = true }
-ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim", branch = "refactor-piecewise-polynomial" }
-gettsim = { git = "https://github.com/ttsim-dev/gettsim", branch = "refactor-piecewise-polynomial" }
+ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim", branch = "main" }
+gettsim = { git = "https://github.com/ttsim-dev/gettsim", branch = "werbungskosten-proportional-splitting" }
 kaleido = ">=1.0.0"
 pdbp = "*"
 [tool.pixi.workspace]
