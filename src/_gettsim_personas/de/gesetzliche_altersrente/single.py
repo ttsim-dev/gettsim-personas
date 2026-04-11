@@ -406,3 +406,13 @@ def sozialversicherung__rente__altersrente__betrag_m() -> None:
 @persona_target_element()
 def einkommensteuer__betrag_y_sn() -> None:
     pass
+
+
+@persona_target_element()
+def sozialversicherung__kranken__beitrag__betrag_versicherter_y() -> None:
+    pass
+
+
+@persona_target_element()
+def sozialversicherung__pflege__beitrag__betrag_versicherter_y() -> None:
+    pass
