@@ -3,11 +3,13 @@ import datetime
 from _gettsim_personas.persona_objects import OrigPersonaOverTime
 from gettsim_personas import (
     einkommensteuer_sozialabgaben,
+    gesetzliche_altersrente,
     grundsicherung_für_erwerbsfähige,
 )
 
 ALL_PERSONA_SUBMODULES = [
     einkommensteuer_sozialabgaben,
+    gesetzliche_altersrente,
     grundsicherung_für_erwerbsfähige,
 ]
 
