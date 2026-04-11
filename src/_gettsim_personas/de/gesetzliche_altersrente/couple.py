@@ -203,15 +203,13 @@ def sozialversicherung__rente__bezieht_rente() -> np.ndarray:
 
 
 @persona_input_element()
-def sozialversicherung__rente__erwerbsminderung__voll_erwerbsgemindert() -> np.ndarray:
-    return np.array([False, False])
+def sozialversicherung__rente__erwerbsminderung__betrag_m() -> np.ndarray:
+    return np.array([0, 0])
 
 
-@persona_input_element()
-def sozialversicherung__rente__erwerbsminderung__teilweise_erwerbsgemindert() -> (
-    np.ndarray
-):
-    return np.array([False, False])
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__betrag_m() -> np.ndarray:
+    return np.array([0, 0])
 
 
 @persona_input_element(end_date="2017-12-31")
@@ -349,54 +347,6 @@ def sozialversicherung__rente__altersrente__höchster_bruttolohn_letzte_15_jahre
     np.ndarray
 ):
     return np.array([50000.0, 45000.0])
-
-
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__grundrente__bewertungszeiten_monate() -> np.ndarray:
-    return np.array([540, 480])
-
-
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__grundrente__grundrentenzeiten_monate() -> np.ndarray:
-    return np.array([540, 480])
-
-
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__grundrente__mean_entgeltpunkte() -> np.ndarray:
-    return np.array([0.8, 0.6])
-
-
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__grundrente__gesamteinnahmen_aus_renten_vorjahr_m() -> (
-    np.ndarray
-):
-    return np.array([0.0, 0.0])
-
-
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__grundrente__bruttolohn_vorjahr_y() -> np.ndarray:
-    return np.array([0.0, 0.0])
-
-
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__grundrente__einnahmen_aus_selbstständiger_arbeit_vorvorjahr_y() -> (
-    np.ndarray
-):
-    return np.array([0.0, 0.0])
-
-
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__grundrente__einnahmen_aus_vermietung_und_verpachtung_vorvorjahr_y() -> (
-    np.ndarray
-):
-    return np.array([0.0, 0.0])
-
-
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__grundrente__einnahmen_aus_kapitalvermögen_vorvorjahr_y() -> (
-    np.ndarray
-):
-    return np.array([0.0, 0.0])
 
 
 @persona_target_element()

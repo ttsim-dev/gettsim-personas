@@ -11,9 +11,10 @@ from _gettsim_personas.persona_elements import (
 
 
 @persona_description(
-    description="""Persona to compute public pension benefits and income taxes
-    for a single adult who receives Altersrente from the statutory pension system.""",
-    start_date="2005-01-01",
+    description="""Persona to compute Grundsicherung im Alter, Wohngeld, public
+    pension benefits, and income taxes for a single retired adult without children.
+    All adults receive Altersrente from the statutory pension system.""",
+    start_date="2011-01-01",
 )
 def description() -> None:
     pass
@@ -42,6 +43,16 @@ def arbeitsstunden_w() -> np.ndarray:
 @persona_input_element()
 def behinderungsgrad() -> np.ndarray:
     return np.array([0])
+
+
+@persona_input_element()
+def schwerbehindert_grad_g() -> np.ndarray:
+    return np.array([False])
+
+
+@persona_input_element()
+def alter_monate(alter: np.ndarray) -> np.ndarray:
+    return alter * 12
 
 
 @persona_input_element(end_date="2017-12-31")
@@ -206,16 +217,11 @@ def sozialversicherung__rente__erwerbsminderung__betrag_m() -> np.ndarray:
     return np.array([0])
 
 
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__grundrente__betrag_m() -> np.ndarray:
-    return np.array([0])
-
-
 @persona_input_element(end_date="2017-12-31")
 def sozialversicherung__rente__altersrente__für_frauen__pflichtsbeitragsjahre_ab_alter_40() -> (
     np.ndarray
 ):
-    return np.array([0.0])
+    return np.array([0])
 
 
 @persona_input_element(end_date="2017-12-31")
@@ -251,7 +257,7 @@ def sozialversicherung__rente__jahr_renteneintritt(
     evaluation_date: datetime.date,
     alter: np.ndarray,
 ) -> np.ndarray:
-    return np.full(alter.shape, evaluation_date.year - 5, dtype=int)
+    return np.full(alter.shape, evaluation_date.year - 3, dtype=int)
 
 
 @persona_input_element()
@@ -261,22 +267,22 @@ def sozialversicherung__rente__monat_renteneintritt() -> np.ndarray:
 
 @persona_input_element(end_date="2023-06-30")
 def sozialversicherung__rente__entgeltpunkte_west() -> np.ndarray:
-    return np.array([40.0])
+    return np.array([15.0])
 
 
 @persona_input_element(end_date="2023-06-30")
 def sozialversicherung__rente__entgeltpunkte_ost() -> np.ndarray:
-    return np.array([0.0])
+    return np.array([0])
 
 
 @persona_input_element(start_date="2023-07-01")
 def sozialversicherung__rente__entgeltpunkte() -> np.ndarray:
-    return np.array([40.0])
+    return np.array([15.0])
 
 
 @persona_input_element()
 def sozialversicherung__rente__pflichtbeitragsmonate() -> np.ndarray:
-    return np.array([540.0])
+    return np.array([360.0])
 
 
 @persona_input_element()
@@ -345,7 +351,130 @@ def sozialversicherung__rente__pflegeberücksichtigungszeiten_monate() -> np.nda
 def sozialversicherung__rente__altersrente__höchster_bruttolohn_letzte_15_jahre_vor_rente_y() -> (
     np.ndarray
 ):
-    return np.array([50000.0])
+    return np.array([22000.0])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__bewertungszeiten_monate() -> np.ndarray:
+    return np.array([360])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__grundrentenzeiten_monate() -> np.ndarray:
+    return np.array([360])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__mean_entgeltpunkte() -> np.ndarray:
+    return np.array([0.5])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__gesamteinnahmen_aus_renten_vorjahr_m() -> (
+    np.ndarray
+):
+    return np.array([0.0])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__bruttolohn_vorjahr_y() -> np.ndarray:
+    return np.array([0.0])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__einnahmen_aus_selbstständiger_arbeit_vorvorjahr_y() -> (
+    np.ndarray
+):
+    return np.array([0.0])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__einnahmen_aus_vermietung_und_verpachtung_vorvorjahr_y() -> (
+    np.ndarray
+):
+    return np.array([0.0])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__einnahmen_aus_kapitalvermögen_vorvorjahr_y() -> (
+    np.ndarray
+):
+    return np.array([0.0])
+
+
+@persona_input_element()
+def wohnen__bewohnt_eigentum_hh() -> np.ndarray:
+    return np.array([False])
+
+
+@persona_input_element()
+def wohnen__bruttokaltmiete_m_hh() -> np.ndarray:
+    return np.array([450])
+
+
+@persona_input_element()
+def wohnen__heizkosten_m_hh() -> np.ndarray:
+    return np.array([50])
+
+
+@persona_input_element()
+def wohnen__wohnfläche_hh() -> np.ndarray:
+    return np.array([45])
+
+
+@persona_input_element(end_date="2008-12-31")
+def wohnen__baujahr_immobilie_hh() -> np.ndarray:
+    return np.array([2000])
+
+
+@persona_input_element()
+def wohngeld__mietstufe_hh() -> np.ndarray:
+    return np.array([3])
+
+
+@persona_input_element()
+def vermögen() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element()
+def unterhalt__tatsächlich_erhaltener_betrag_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element()
+def unterhaltsvorschuss__betrag_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element()
+def elterngeld__betrag_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element(end_date="2022-12-31")
+def arbeitslosengeld_2__p_id_einstandspartner() -> np.ndarray:
+    return np.array([-1])
+
+
+@persona_input_element(start_date="2023-01-01")
+def bürgergeld__p_id_einstandspartner() -> np.ndarray:
+    return np.array([-1])
+
+
+@persona_input_element(start_date="2023-01-01")
+def bürgergeld__bezug_im_vorjahr() -> np.ndarray:
+    return np.array([False])
+
+
+@persona_input_element()
+def kindergeld__betrag_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element()
+def sozialversicherung__arbeitslosen__betrag_m() -> np.ndarray:
+    return np.array([0])
 
 
 @persona_target_element()
@@ -365,4 +494,14 @@ def sozialversicherung__kranken__beitrag__betrag_versicherter_y() -> None:
 
 @persona_target_element()
 def sozialversicherung__pflege__beitrag__betrag_versicherter_y() -> None:
+    pass
+
+
+@persona_target_element()
+def grundsicherung__im_alter__betrag_m_eg() -> None:
+    pass
+
+
+@persona_target_element()
+def wohngeld__betrag_m_wthh() -> None:
     pass

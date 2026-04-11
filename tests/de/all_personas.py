@@ -5,12 +5,14 @@ from gettsim_personas import (
     einkommensteuer_sozialabgaben,
     gesetzliche_altersrente,
     grundsicherung_für_erwerbsfähige,
+    grundsicherung_im_alter,
 )
 
 ALL_PERSONA_SUBMODULES = [
     einkommensteuer_sozialabgaben,
     gesetzliche_altersrente,
     grundsicherung_für_erwerbsfähige,
+    grundsicherung_im_alter,
 ]
 
 START_YEAR = 1950
