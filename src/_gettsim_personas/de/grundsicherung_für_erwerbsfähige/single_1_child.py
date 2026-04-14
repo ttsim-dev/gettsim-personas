@@ -259,11 +259,6 @@ def unterhalt__tatsächlich_erhaltener_betrag_m() -> np.ndarray:
 
 
 @persona_input_element(start_date="2005-01-01")
-def unterhaltsvorschuss__betrag_m() -> np.ndarray:
-    return np.array([0, 0])
-
-
-@persona_input_element(start_date="2005-01-01")
 def vermögen() -> np.ndarray:
     return np.array([0, 0])
 
@@ -355,4 +350,9 @@ def kinderzuschlag__betrag_m_bg() -> None:
 
 @persona_target_element(start_date="2005-01-01")
 def kindergeld__betrag_m() -> None:
+    pass
+
+
+@persona_target_element(start_date="2005-01-01")
+def unterhaltsvorschuss__betrag_m() -> None:
     pass
