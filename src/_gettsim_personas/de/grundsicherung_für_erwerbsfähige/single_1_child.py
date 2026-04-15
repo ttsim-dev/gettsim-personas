@@ -32,7 +32,7 @@ def hh_id() -> np.ndarray:
 
 @persona_input_element(start_date="2005-01-01")
 def alter() -> np.ndarray:
-    return np.array([30, 6])
+    return np.array([30, 7])
 
 
 @persona_input_element(start_date="2005-01-01")
