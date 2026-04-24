@@ -108,6 +108,13 @@ def einkommensteuer__einkünfte__ist_hauptberuflich_selbstständig() -> np.ndarr
 
 
 @persona_input_element(start_date="2005-01-01")
+def einkommensteuer__einkünfte__aus_nichtselbstständiger_arbeit__tatsächliche_werbungskosten_y() -> (
+    np.ndarray
+):
+    return np.array([0, 0, 0])
+
+
+@persona_input_element(start_date="2005-01-01")
 def einkommensteuer__einkünfte__sonstige__alle_weiteren_y() -> np.ndarray:
     return np.array([0, 0, 0])
 
