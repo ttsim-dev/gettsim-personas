@@ -212,12 +212,12 @@ def wohnen__bewohnt_eigentum_hh() -> np.ndarray:
 
 @persona_input_element()
 def wohnen__bruttokaltmiete_m_hh() -> np.ndarray:
-    return np.array([450])
+    return np.array([437])
 
 
 @persona_input_element()
 def wohnen__heizkosten_m_hh() -> np.ndarray:
-    return np.array([50])
+    return np.array([68])
 
 
 @persona_input_element()

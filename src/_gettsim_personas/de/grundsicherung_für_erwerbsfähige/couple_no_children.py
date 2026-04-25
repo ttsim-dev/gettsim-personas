@@ -276,12 +276,12 @@ def wohnen__bewohnt_eigentum_hh() -> np.ndarray:
 
 @persona_input_element(start_date="2005-01-01")
 def wohnen__bruttokaltmiete_m_hh() -> np.ndarray:
-    return np.array([550, 550])
+    return np.array([580, 580])
 
 
 @persona_input_element(start_date="2005-01-01")
 def wohnen__heizkosten_m_hh() -> np.ndarray:
-    return np.array([50, 50])
+    return np.array([100, 100])
 
 
 @persona_input_element(start_date="2005-01-01")
@@ -296,7 +296,7 @@ def wohnen__baujahr_immobilie_hh() -> np.ndarray:
 
 @persona_input_element(start_date="2005-01-01")
 def wohngeld__mietstufe_hh() -> np.ndarray:
-    return np.array([4, 4])
+    return np.array([3, 3])
 
 
 @persona_input_element(start_date="2005-01-01", end_date="2024-12-31")
