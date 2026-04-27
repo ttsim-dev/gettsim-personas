@@ -9,16 +9,18 @@ _ERROR = (
     "not implemented in GETTSIM before 2005."
 )
 
-Couple = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "couple.py",
+CoupleWithFixedPublicPension = OrigPersonaOverTime(
+    path_to_persona_elements=Path(__file__).parent
+    / "couple_with_fixed_public_pension.py",
     start_date=_START_DATE,
     error_if_not_implemented=_ERROR,
 )
 
-Single = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "single.py",
+SingleWithFixedPublicPension = OrigPersonaOverTime(
+    path_to_persona_elements=Path(__file__).parent
+    / "single_with_fixed_public_pension.py",
     start_date=_START_DATE,
     error_if_not_implemented=_ERROR,
 )
 
-__all__ = ["Couple", "Single"]
+__all__ = ["CoupleWithFixedPublicPension", "SingleWithFixedPublicPension"]

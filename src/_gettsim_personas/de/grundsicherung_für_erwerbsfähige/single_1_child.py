@@ -72,7 +72,7 @@ def einkommensteuer__abzüge__beitrag_private_rentenversicherung_m() -> np.ndarr
 
 @persona_input_element(start_date="2005-01-01")
 def einkommensteuer__abzüge__kinderbetreuungskosten_m() -> np.ndarray:
-    return np.array([0, 150])
+    return np.array([0, 0])
 
 
 @persona_input_element(start_date="2005-01-01")
@@ -270,12 +270,12 @@ def wohnen__bewohnt_eigentum_hh() -> np.ndarray:
 
 @persona_input_element(start_date="2005-01-01")
 def wohnen__bruttokaltmiete_m_hh() -> np.ndarray:
-    return np.array([500, 500])
+    return np.array([580, 580])
 
 
 @persona_input_element(start_date="2005-01-01")
 def wohnen__heizkosten_m_hh() -> np.ndarray:
-    return np.array([50, 50])
+    return np.array([100, 100])
 
 
 @persona_input_element(start_date="2005-01-01")
