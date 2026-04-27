@@ -22,6 +22,33 @@ Couple1ChildInKarenzzeit = OrigPersonaOverTime(
     ),
 )
 
+Couple2Children = OrigPersonaOverTime(
+    path_to_persona_elements=Path(__file__).parent / "couple_2_children.py",
+    start_date=datetime.date(2005, 1, 1),
+    error_if_not_implemented=(
+        "These personas are available from 2005 because basic income support is not "
+        "implemented in GETTSIM before 2005."
+    ),
+)
+
+CoupleNoChildren = OrigPersonaOverTime(
+    path_to_persona_elements=Path(__file__).parent / "couple_no_children.py",
+    start_date=datetime.date(2005, 1, 1),
+    error_if_not_implemented=(
+        "These personas are available from 2005 because basic income support is not "
+        "implemented in GETTSIM before 2005."
+    ),
+)
+
+Single1Child = OrigPersonaOverTime(
+    path_to_persona_elements=Path(__file__).parent / "single_1_child.py",
+    start_date=datetime.date(2005, 1, 1),
+    error_if_not_implemented=(
+        "These personas are available from 2005 because basic income support is not "
+        "implemented in GETTSIM before 2005."
+    ),
+)
+
 SingleAdult = OrigPersonaOverTime(
     path_to_persona_elements=Path(__file__).parent / "single_adult.py",
     start_date=datetime.date(2005, 1, 1),
@@ -31,4 +58,11 @@ SingleAdult = OrigPersonaOverTime(
     ),
 )
 
-__all__ = ["Couple1Child", "Couple1ChildInKarenzzeit", "SingleAdult"]
+__all__ = [
+    "Couple1Child",
+    "Couple1ChildInKarenzzeit",
+    "Couple2Children",
+    "CoupleNoChildren",
+    "Single1Child",
+    "SingleAdult",
+]
