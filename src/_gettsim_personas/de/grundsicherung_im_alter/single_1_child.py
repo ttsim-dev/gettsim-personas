@@ -133,6 +133,13 @@ def einkommensteuer__einkünfte__aus_selbstständiger_arbeit__betrag_m() -> np.n
 
 
 @persona_input_element()
+def einkommensteuer__einkünfte__aus_nichtselbstständiger_arbeit__tatsächliche_werbungskosten_y() -> (
+    np.ndarray
+):
+    return np.array([0, 0])
+
+
+@persona_input_element()
 def einkommensteuer__einkünfte__sonstige__alle_weiteren_m() -> np.ndarray:
     return np.array([0, 0])
 

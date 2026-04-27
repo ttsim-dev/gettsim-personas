@@ -97,6 +97,13 @@ def einkommensteuer__einkünfte__aus_selbstständiger_arbeit__betrag_y() -> np.n
 
 
 @persona_input_element(start_date="2005-01-01")
+def einkommensteuer__einkünfte__aus_nichtselbstständiger_arbeit__tatsächliche_werbungskosten_y() -> (
+    np.ndarray
+):
+    return np.array([0, 0])
+
+
+@persona_input_element(start_date="2005-01-01")
 def einkommensteuer__einkünfte__aus_vermietung_und_verpachtung__betrag_y() -> (
     np.ndarray
 ):
