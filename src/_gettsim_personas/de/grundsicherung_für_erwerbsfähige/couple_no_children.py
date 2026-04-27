@@ -317,27 +317,27 @@ def einkommensteuer__betrag_m_sn() -> None:
 
 
 @persona_target_element(start_date="2005-01-01")
-def sozialversicherung__rente__beitrag__betrag_versicherter_y() -> None:
+def solidaritätszuschlag__betrag_m_sn() -> None:
     pass
 
 
 @persona_target_element(start_date="2005-01-01")
-def sozialversicherung__kranken__beitrag__betrag_versicherter_y() -> None:
+def sozialversicherung__beiträge_versicherter_m_hh() -> None:
     pass
 
 
 @persona_target_element(start_date="2005-01-01")
-def sozialversicherung__pflege__beitrag__betrag_versicherter_y() -> None:
+def kindergeld__betrag_m_hh() -> None:
     pass
 
 
 @persona_target_element(start_date="2005-01-01")
-def sozialversicherung__arbeitslosen__beitrag__betrag_versicherter_y() -> None:
+def kinderzuschlag__betrag_m_bg() -> None:
     pass
 
 
 @persona_target_element(start_date="2005-01-01")
-def sozialversicherung__arbeitslosen__betrag_m() -> None:
+def wohngeld__betrag_m_wthh() -> None:
     pass
 
 
@@ -348,9 +348,4 @@ def arbeitslosengeld_2__betrag_m_bg() -> None:
 
 @persona_target_element(start_date="2023-01-01")
 def bürgergeld__betrag_m_bg() -> None:
-    pass
-
-
-@persona_target_element(start_date="2005-01-01")
-def wohngeld__betrag_m_wthh() -> None:
     pass

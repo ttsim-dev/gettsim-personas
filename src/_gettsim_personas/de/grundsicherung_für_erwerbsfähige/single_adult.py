@@ -311,45 +311,40 @@ def kindergeld__p_id_empfänger() -> np.ndarray:
 
 
 @persona_target_element()
-def einkommensteuer__betrag_y_sn() -> None:
-    return None
+def einkommensteuer__betrag_m_sn() -> None:
+    pass
 
 
 @persona_target_element()
-def sozialversicherung__pflege__beitrag__betrag_versicherter_y() -> None:
-    return None
+def solidaritätszuschlag__betrag_m_sn() -> None:
+    pass
 
 
 @persona_target_element()
-def sozialversicherung__kranken__beitrag__betrag_versicherter_y() -> None:
-    return None
+def sozialversicherung__beiträge_versicherter_m_hh() -> None:
+    pass
 
 
 @persona_target_element()
-def sozialversicherung__rente__beitrag__betrag_versicherter_y() -> None:
-    return None
+def kindergeld__betrag_m_hh() -> None:
+    pass
+
+
+@persona_target_element(start_date="2005-01-01")
+def kinderzuschlag__betrag_m_bg() -> None:
+    pass
 
 
 @persona_target_element()
-def sozialversicherung__arbeitslosen__beitrag__betrag_versicherter_y() -> None:
-    return None
-
-
-@persona_target_element()
-def sozialversicherung__arbeitslosen__betrag_y() -> None:
+def wohngeld__betrag_m_wthh() -> None:
     pass
 
 
 @persona_target_element(start_date="2005-01-01", end_date="2022-12-31")
-def arbeitslosengeld_2__betrag_y_bg() -> None:
+def arbeitslosengeld_2__betrag_m_bg() -> None:
     pass
 
 
 @persona_target_element(start_date="2023-01-01")
-def bürgergeld__betrag_y_bg() -> None:
-    pass
-
-
-@persona_target_element()
-def wohngeld__betrag_y_wthh() -> None:
+def bürgergeld__betrag_m_bg() -> None:
     pass
