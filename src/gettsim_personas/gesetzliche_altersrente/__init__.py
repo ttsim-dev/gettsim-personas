@@ -1,3 +1,6 @@
-from _gettsim_personas.de.gesetzliche_altersrente import Couple, Single
+from _gettsim_personas.de.gesetzliche_altersrente import (
+    CoupleWithFixedPublicPension,
+    SingleWithFixedPublicPension,
+)
 
-__all__ = ["Couple", "Single"]
+__all__ = ["CoupleWithFixedPublicPension", "SingleWithFixedPublicPension"]

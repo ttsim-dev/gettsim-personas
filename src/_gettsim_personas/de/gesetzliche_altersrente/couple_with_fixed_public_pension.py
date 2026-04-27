@@ -11,10 +11,10 @@ from _gettsim_personas.persona_elements import (
 
 
 @persona_description(
-    description="""Jointly-taxed married couple of retirees without children. Statutory
-                pension benefits are fixed. Use this persona to compute income taxes,
-                social security contributions, Wohngeld, and Grundsicherung.""",
-    start_date="2011-01-01",
+    description="""Couple retiree receiving statutory pension benefits. Statutory
+                pension benefits are fixed. Use this persona to compute income taxes and
+                social security contributions.""",
+    start_date="2005-01-01",
 )
 def description() -> None:
     pass
@@ -32,7 +32,7 @@ def hh_id() -> np.ndarray:
 
 @persona_input_element()
 def alter() -> np.ndarray:
-    return np.array([72, 70])
+    return np.array([68, 68])
 
 
 @persona_input_element()
@@ -43,16 +43,6 @@ def arbeitsstunden_w() -> np.ndarray:
 @persona_input_element()
 def behinderungsgrad() -> np.ndarray:
     return np.array([0, 0])
-
-
-@persona_input_element()
-def schwerbehindert_grad_g() -> np.ndarray:
-    return np.array([False, False])
-
-
-@persona_input_element()
-def alter_monate(alter: np.ndarray) -> np.ndarray:
-    return alter * 12
 
 
 @persona_input_element()
@@ -198,18 +188,13 @@ def kindergeld__p_id_empfänger() -> np.ndarray:
 
 
 @persona_input_element()
-def sozialversicherung__rente__bezieht_rente() -> np.ndarray:
-    return np.array([True, True])
-
-
-@persona_input_element()
 def sozialversicherung__rente__erwerbsminderung__betrag_m() -> np.ndarray:
     return np.array([0, 0])
 
 
 @persona_input_element()
 def sozialversicherung__rente__altersrente__betrag_m() -> np.ndarray:
-    return np.array([500.0, 200.0])
+    return np.array([2000.0, 2000.0])
 
 
 @persona_input_element()
@@ -217,81 +202,6 @@ def sozialversicherung__rente__jahr_renteneintritt(
     evaluation_date: datetime.date,
 ) -> np.ndarray:
     return np.array([evaluation_date.year, evaluation_date.year])
-
-
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__grundrente__grundrentenzeiten_monate() -> np.ndarray:
-    return np.array([360, 80])
-
-
-@persona_input_element()
-def wohnen__bewohnt_eigentum_hh() -> np.ndarray:
-    return np.array([False, False])
-
-
-@persona_input_element()
-def wohnen__bruttokaltmiete_m_hh() -> np.ndarray:
-    return np.array([550, 550])
-
-
-@persona_input_element()
-def wohnen__heizkosten_m_hh() -> np.ndarray:
-    return np.array([60, 60])
-
-
-@persona_input_element()
-def wohnen__wohnfläche_hh() -> np.ndarray:
-    return np.array([65, 65])
-
-
-@persona_input_element()
-def wohngeld__mietstufe_hh() -> np.ndarray:
-    return np.array([3, 3])
-
-
-@persona_input_element()
-def vermögen() -> np.ndarray:
-    return np.array([0, 0])
-
-
-@persona_input_element()
-def unterhalt__tatsächlich_erhaltener_betrag_m() -> np.ndarray:
-    return np.array([0, 0])
-
-
-@persona_input_element()
-def unterhaltsvorschuss__betrag_m() -> np.ndarray:
-    return np.array([0, 0])
-
-
-@persona_input_element()
-def elterngeld__betrag_m() -> np.ndarray:
-    return np.array([0, 0])
-
-
-@persona_input_element(end_date="2022-12-31")
-def arbeitslosengeld_2__p_id_einstandspartner() -> np.ndarray:
-    return np.array([1, 0])
-
-
-@persona_input_element(start_date="2023-01-01")
-def bürgergeld__p_id_einstandspartner() -> np.ndarray:
-    return np.array([1, 0])
-
-
-@persona_input_element(start_date="2023-01-01")
-def bürgergeld__bezug_im_vorjahr() -> np.ndarray:
-    return np.array([False, False])
-
-
-@persona_input_element()
-def kindergeld__betrag_m() -> np.ndarray:
-    return np.array([0, 0])
-
-
-@persona_input_element()
-def sozialversicherung__arbeitslosen__betrag_m() -> np.ndarray:
-    return np.array([0, 0])
 
 
 @persona_target_element()
@@ -310,10 +220,10 @@ def sozialversicherung__pflege__beitrag__betrag_versicherter_y() -> None:
 
 
 @persona_target_element()
-def grundsicherung__im_alter__betrag_m_eg() -> None:
+def sozialversicherung__rente__beitrag__betrag_versicherter_y() -> None:
     pass
 
 
 @persona_target_element()
-def wohngeld__betrag_m_wthh() -> None:
+def sozialversicherung__arbeitslosen__beitrag__betrag_versicherter_y() -> None:
     pass
