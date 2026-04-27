@@ -336,11 +336,6 @@ def kinderzuschlag__betrag_m_bg() -> None:
     pass
 
 
-@persona_target_element(start_date="2005-01-01")
-def wohngeld__betrag_m_wthh() -> None:
-    pass
-
-
 @persona_target_element(start_date="2005-01-01", end_date="2022-12-31")
 def arbeitslosengeld_2__betrag_m_bg() -> None:
     pass
@@ -348,4 +343,9 @@ def arbeitslosengeld_2__betrag_m_bg() -> None:
 
 @persona_target_element(start_date="2023-01-01")
 def bürgergeld__betrag_m_bg() -> None:
+    pass
+
+
+@persona_target_element(start_date="2005-01-01")
+def wohngeld__betrag_m_wthh() -> None:
     pass

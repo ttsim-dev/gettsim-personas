@@ -307,10 +307,10 @@ def kinderzuschlag__betrag_m_bg() -> None:
 
 
 @persona_target_element()
-def wohngeld__betrag_m_wthh() -> None:
+def bürgergeld__betrag_m_bg() -> None:
     pass
 
 
 @persona_target_element()
-def bürgergeld__betrag_m_bg() -> None:
+def wohngeld__betrag_m_wthh() -> None:
     pass
