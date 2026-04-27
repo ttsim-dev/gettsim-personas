@@ -307,25 +307,25 @@ def sozialversicherung__arbeitslosen__betrag_m() -> np.ndarray:
 
 
 @persona_target_element()
-def einkommensteuer__betrag_y_sn() -> None:
+def einkommensteuer__betrag_m_sn() -> None:
     pass
 
 
 @persona_target_element()
-def sozialversicherung__kranken__beitrag__betrag_versicherter_y() -> None:
+def solidaritätszuschlag__betrag_m_sn() -> None:
     pass
 
 
 @persona_target_element()
-def sozialversicherung__pflege__beitrag__betrag_versicherter_y() -> None:
+def sozialversicherung__beiträge_versicherter_m_hh() -> None:
     pass
 
 
 @persona_target_element()
-def grundsicherung__im_alter__betrag_y_eg() -> None:
+def grundsicherung__im_alter__betrag_m_eg() -> None:
     pass
 
 
 @persona_target_element()
-def wohngeld__betrag_y_wthh() -> None:
+def wohngeld__betrag_m_wthh() -> None:
     pass
