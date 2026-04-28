@@ -159,6 +159,11 @@ def einnahmen__renten__geförderte_private_vorsorge_m() -> np.ndarray:
     return np.array([0, 0, 0])
 
 
+@persona_input_element(start_date="2005-01-01")
+def einnahmen__renten__basisrente_m() -> np.ndarray:
+    return np.array([0, 0, 0])
+
+
 @persona_input_element()
 def einkommensteuer__einkünfte__sonstige__rente__betrag_m() -> np.ndarray:
     return np.array([0, 0, 0])
