@@ -11,3 +11,4 @@ coverage:
         threshold: 1%
 ignore:
   - tests/**/*
+  - src/_gettsim_personas/de/**/*

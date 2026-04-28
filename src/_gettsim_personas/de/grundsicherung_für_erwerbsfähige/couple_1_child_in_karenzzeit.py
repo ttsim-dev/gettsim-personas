@@ -287,27 +287,22 @@ def einkommensteuer__betrag_m_sn() -> None:
 
 
 @persona_target_element()
-def sozialversicherung__rente__beitrag__betrag_versicherter_y() -> None:
+def solidaritätszuschlag__betrag_m_sn() -> None:
     pass
 
 
 @persona_target_element()
-def sozialversicherung__kranken__beitrag__betrag_versicherter_y() -> None:
+def sozialversicherung__beiträge_versicherter_m_hh() -> None:
     pass
 
 
 @persona_target_element()
-def sozialversicherung__pflege__beitrag__betrag_versicherter_y() -> None:
+def kindergeld__betrag_m_hh() -> None:
     pass
 
 
 @persona_target_element()
-def sozialversicherung__arbeitslosen__beitrag__betrag_versicherter_y() -> None:
-    pass
-
-
-@persona_target_element()
-def sozialversicherung__arbeitslosen__betrag_m() -> None:
+def kinderzuschlag__betrag_m_bg() -> None:
     pass
 
 
@@ -318,14 +313,4 @@ def bürgergeld__betrag_m_bg() -> None:
 
 @persona_target_element()
 def wohngeld__betrag_m_wthh() -> None:
-    pass
-
-
-@persona_target_element()
-def kinderzuschlag__betrag_m_bg() -> None:
-    pass
-
-
-@persona_target_element()
-def kindergeld__betrag_m() -> None:
     pass
