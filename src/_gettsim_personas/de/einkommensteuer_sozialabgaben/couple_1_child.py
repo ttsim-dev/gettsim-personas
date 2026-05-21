@@ -71,7 +71,7 @@ def einnahmen__kapitalerträge_y() -> np.ndarray:
 
 
 @persona_input_element()
-def einkommensteuer__einkünfte__sonstige__rente__betrag_m() -> np.ndarray:
+def einkommensteuer__einkünfte__sonstige__rente__steuerpflichtige_einnahmen_m() -> np.ndarray:
     return np.array([0, 0, 0])
 
 
