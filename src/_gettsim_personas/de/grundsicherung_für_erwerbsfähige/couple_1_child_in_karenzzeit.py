@@ -131,7 +131,7 @@ def einnahmen__kapitalerträge_y() -> np.ndarray:
 
 
 @persona_input_element()
-def einnahmen__renten__gesamt_m() -> np.ndarray:
+def einnahmen__renten__betrag_gesamt_m() -> np.ndarray:
     return np.array([0, 0, 0])
 
 
