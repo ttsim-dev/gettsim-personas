@@ -12,7 +12,9 @@ def upsert_input_data(
 ) -> NestedData:
     """Upsert persona input data."""
     _fail_if_data_to_upsert_is_not_dict_with_array_leafs(data_to_upsert)
-    _fail_if_data_lengths_are_incompatible(data_to_upsert, input_data)
+    _fail_if_data_lengths_are_incompatible(
+        data_to_upsert=data_to_upsert, data_from_persona=input_data
+    )
     flat_data_to_upsert = dt.flatten_to_tree_paths(data_to_upsert)
     flat_input_data = dt.flatten_to_tree_paths(input_data)
 
