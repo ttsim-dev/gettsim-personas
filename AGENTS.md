@@ -1,4 +1,4 @@
-@.ai-instructions/profiles/tier-b-research.md
+@.ai-instructions/profiles/tier-a.md @.ai-instructions/modules/pandas.md
 
 # gettsim-personas
 

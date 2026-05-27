@@ -1,16 +1,25 @@
 from __future__ import annotations
 
+import datetime
 import inspect
 from dataclasses import dataclass, field, fields, make_dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Protocol, cast
+from types import ModuleType
+from typing import Any, Protocol, cast, runtime_checkable
 
 import dags
 import dags.tree as dt
 import numpy as np
+from beartype import beartype
 from ttsim.interface_dag_elements.orig_policy_objects import load_module
 from ttsim.interface_dag_elements.shared import to_datetime
+from ttsim.typing import (
+    DashedISOString,
+    NestedData,
+    NestedTargetDict,
+)
 
+from _gettsim_personas._beartype_conf import PERSONA_CONF
 from _gettsim_personas.persona_elements import (
     DEFAULT_END_DATE,
     DEFAULT_START_DATE,
@@ -23,12 +32,6 @@ from _gettsim_personas.persona_elements import (
 from _gettsim_personas.typing import PersonaElement
 from _gettsim_personas.upsert import upsert_input_data
 
-if TYPE_CHECKING:
-    import datetime
-    from types import ModuleType
-
-    from _gettsim_personas.typing import DashedISOString, NestedData, NestedStrings
-
 
 @dataclass(frozen=True)
 class LinspaceRange:
@@ -36,6 +39,7 @@ class LinspaceRange:
     top: float
 
 
+@runtime_checkable
 class LinspaceGridProtocol(Protocol):
     """Protocol for a dynamically created linspace grid.
 
@@ -53,8 +57,9 @@ class Persona:
     policy_date: datetime.date
     evaluation_date: datetime.date
     input_data_tree: NestedData
-    tt_targets_tree: NestedStrings
+    tt_targets_tree: NestedTargetDict
 
+    @beartype(conf=PERSONA_CONF)
     def upsert_input_data(self, input_data_to_upsert: NestedData) -> Persona:
         """Upsert persona input data.
 
@@ -138,6 +143,7 @@ class OrigPersonaOverTime:
         )
         object.__setattr__(self, "LinspaceRange", LinspaceRange)
 
+    @beartype(conf=PERSONA_CONF)
     def __call__(
         self,
         *,
