@@ -102,8 +102,8 @@ ty = "*"
 ty = "ty check"
 [tool.pixi.pypi-dependencies]
 gettsim_personas = { path = ".", editable = true }
-ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim.git", branch = "beartype" }
-gettsim = { git = "https://github.com/ttsim-dev/gettsim.git", branch = "beartype" }
+ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim.git", branch = "main" }
+gettsim = { git = "https://github.com/ttsim-dev/gettsim.git", branch = "main" }
 kaleido = ">=1.0.0"
 pdbp = "*"
 [tool.pixi.workspace]
