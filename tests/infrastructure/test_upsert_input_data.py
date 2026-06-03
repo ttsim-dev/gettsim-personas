@@ -22,7 +22,9 @@ from _gettsim_personas.upsert import (
     ],
 )
 def test_broadcast_p_id(p_id_array, expected_length, expected_p_id):
-    broadcasted_p_id = broadcast_p_id(p_id_array, expected_length)
+    broadcasted_p_id = broadcast_p_id(
+        original_array=p_id_array, expected_length=expected_length
+    )
     assert np.array_equal(broadcasted_p_id, np.array(expected_p_id))
 
 
@@ -30,14 +32,14 @@ def test_broadcasting_p_id_fails_if_p_id_is_not_consecutive():
     p_id_array = np.array([0, 2, 3])
     expected_length = 3
     with pytest.raises(ValueError, match="Persona p_id does not start with 0 or"):
-        broadcast_p_id(p_id_array, expected_length)
+        broadcast_p_id(original_array=p_id_array, expected_length=expected_length)
 
 
 def test_broadcasting_p_id_fails_if_p_id_is_not_starting_with_0():
     p_id_array = np.array([1, 2, 3])
     expected_length = 3
     with pytest.raises(ValueError, match="Persona p_id does not start with 0 or"):
-        broadcast_p_id(p_id_array, expected_length)
+        broadcast_p_id(original_array=p_id_array, expected_length=expected_length)
 
 
 @pytest.mark.parametrize(
@@ -56,7 +58,9 @@ def test_broadcasting_p_id_fails_if_p_id_is_not_starting_with_0():
 def test_broadcast_array_with_group_or_foreign_keys(
     original_array, expected_length, expected_array
 ):
-    broadcasted_array = broadcast_group_ids(original_array, expected_length)
+    broadcasted_array = broadcast_group_ids(
+        original_array=original_array, expected_length=expected_length
+    )
     assert np.array_equal(broadcasted_array, expected_array)
 
 
@@ -72,7 +76,9 @@ def test_broadcast_array_with_group_or_foreign_keys(
     ],
 )
 def test_broadcast_foreign_keys(original_array, expected_length, expected_array):
-    broadcasted_array = broadcast_foreign_keys(original_array, expected_length)
+    broadcasted_array = broadcast_foreign_keys(
+        original_array=original_array, expected_length=expected_length
+    )
     assert np.array_equal(broadcasted_array, expected_array)
 
 
@@ -156,7 +162,9 @@ def test_broadcast_foreign_keys(original_array, expected_length, expected_array)
     ],
 )
 def test_upsert_input_data(data_from_persona, data_to_upsert, expected_upserted_data):
-    upserted_data = upsert_input_data(data_from_persona, data_to_upsert)
+    upserted_data = upsert_input_data(
+        input_data=data_from_persona, data_to_upsert=data_to_upsert
+    )
     flat_upserted_data = dt.flatten_to_tree_paths(upserted_data)
     flat_expected_upserted_data = dt.flatten_to_tree_paths(expected_upserted_data)
 
@@ -174,7 +182,7 @@ def test_upsert_input_data_fails_if_upserted_data_is_not_dict():
     data_to_upsert = "not a dict"
     match = "data_to_upsert must be a dictionary."
     with pytest.raises(TypeError, match=match):
-        upsert_input_data(data_from_persona, data_to_upsert)  # ty: ignore[invalid-argument-type]
+        upsert_input_data(input_data=data_from_persona, data_to_upsert=data_to_upsert)  # ty: ignore[invalid-argument-type]
 
 
 def test_upsert_input_data_fails_if_data_to_upsert_is_not_dict_with_array_leafs():
@@ -185,7 +193,7 @@ def test_upsert_input_data_fails_if_data_to_upsert_is_not_dict_with_array_leafs(
     data_to_upsert = {"a": "not a array"}
     match = "All leafs in data_to_upsert must be numpy Arrays or lists."
     with pytest.raises(TypeError, match=match):
-        upsert_input_data(data_from_persona, data_to_upsert)
+        upsert_input_data(input_data=data_from_persona, data_to_upsert=data_to_upsert)
 
 
 def test_upsert_input_data_fails_if_data_lengths_are_incompatible():
@@ -198,7 +206,7 @@ def test_upsert_input_data_fails_if_data_lengths_are_incompatible():
     }
     match = "The length of data in data_to_upsert is not a multiple"
     with pytest.raises(ValueError, match=match):
-        upsert_input_data(data_from_persona, data_to_upsert)
+        upsert_input_data(input_data=data_from_persona, data_to_upsert=data_to_upsert)
 
 
 def test_upsert_input_data_fails_if_length_of_data_in_to_upsert_different():
@@ -212,4 +220,4 @@ def test_upsert_input_data_fails_if_length_of_data_in_to_upsert_different():
     }
     match = "The length of data in data_to_upsert differ"
     with pytest.raises(ValueError, match=match):
-        upsert_input_data(data_from_persona, data_to_upsert)
+        upsert_input_data(input_data=data_from_persona, data_to_upsert=data_to_upsert)
