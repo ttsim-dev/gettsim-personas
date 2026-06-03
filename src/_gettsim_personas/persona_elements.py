@@ -2,18 +2,16 @@ from __future__ import annotations
 
 import datetime
 import inspect
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import Any
 
 import numpy as np
+from beartype import beartype
 from ttsim.tt.column_objects_param_function import _convert_and_validate_dates
+from ttsim.typing import DashedISOString
 
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from typing import Any
-
-    from _gettsim_personas.typing import DashedISOString
-
+from _gettsim_personas._beartype_conf import PERSONA_CONF
 
 DEFAULT_START_DATE = datetime.date(1900, 1, 1)
 DEFAULT_END_DATE = datetime.date(2100, 12, 31)
@@ -42,6 +40,7 @@ class PersonaPIDElement:
         return len(self.function())
 
 
+@beartype(conf=PERSONA_CONF)
 def persona_pid_element() -> Callable[[Callable[..., Any]], PersonaPIDElement]:
     def inner(func: Callable[..., Any]) -> PersonaPIDElement:
         return PersonaPIDElement(function=func)
@@ -77,6 +76,7 @@ class PersonaInputElement(TimeDependentPersonaElement):
         return inspect.signature(self.function)
 
 
+@beartype(conf=PERSONA_CONF)
 def persona_input_element(
     *,
     tt_qname: str | None = None,
@@ -110,6 +110,7 @@ class PersonaTargetElement(TimeDependentPersonaElement):
     tt_qname: str
 
 
+@beartype(conf=PERSONA_CONF)
 def persona_target_element(
     *,
     start_date: DashedISOString | datetime.date = DEFAULT_START_DATE,
@@ -140,6 +141,7 @@ class PersonaDescription(TimeDependentPersonaElement):
     description: str
 
 
+@beartype(conf=PERSONA_CONF)
 def persona_description(
     *,
     description: str,

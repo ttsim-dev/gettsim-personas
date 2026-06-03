@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import dags.tree as dt
 import numpy as np
 
-if TYPE_CHECKING:
-    from _gettsim_personas.typing import NestedData
+from _gettsim_personas.typing import NestedData
 
 
 def upsert_input_data(
