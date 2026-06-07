@@ -312,10 +312,6 @@ def elterngeld__betrag_m() -> np.ndarray:
     return np.array([0])
 
 
-# Nobody in this persona is beyond the Regelaltersgrenze, so no income of
-# Grundsicherung im Alter recipients can flow to the SGB II members of the
-# household. Setting the surplus to zero cuts the Grundsicherung im Alter
-# subtree from the DAG.
 @persona_input_element()
 def grundsicherung__im_alter__überschusseinkommen_m_eg() -> np.ndarray:
     return np.array([0])
