@@ -67,6 +67,11 @@ def behinderungsgrad() -> np.ndarray:
 
 
 @persona_input_element(start_date="2005-01-01")
+def schwerbehindert_grad_g() -> np.ndarray:
+    return np.array([False, False])
+
+
+@persona_input_element(start_date="2005-01-01")
 def einkommensteuer__abzüge__beitrag_private_rentenversicherung_m() -> np.ndarray:
     return np.array([0, 0])
 
@@ -210,6 +215,19 @@ def geburtsjahr(
     return evaluation_date.year - alter
 
 
+# TODO(@MImmesberger): Remove the following two elements once Grundsicherung im
+# Alter works pre-2011.
+# https://github.com/ttsim-dev/gettsim/issues/685
+@persona_input_element(start_date="2005-01-01", end_date="2010-12-31")
+def grundsicherung__im_alter__erwerbseinkommen_m() -> np.ndarray:
+    return np.array([0, 0])
+
+
+@persona_input_element(start_date="2005-01-01", end_date="2006-12-06")
+def grundsicherung__im_alter__mehrbedarf_bei_schwerbehinderungsgrad_g() -> np.ndarray:
+    return np.array([0, 0])
+
+
 @persona_input_element(start_date="2005-01-01")
 def kindergeld__in_ausbildung() -> np.ndarray:
     return np.array([False, False])
@@ -263,9 +281,14 @@ def sozialversicherung__pflege__beitrag__hat_kinder() -> np.ndarray:
     return np.array([False, False])
 
 
-@persona_input_element(start_date="2005-01-01")
+@persona_input_element(start_date="2021-01-01")
 def sozialversicherung__rente__bezieht_rente() -> np.ndarray:
     return np.array([False, False])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__grundrentenzeiten_monate() -> np.ndarray:
+    return np.array([0, 0])
 
 
 @persona_input_element(start_date="2005-01-01")
