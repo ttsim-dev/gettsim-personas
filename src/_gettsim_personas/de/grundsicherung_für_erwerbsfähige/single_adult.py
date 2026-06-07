@@ -51,11 +51,6 @@ def behinderungsgrad() -> np.ndarray:
 
 
 @persona_input_element()
-def schwerbehindert_grad_g() -> np.ndarray:
-    return np.array([False])
-
-
-@persona_input_element()
 def geburtsjahr(
     evaluation_date: datetime.date,
     alter: np.ndarray,
@@ -317,16 +312,12 @@ def elterngeld__betrag_m() -> np.ndarray:
     return np.array([0])
 
 
-# TODO(@MImmesberger): Remove the following two elements once Grundsicherung im
-# Alter works pre-2011.
-# https://github.com/ttsim-dev/gettsim/issues/685
-@persona_input_element(end_date="2010-12-31")
-def grundsicherung__im_alter__erwerbseinkommen_m() -> np.ndarray:
-    return np.array([0])
-
-
-@persona_input_element(end_date="2006-12-06")
-def grundsicherung__im_alter__mehrbedarf_bei_schwerbehinderungsgrad_g() -> np.ndarray:
+# Nobody in this persona is beyond the Regelaltersgrenze, so no income of
+# Grundsicherung im Alter recipients can flow to the SGB II members of the
+# household. Setting the surplus to zero cuts the Grundsicherung im Alter
+# subtree from the DAG.
+@persona_input_element()
+def grundsicherung__im_alter__überschusseinkommen_m_eg() -> np.ndarray:
     return np.array([0])
 
 
