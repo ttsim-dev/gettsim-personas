@@ -210,6 +210,11 @@ def geburtsjahr(
 
 
 @persona_input_element(start_date="2005-01-01")
+def grundsicherung__im_alter__überschusseinkommen_m_eg() -> np.ndarray:
+    return np.array([0, 0])
+
+
+@persona_input_element(start_date="2005-01-01")
 def kindergeld__in_ausbildung() -> np.ndarray:
     return np.array([False, False])
 
@@ -262,9 +267,14 @@ def sozialversicherung__pflege__beitrag__hat_kinder() -> np.ndarray:
     return np.array([True, False])
 
 
-@persona_input_element(start_date="2005-01-01")
+@persona_input_element(start_date="2021-01-01")
 def sozialversicherung__rente__bezieht_rente() -> np.ndarray:
     return np.array([False, False])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__grundrentenzeiten_monate() -> np.ndarray:
+    return np.array([0, 0])
 
 
 @persona_input_element(start_date="2005-01-01")
