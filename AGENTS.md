@@ -24,20 +24,19 @@ pixi run -e py314 tests -n 7          # parallel
 pixi run -e py314 tests -k "test_end_to_end"
 pixi run -e py314 tests tests/infrastructure/test_persona_objects.py
 
-# Type checking
-pixi run ty
+# Type checking (runs as the ty pre-commit hook)
+prek run ty --all-files
 
 # Quality checks
 pixi run prek run --all-files
 
-# Available environments: py311, py312, py313, py314, type-checking
+# Available environments: py311, py312, py313, py314
 ```
 
-Before finishing any task that modifies code, always run these three verification steps
-in order:
+Before finishing any task that modifies code, always run these two verification steps in
+order:
 
-1. `pixi run ty` (type checker)
-1. `pixi run prek run --all-files` (quality checks)
+1. `pixi run prek run --all-files` (quality checks incl. ty type checking)
 1. `pixi run -e py314 tests -n 7` (full test suite)
 
 ## Architecture
