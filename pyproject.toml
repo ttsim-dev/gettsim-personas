@@ -72,7 +72,6 @@ py311 = [ "tests", "py311" ]
 py312 = [ "tests", "py312" ]
 py313 = [ "tests", "py313" ]
 py314 = [ "tests", "py314" ]
-type-checking = [ "py314", "type-checking" ]
 [tool.pixi.feature.py311.dependencies]
 python = "~=3.11.0"
 [tool.pixi.feature.py312.dependencies]
@@ -96,10 +95,6 @@ types-pytz = "*"
 [tool.pixi.feature.tests.tasks]
 tests = "pytest"
 tests-with-cov = "pytest --cov-report=xml --cov=./"
-[tool.pixi.feature.type-checking.pypi-dependencies]
-ty = "*"
-[tool.pixi.feature.type-checking.tasks]
-ty = "ty check"
 [tool.pixi.pypi-dependencies]
 gettsim_personas = { path = ".", editable = true }
 ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim.git", branch = "main" }
@@ -157,14 +152,16 @@ expand_tables = [
   "tool.pixi.feature.tests.activation.env",
   "tool.pixi.feature.tests.pypi-dependencies",
   "tool.pixi.feature.tests.tasks",
-  "tool.pixi.feature.type-checking.pypi-dependencies",
-  "tool.pixi.feature.type-checking.tasks",
   "tool.pixi.pypi-dependencies",
   "tool.pixi.tasks",
   "tool.pixi.workspace",
 ]
 
 [tool.ty]
+# ty resolves third-party imports from this pixi env (the ty-pre-commit hook runs
+# `uv check --no-project`, so uv neither creates a `.venv` nor resolves deps). Run
+# `pixi install` once.
+environment.python = ".pixi/envs/py314"
 rules.ambiguous-protocol-member = "error"
 rules.deprecated = "error"
 rules.division-by-zero = "error"
