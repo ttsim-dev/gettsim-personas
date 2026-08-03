@@ -34,6 +34,7 @@ dependencies = [ "dags>=0.6", "gettsim>=1.1" ]
 [[project.authors]]
 name = "Hans-Martin von Gaudecker"
 email = "hmgaudecker@uni-bonn.de"
+
 [[project.authors]]
 name = "Marvin Immesberger"
 email = "immesberger@uni-bonn.de"
@@ -42,6 +43,7 @@ text = "GNU Affero General Public License v3"
 [[project.maintainers]]
 name = "Hans-Martin von Gaudecker"
 email = "hmgaudecker@uni-bonn.de"
+
 [[project.maintainers]]
 name = "Marvin Immesberger"
 email = "immesberger@uni-bonn.de"
@@ -145,7 +147,6 @@ pydocstyle.convention = "google"
 column_width = 88
 max_supported_python = "3.14"
 table_format = "long"
-collapse_tables = [ "tool.hatch", "tool.pytest", "tool.pytask", "tool.ty" ]
 expand_tables = [
   "tool.pixi.dependencies",
   "tool.pixi.environments",
@@ -156,6 +157,7 @@ expand_tables = [
   "tool.pixi.tasks",
   "tool.pixi.workspace",
 ]
+collapse_tables = [ "tool.hatch", "tool.pytask", "tool.pytest", "tool.ty" ]
 
 [tool.ty]
 # ty resolves third-party imports from this pixi env (the ty-pre-commit hook runs
