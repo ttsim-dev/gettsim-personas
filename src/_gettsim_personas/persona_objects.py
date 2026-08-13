@@ -50,6 +50,9 @@ class LinspaceGridProtocol(Protocol):
     n_points: int
     p0: LinspaceRange | float | int
 
+    def __init__(self, **kwargs: LinspaceRange | float) -> None:
+        """Construct a grid from `n_points` and one `p{i}` per persona member."""
+
 
 @dataclass(frozen=True)
 class Persona:
