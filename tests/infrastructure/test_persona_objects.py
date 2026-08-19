@@ -12,6 +12,7 @@ from _gettsim_personas.persona_elements import (
 )
 from _gettsim_personas.persona_objects import (
     LinspaceGridProtocol,
+    OrigPersonaOverTime,
     _fail_if_active_tt_qnames_overlap,
     _fail_if_bruttolohn_m_linspace_grid_is_invalid,
     _fail_if_not_exactly_one_description_is_active,
@@ -250,6 +251,19 @@ def test_bruttolohn_m_linspace_grid_invalid_wrong_number_of_p_ids():
             linspace_grid=InvalidLinspaceGrid(p0=1, p1=2, n_points=10),
             p_id_array=np.array([0, 1, 2, 3]),
         )
+
+
+def test_linspace_grid_accepts_one_keyword_per_member_plus_n_points():
+    """`LinspaceGrid` of a statically typed persona takes `p0..pN` and `n_points`.
+
+    The annotation on `persona` is what gives this test its value: it makes type
+    checkers resolve `LinspaceGrid` to `type[LinspaceGridProtocol]` rather than to
+    an unknown type, so the protocol must declare a constructor accepting these
+    keywords for the call below to type-check.
+    """
+    persona: OrigPersonaOverTime = SamplePersona
+    grid = persona.LinspaceGrid(p0=1.0, p1=2.0, p2=3.0, n_points=5)
+    assert grid.n_points == 5
 
 
 def test_bruttolohn_m_linspace_grid_invalid_bottom_larger_than_top():
