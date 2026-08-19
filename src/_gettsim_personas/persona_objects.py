@@ -51,14 +51,7 @@ class LinspaceGridProtocol(Protocol):
     p0: LinspaceRange | float | int
 
     def __init__(self, **kwargs: LinspaceRange | float) -> None:
-        """Accept one keyword per persona member plus `n_points`.
-
-        The concrete grid class is built by `_make_linspace_grid_class` at runtime, so
-        the number of `pN` parameters is only known then. Declaring the constructor
-        keyword-only here lets type checkers accept `SomePersona.LinspaceGrid(p0=...,
-        p1=..., n_points=...)` instead of falling back to `object.__init__`.
-        """
-        ...
+        """Construct a grid from `n_points` and one `p{i}` per persona member."""
 
 
 @dataclass(frozen=True)
