@@ -70,7 +70,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "hh_id",
         "einnahmen__bruttolohn_m",
     }
-    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}  # ty: ignore[unresolved-attribute]
+    orig_names = {el.orig_name for el in SamplePersona.elements}  # ty: ignore[unresolved-attribute]
     assert expected_orig_names == orig_names
 
     expected_tt_qnames = {
@@ -89,7 +89,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "einnahmen__bruttolohn_m",
     }
     tt_qnames = {
-        el.tt_qname for el in SamplePersona.orig_elements() if hasattr(el, "tt_qname")
+        el.tt_qname for el in SamplePersona.elements if hasattr(el, "tt_qname")
     }
     assert expected_tt_qnames == tt_qnames
 

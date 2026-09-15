@@ -143,7 +143,7 @@ class OrigPersonaOverTime:
     path_to_persona_elements: Path | None = None
     """Module of persona elements to load into `elements`. Mutually exclusive with
     `elements`."""
-    elements: tuple[PersonaElement, ...] | None = None
+    elements: tuple[PersonaElement, ...] = ()
     """Persona elements passed explicitly. Mutually exclusive with
     `path_to_persona_elements`."""
     base: OrigPersonaOverTime | None = None
@@ -168,18 +168,18 @@ class OrigPersonaOverTime:
                 self, "elements", tuple(load_persona_elements_from_module(module))
             )
         _fail_if_p_id_not_defined_exactly_once(
-            own_elements=self.elements or (),
+            own_elements=self.elements,
             has_base=self.base is not None,
             persona_name=self.persona_name,
         )
-        p_id_element = next(
-            el for el in self.orig_elements() if isinstance(el, PersonaPIDElement)
-        )
-        object.__setattr__(
-            self,
-            "LinspaceGrid",
-            _make_linspace_grid_class(p_id_element.persona_size),
-        )
+        if self.base is not None:
+            linspace_grid = self.base.LinspaceGrid
+        else:
+            p_id_element = next(
+                el for el in self.elements if isinstance(el, PersonaPIDElement)
+            )
+            linspace_grid = _make_linspace_grid_class(p_id_element.persona_size)
+        object.__setattr__(self, "LinspaceGrid", linspace_grid)
         object.__setattr__(self, "LinspaceRange", LinspaceRange)
 
     @property
@@ -274,11 +274,6 @@ class OrigPersonaOverTime:
             else dt.unflatten_from_qnames(active_tt_targets(active_elements)),
         )
 
-    def orig_elements(self) -> list[PersonaElement]:
-        """All elements of this persona, those of the base (if any) first."""
-        base_elements = self.base.orig_elements() if self.base is not None else []
-        return [*base_elements, *(self.elements or ())]
-
     def active_elements(self, policy_date: datetime.date) -> list[PersonaElement]:
         """Elements active at *policy_date*, excluding replaced base elements.
 
@@ -286,7 +281,7 @@ class OrigPersonaOverTime:
         element with the same `tt_qname` regardless of kind. A description replaces
         the base's description. The base's p_id element is never replaced.
         """
-        own_active = _active_elements(list(self.elements or ()), policy_date)
+        own_active = _active_elements(list(self.elements), policy_date)
         own_qnames = {getattr(el, "tt_qname", None) for el in own_active}
         own_has_description = any(
             isinstance(el, PersonaDescription) for el in own_active
@@ -457,9 +452,9 @@ def load_persona_elements_from_module(
 
 def _fail_if_not_exactly_one_source_of_elements(
     path_to_persona_elements: Path | None,
-    elements: tuple[PersonaElement, ...] | None,
+    elements: tuple[PersonaElement, ...],
 ) -> None:
-    if (path_to_persona_elements is None) == (elements is None):
+    if (path_to_persona_elements is None) == (not elements):
         msg = (
             "Pass exactly one of 'path_to_persona_elements' and 'elements' when "
             "creating an OrigPersonaOverTime."
