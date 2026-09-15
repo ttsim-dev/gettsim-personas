@@ -134,10 +134,10 @@ class OrigPersonaOverTime:
     (`path_to_persona_elements`) or from explicitly passed `elements`. In the latter
     case, an existing persona may be passed as `base`: the passed elements are added to
     the base's elements, and where a passed element and a base element share a
-    `tt_qname` and are active on the same policy date, the passed element wins. The
-    base's members are fixed: to change who is in the persona, define a new persona
-    rather than a `base`. Without a `base`, the passed elements must form a complete
-    persona.
+    `tt_qname` and are active on the same policy date, the passed element replaces the
+    base element. The base's members are fixed: a persona with different members is a
+    new persona, not an extension. Without a `base`, the passed elements must form a
+    complete persona.
     """
 
     path_to_persona_elements: Path | None = None
@@ -167,7 +167,7 @@ class OrigPersonaOverTime:
             object.__setattr__(
                 self, "elements", tuple(load_persona_elements_from_module(module))
             )
-        _fail_if_p_id_not_from_exactly_one_place(
+        _fail_if_p_id_not_defined_exactly_once(
             own_elements=self.elements or (),
             has_base=self.base is not None,
             persona_name=self.persona_name,
@@ -280,9 +280,9 @@ class OrigPersonaOverTime:
         return [*base_elements, *(self.elements or ())]
 
     def active_elements(self, policy_date: datetime.date) -> list[PersonaElement]:
-        """Elements active at *policy_date*, with the base's overridden ones dropped.
+        """Elements active at *policy_date*, excluding replaced base elements.
 
-        Input and target elements live in one `tt_qname` namespace and replace a base
+        Input and target elements share one `tt_qname` namespace and replace a base
         element with the same `tt_qname` regardless of kind. A description replaces
         the base's description. The base's p_id element is never replaced.
         """
@@ -467,16 +467,16 @@ def _fail_if_not_exactly_one_source_of_elements(
         raise ValueError(msg)
 
 
-def _fail_if_p_id_not_from_exactly_one_place(
+def _fail_if_p_id_not_defined_exactly_once(
     *,
     own_elements: tuple[PersonaElement, ...],
     has_base: bool,
     persona_name: str,
 ) -> None:
-    """Fail unless the p_id array comes from exactly one place.
+    """Fail unless exactly one element defines the p_id array.
 
     Without a base, exactly one `PersonaPIDElement` must be passed. With a base, the
-    base's p_id array is final, so no passed element may target `p_id`.
+    base's p_id element cannot be replaced, so no passed element may target `p_id`.
     """
     if has_base:
         if any(getattr(el, "tt_qname", None) == "p_id" for el in own_elements):
