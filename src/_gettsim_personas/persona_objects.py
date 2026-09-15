@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime
 import inspect
-from dataclasses import dataclass, field, fields, make_dataclass
+from dataclasses import dataclass, field, fields, make_dataclass, replace
 from pathlib import Path
 from types import ModuleType
 from typing import Any, Protocol, cast, runtime_checkable
@@ -131,11 +131,8 @@ class OrigPersonaOverTime:
     """A persona containing inputs and targets to use with GETTSIM.
 
     A persona is built either from a module of persona elements on disk
-    (`path_to_persona_elements`) or from explicitly passed `elements`. In the latter
-    case, an existing persona may be passed as `base`: its elements and the passed
-    elements are merged by element name, a passed element replacing the base element
-    of the same name. Without a `base`, the passed elements must form a complete
-    persona.
+    (`path_to_persona_elements`) or from explicitly passed `elements`, which must form
+    a complete persona. `upsert_elements` derives a new persona from an existing one.
     """
 
     path_to_persona_elements: Path | None = None
@@ -144,8 +141,6 @@ class OrigPersonaOverTime:
     elements: tuple[PersonaElement, ...] = ()
     """Persona elements passed explicitly. Mutually exclusive with
     `path_to_persona_elements`."""
-    base: OrigPersonaOverTime | None = None
-    """Persona whose elements are extended by `elements`."""
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
@@ -165,18 +160,6 @@ class OrigPersonaOverTime:
             object.__setattr__(
                 self, "elements", tuple(load_persona_elements_from_module(module))
             )
-        if self.base is not None:
-            merged = {el.orig_name: el for el in (*self.base.elements, *self.elements)}
-            object.__setattr__(self, "elements", tuple(merged.values()))
-            object.__setattr__(
-                self, "start_date", max(self.start_date, self.base.start_date)
-            )
-            object.__setattr__(self, "end_date", min(self.end_date, self.base.end_date))
-            object.__setattr__(
-                self,
-                "error_if_not_implemented",
-                self.error_if_not_implemented or self.base.error_if_not_implemented,
-            )
         _fail_if_not_exactly_one_p_id_element(
             elements=self.elements, persona_name=self.persona_name
         )
@@ -187,6 +170,13 @@ class OrigPersonaOverTime:
             self, "LinspaceGrid", _make_linspace_grid_class(p_id_element.persona_size)
         )
         object.__setattr__(self, "LinspaceRange", LinspaceRange)
+
+    def upsert_elements(self, *elements: PersonaElement) -> OrigPersonaOverTime:
+        """A new persona with *elements* added, replacing elements of the same name."""
+        merged = {el.orig_name: el for el in (*self.elements, *elements)}
+        return replace(
+            self, path_to_persona_elements=None, elements=tuple(merged.values())
+        )
 
     @property
     def persona_name(self) -> str:

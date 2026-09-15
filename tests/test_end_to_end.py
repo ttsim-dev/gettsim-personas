@@ -1,7 +1,7 @@
 import numpy as np
 from gettsim import InputData, MainTarget, TTTargets, main
 
-from gettsim_personas import OrigPersonaOverTime, persona_input_element
+from gettsim_personas import persona_input_element
 from gettsim_personas.einkommensteuer_sozialabgaben import Couple1Child
 
 
@@ -66,10 +66,7 @@ def einnahmen__bruttolohn_m() -> np.ndarray:
     return np.array([1234.0, 2345.0, 0.0])
 
 
-ExtendedCouple1Child = OrigPersonaOverTime(
-    elements=(einnahmen__bruttolohn_m,),
-    base=Couple1Child,
-)
+ExtendedCouple1Child = Couple1Child.upsert_elements(einnahmen__bruttolohn_m)
 
 
 def test_extended_persona_uses_passed_element_in_place_of_base_element():
