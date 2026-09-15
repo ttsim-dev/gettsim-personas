@@ -156,7 +156,6 @@ def test_fail_if_active_tt_qnames_overlap():
                 another_input_element_always_active,
                 time_dependent_persona_input_element_active_since_2010,
             ],
-            persona_name="some persona",
         )
 
 
@@ -171,7 +170,6 @@ def test_do_not_fail_if_active_qnames_do_not_overlap():
             input_element_always_active,
             time_dependent_persona_input_element_active_since_2010,
         ],
-        persona_name="some persona",
     )
 
 
@@ -183,7 +181,6 @@ def test_fail_if_multiple_descriptions_are_active():
                 another_active_description,
                 input_element_always_active,
             ],
-            persona_name="some persona",
         )
 
 
@@ -193,7 +190,6 @@ def test_do_not_fail_if_only_one_description_is_active():
             active_description,
             input_element_always_active,
         ],
-        persona_name="some persona",
     )
 
 

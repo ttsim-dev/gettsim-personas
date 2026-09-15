@@ -4,7 +4,6 @@ import datetime
 import inspect
 from dataclasses import dataclass, field, fields, make_dataclass, replace
 from pathlib import Path
-from types import ModuleType
 from typing import Any, Protocol, cast, runtime_checkable
 
 import dags
@@ -130,49 +129,32 @@ class Persona:
 class OrigPersonaOverTime:
     """A persona containing inputs and targets to use with GETTSIM.
 
-    A persona is loaded from a module of persona elements on disk.
-    `upsert_elements` derives a new persona from an existing one.
+    A persona is built from a collection of persona elements; `load_persona_elements`
+    collects them from a module on disk. `upsert_elements` derives a new persona from
+    an existing one.
     """
 
-    path_to_persona_elements: Path
+    elements: tuple[PersonaElement, ...]
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
-    elements: tuple[PersonaElement, ...] = field(init=False)
-    """The persona elements loaded from `path_to_persona_elements`, with any
-    replacements made by `upsert_elements`."""
     LinspaceGrid: type[LinspaceGridProtocol] = field(init=False)
     LinspaceRange: Any = field(init=False)
 
     def __post_init__(self) -> None:
-        module = load_module(
-            path=self.path_to_persona_elements,
-            root=Path(__file__).parent.parent.parent,
+        _fail_if_not_exactly_one_p_id_element(self.elements)
+        p_id_element = next(
+            el for el in self.elements if isinstance(el, PersonaPIDElement)
         )
-        self._set_elements(tuple(load_persona_elements_from_module(module)))
+        object.__setattr__(
+            self, "LinspaceGrid", _make_linspace_grid_class(p_id_element.persona_size)
+        )
         object.__setattr__(self, "LinspaceRange", LinspaceRange)
 
     def upsert_elements(self, *elements: PersonaElement) -> OrigPersonaOverTime:
         """A new persona with *elements* added, replacing elements of the same name."""
         merged = {el.orig_name: el for el in (*self.elements, *elements)}
-        new = replace(self)
-        new._set_elements(tuple(merged.values()))  # noqa: SLF001
-        return new
-
-    def _set_elements(self, elements: tuple[PersonaElement, ...]) -> None:
-        _fail_if_not_exactly_one_p_id_element(
-            elements=elements, persona_name=self.persona_name
-        )
-        p_id_element = next(el for el in elements if isinstance(el, PersonaPIDElement))
-        object.__setattr__(self, "elements", elements)
-        object.__setattr__(
-            self, "LinspaceGrid", _make_linspace_grid_class(p_id_element.persona_size)
-        )
-
-    @property
-    def persona_name(self) -> str:
-        """Name of this persona, used in error messages."""
-        return str(self.path_to_persona_elements)
+        return replace(self, elements=tuple(merged.values()))
 
     @beartype(conf=PERSONA_CONF)
     def __call__(
@@ -265,14 +247,8 @@ class OrigPersonaOverTime:
             if not isinstance(el, TimeDependentPersonaElement)
             or el.is_active(policy_date)
         ]
-        _fail_if_active_tt_qnames_overlap(
-            active_elements=active_elements,
-            persona_name=self.persona_name,
-        )
-        _fail_if_not_exactly_one_description_is_active(
-            active_elements=active_elements,
-            persona_name=self.persona_name,
-        )
+        _fail_if_active_tt_qnames_overlap(active_elements)
+        _fail_if_not_exactly_one_description_is_active(active_elements)
         return active_elements
 
     def _fail_if_persona_not_implemented(
@@ -384,38 +360,34 @@ def _get_qname_input_data(
     return f()
 
 
-def load_persona_elements_from_module(
-    module: ModuleType,
-) -> list[PersonaElement]:
-    return [
+def load_persona_elements(path: Path) -> tuple[PersonaElement, ...]:
+    """Collect the persona elements defined in the module at *path*."""
+    module = load_module(path=path, root=Path(__file__).parent.parent.parent)
+    return tuple(
         obj for _, obj in inspect.getmembers(module) if isinstance(obj, PersonaElement)
-    ]
+    )
 
 
-def _fail_if_not_exactly_one_p_id_element(
-    elements: tuple[PersonaElement, ...], persona_name: str
-) -> None:
+def _fail_if_not_exactly_one_p_id_element(elements: tuple[PersonaElement, ...]) -> None:
     n_p_id = sum(isinstance(el, PersonaPIDElement) for el in elements)
     if n_p_id != 1:
-        msg = f"Expected exactly one p_id array in {persona_name}. Found {n_p_id}."
+        msg = f"Expected exactly one p_id array. Found {n_p_id}."
         raise ValueError(msg)
 
 
 def _fail_if_not_exactly_one_description_is_active(
-    active_elements: list[PersonaElement], persona_name: str
+    active_elements: list[PersonaElement],
 ) -> None:
     descriptions = [s for s in active_elements if isinstance(s, PersonaDescription)]
     if len(descriptions) > 1:
-        msg = f"More than one PersonaDescription is active at {persona_name}."
+        msg = "More than one PersonaDescription is active."
         raise ValueError(msg)
     if len(descriptions) == 0:
-        msg = f"No PersonaDescription found at {persona_name}."
+        msg = "No PersonaDescription found."
         raise ValueError(msg)
 
 
-def _fail_if_active_tt_qnames_overlap(
-    active_elements: list[PersonaElement], persona_name: str
-) -> None:
+def _fail_if_active_tt_qnames_overlap(active_elements: list[PersonaElement]) -> None:
     all_qnames: set[str] = set()
     overlapping_qnames: set[str] = set()
     for el in active_elements:
@@ -431,10 +403,7 @@ def _fail_if_active_tt_qnames_overlap(
                 all_qnames.add(el.tt_qname)
 
     if overlapping_qnames:
-        msg = (
-            f"Active qnames overlap at {persona_name}. "
-            f"Overlapping qnames: {overlapping_qnames}"
-        )
+        msg = f"Active qnames overlap. Overlapping qnames: {overlapping_qnames}"
         raise ValueError(msg)
 
 
