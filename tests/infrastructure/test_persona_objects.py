@@ -410,6 +410,19 @@ def p_id_with_two_members() -> np.ndarray:
     return np.array([0, 1])
 
 
+def test_persona_fails_without_p_id_element():
+    with pytest.raises(ValueError, match="Expected exactly one p_id array"):
+        OrigPersonaOverTime(elements=(input_element_always_active,))
+
+
+def test_persona_fails_without_active_description():
+    persona = OrigPersonaOverTime(
+        elements=(p_id_with_two_members, input_element_always_active)
+    )
+    with pytest.raises(ValueError, match="No PersonaDescription found"):
+        persona(policy_date_str="2021-01-01")
+
+
 def test_passed_element_replaces_base_element_of_same_name():
     derived = SamplePersona.upsert_elements(einnahmen__bruttolohn_m)
     assert_array_equal(
