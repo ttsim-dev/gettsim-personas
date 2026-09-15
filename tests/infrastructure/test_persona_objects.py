@@ -385,6 +385,16 @@ def test_persona_description_is_string_after_instantiation():
     assert isinstance(persona.description, str)
 
 
+def test_input_data_df_has_one_column_per_input_qname_indexed_by_p_id():
+    persona = SamplePersona(policy_date_str="2015-01-01")
+    df = persona.input_data_df
+    assert_array_equal(
+        df.loc[:, ("einnahmen", "bruttolohn_m")].to_numpy(),
+        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+    )
+    assert df.index.name == "p_id"
+
+
 @persona_input_element()
 def einnahmen__bruttolohn_m() -> np.ndarray:
     return np.array([10.0, 20.0, 30.0])

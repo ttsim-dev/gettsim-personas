@@ -9,7 +9,11 @@ from typing import Any, Protocol, cast, runtime_checkable
 import dags
 import dags.tree as dt
 import numpy as np
+import pandas as pd
 from beartype import beartype
+from ttsim.interface_dag_elements.data_converters import (
+    nested_data_to_df_with_nested_columns,
+)
 from ttsim.interface_dag_elements.orig_policy_objects import load_module
 from ttsim.interface_dag_elements.shared import to_datetime
 from ttsim.typing import (
@@ -60,6 +64,14 @@ class Persona:
     evaluation_date: datetime.date
     input_data_tree: NestedData
     tt_targets_tree: NestedTargetDict
+
+    @property
+    def input_data_df(self) -> pd.DataFrame:
+        """The input data as a DataFrame with nested columns, indexed by `p_id`."""
+        return nested_data_to_df_with_nested_columns(
+            self.input_data_tree,
+            index=pd.Index(self.input_data_tree["p_id"], name="p_id"),
+        )
 
     @beartype(conf=PERSONA_CONF)
     def upsert_input_data(self, input_data_to_upsert: NestedData) -> Persona:
