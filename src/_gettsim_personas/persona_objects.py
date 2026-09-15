@@ -134,8 +134,10 @@ class OrigPersonaOverTime:
     (`path_to_persona_elements`) or from explicitly passed `elements`. In the latter
     case, an existing persona may be passed as `base`: the passed elements are added to
     the base's elements, and where a passed element and a base element share a
-    `tt_qname` and are active on the same policy date, the passed element wins. Without
-    a `base`, the passed elements must form a complete persona.
+    `tt_qname` and are active on the same policy date, the passed element wins. The
+    base's members are fixed: to change who is in the persona, define a new persona
+    rather than a `base`. Without a `base`, the passed elements must form a complete
+    persona.
     """
 
     path_to_persona_elements: Path | None = None
@@ -165,15 +167,13 @@ class OrigPersonaOverTime:
             object.__setattr__(
                 self, "elements", tuple(load_persona_elements_from_module(module))
             )
-        _fail_if_invalid_number_of_own_p_id_elements(
+        _fail_if_p_id_not_from_exactly_one_place(
             own_elements=self.elements or (),
             has_base=self.base is not None,
             persona_name=self.persona_name,
         )
         p_id_element = next(
-            el
-            for el in reversed(self.orig_elements())
-            if isinstance(el, PersonaPIDElement)
+            el for el in self.orig_elements() if isinstance(el, PersonaPIDElement)
         )
         object.__setattr__(
             self,
@@ -282,9 +282,9 @@ class OrigPersonaOverTime:
     def active_elements(self, policy_date: datetime.date) -> list[PersonaElement]:
         """Elements active at *policy_date*, with the base's overridden ones dropped.
 
-        Input, target, and p_id elements live in one `tt_qname` namespace and replace a
-        base element with the same `tt_qname` regardless of kind. A description
-        replaces the base's description.
+        Input and target elements live in one `tt_qname` namespace and replace a base
+        element with the same `tt_qname` regardless of kind. A description replaces
+        the base's description. The base's p_id element is never replaced.
         """
         own_active = _active_elements(list(self.elements or ()), policy_date)
         own_qnames = {getattr(el, "tt_qname", None) for el in own_active}
@@ -467,19 +467,28 @@ def _fail_if_not_exactly_one_source_of_elements(
         raise ValueError(msg)
 
 
-def _fail_if_invalid_number_of_own_p_id_elements(
+def _fail_if_p_id_not_from_exactly_one_place(
     *,
     own_elements: tuple[PersonaElement, ...],
     has_base: bool,
     persona_name: str,
 ) -> None:
-    """Fail unless exactly one p_id element results; a base already provides one."""
+    """Fail unless the p_id array comes from exactly one place.
+
+    Without a base, exactly one `PersonaPIDElement` must be passed. With a base, the
+    base's p_id array is final, so no passed element may target `p_id`.
+    """
+    if has_base:
+        if any(getattr(el, "tt_qname", None) == "p_id" for el in own_elements):
+            msg = (
+                f"Elements of {persona_name} must not define p_id: the members of "
+                "the base persona are fixed. Define a new persona instead."
+            )
+            raise ValueError(msg)
+        return
     n_p_id = sum(isinstance(el, PersonaPIDElement) for el in own_elements)
-    if n_p_id > 1 or (n_p_id == 0 and not has_base):
-        msg = (
-            f"Expected exactly one p_id array in {persona_name} (at most one when "
-            f"extending a base). Found {n_p_id}."
-        )
+    if n_p_id != 1:
+        msg = f"Expected exactly one p_id array in {persona_name}. Found {n_p_id}."
         raise ValueError(msg)
 
 

@@ -27,7 +27,8 @@ If no existing persona corresponds to your use case, feel free to open an
 You can build a persona of your own from persona elements, either from scratch or by
 extending an existing persona. Pass an existing persona as `base` and your own elements
 via `elements`. Where one of your elements and one of the base's elements target the
-same `tt_qname` and are active on the same policy date, yours wins:
+same `tt_qname` and are active on the same policy date, yours wins. The members of the
+base are fixed: for a different household, define a new persona without a `base`.
 
 ```python
 import numpy as np

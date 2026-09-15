@@ -1,5 +1,4 @@
 import datetime
-import inspect
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -461,6 +460,11 @@ def p_id_with_two_members() -> np.ndarray:
     return np.array([0, 1])
 
 
+@persona_input_element(tt_qname="p_id")
+def p_id_as_plain_input_element() -> np.ndarray:
+    return np.array([0, 1])
+
+
 def test_persona_from_explicit_elements_has_expected_input_data():
     """Explicitly passed input elements make up the persona's input data."""
     persona = OrigPersonaOverTime(elements=COMPLETE_ELEMENTS)(
@@ -612,16 +616,13 @@ def test_overlap_among_passed_elements_raises():
         derived(policy_date_str="2021-01-01")
 
 
-def test_passed_p_id_element_replaces_base_p_id_element_in_linspace_grid():
-    derived = OrigPersonaOverTime(
-        elements=(p_id_with_two_members,),
-        base=SamplePersona,
-    )
-    assert list(inspect.signature(derived.LinspaceGrid).parameters) == [
-        "p0",
-        "p1",
-        "n_points",
-    ]
+@pytest.mark.parametrize(
+    "p_id_element", [p_id_with_two_members, p_id_as_plain_input_element]
+)
+def test_persona_fails_if_passed_element_defines_p_id_with_base(p_id_element):
+    """A base persona's members are fixed; a different household is a new persona."""
+    with pytest.raises(ValueError, match="must not define p_id"):
+        OrigPersonaOverTime(elements=(p_id_element,), base=SamplePersona)
 
 
 def test_derived_persona_raises_base_error_outside_base_date_range():
@@ -655,11 +656,6 @@ def test_bruttolohn_m_linspace_grid_works_on_derived_persona():
     )
 
 
-@persona_pid_element()
-def p_id_with_four_members() -> np.ndarray:
-    return np.array([0, 1, 2, 3])
-
-
 @persona_input_element()
 def another_new_input_element() -> np.ndarray:
     return np.array([4, 5, 6])
@@ -690,29 +686,8 @@ def test_chained_extension_merges_elements_of_all_levels():
     }
 
 
-def test_chained_extension_uses_innermost_p_id_element_for_linspace_grid():
-    """A p_id element replaces the one of a base that replaced another p_id element."""
-    mid = OrigPersonaOverTime(elements=(p_id_with_two_members,), base=SamplePersona)
-    leaf = OrigPersonaOverTime(elements=(p_id_with_four_members,), base=mid)
-    assert list(inspect.signature(leaf.LinspaceGrid).parameters) == [
-        "p0",
-        "p1",
-        "p2",
-        "p3",
-        "n_points",
-    ]
-
-
-def test_persona_fails_if_more_than_one_p_id_element_is_passed_with_base():
-    with pytest.raises(ValueError, match="at most one when extending a base"):
-        OrigPersonaOverTime(
-            elements=(p_id_with_two_members, p_id_with_four_members),
-            base=SamplePersona,
-        )
-
-
 def test_passed_input_element_replaces_base_target_with_same_tt_qname():
-    """Input, target, and p_id elements share one tt_qname namespace."""
+    """Input and target elements share one tt_qname namespace."""
     derived = OrigPersonaOverTime(
         elements=(input_element_overriding_a_base_target,),
         base=SamplePersona,
