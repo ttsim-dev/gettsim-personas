@@ -130,60 +130,49 @@ class Persona:
 class OrigPersonaOverTime:
     """A persona containing inputs and targets to use with GETTSIM.
 
-    A persona is built either from a module of persona elements on disk
-    (`path_to_persona_elements`) or from explicitly passed `elements`, which must form
-    a complete persona. `upsert_elements` derives a new persona from an existing one.
+    A persona is loaded from a module of persona elements on disk.
+    `upsert_elements` derives a new persona from an existing one.
     """
 
-    path_to_persona_elements: Path | None = None
-    """Module of persona elements to load into `elements`. Mutually exclusive with
-    `elements`."""
-    elements: tuple[PersonaElement, ...] = ()
-    """Persona elements passed explicitly. Mutually exclusive with
-    `path_to_persona_elements`."""
+    path_to_persona_elements: Path
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
+    elements: tuple[PersonaElement, ...] = field(init=False)
+    """The persona elements loaded from `path_to_persona_elements`, with any
+    replacements made by `upsert_elements`."""
     LinspaceGrid: type[LinspaceGridProtocol] = field(init=False)
     LinspaceRange: Any = field(init=False)
 
     def __post_init__(self) -> None:
-        _fail_if_not_exactly_one_source_of_elements(
-            path_to_persona_elements=self.path_to_persona_elements,
-            elements=self.elements,
+        module = load_module(
+            path=self.path_to_persona_elements,
+            root=Path(__file__).parent.parent.parent,
         )
-        if self.path_to_persona_elements is not None:
-            module = load_module(
-                path=self.path_to_persona_elements,
-                root=Path(__file__).parent.parent.parent,
-            )
-            object.__setattr__(
-                self, "elements", tuple(load_persona_elements_from_module(module))
-            )
-        _fail_if_not_exactly_one_p_id_element(
-            elements=self.elements, persona_name=self.persona_name
-        )
-        p_id_element = next(
-            el for el in self.elements if isinstance(el, PersonaPIDElement)
-        )
-        object.__setattr__(
-            self, "LinspaceGrid", _make_linspace_grid_class(p_id_element.persona_size)
-        )
+        self._set_elements(tuple(load_persona_elements_from_module(module)))
         object.__setattr__(self, "LinspaceRange", LinspaceRange)
 
     def upsert_elements(self, *elements: PersonaElement) -> OrigPersonaOverTime:
         """A new persona with *elements* added, replacing elements of the same name."""
         merged = {el.orig_name: el for el in (*self.elements, *elements)}
-        return replace(
-            self, path_to_persona_elements=None, elements=tuple(merged.values())
+        new = replace(self)
+        new._set_elements(tuple(merged.values()))  # noqa: SLF001
+        return new
+
+    def _set_elements(self, elements: tuple[PersonaElement, ...]) -> None:
+        _fail_if_not_exactly_one_p_id_element(
+            elements=elements, persona_name=self.persona_name
+        )
+        p_id_element = next(el for el in elements if isinstance(el, PersonaPIDElement))
+        object.__setattr__(self, "elements", elements)
+        object.__setattr__(
+            self, "LinspaceGrid", _make_linspace_grid_class(p_id_element.persona_size)
         )
 
     @property
     def persona_name(self) -> str:
         """Name of this persona, used in error messages."""
-        if self.path_to_persona_elements is not None:
-            return str(self.path_to_persona_elements)
-        return "persona built from explicitly passed elements"
+        return str(self.path_to_persona_elements)
 
     @beartype(conf=PERSONA_CONF)
     def __call__(
@@ -401,18 +390,6 @@ def load_persona_elements_from_module(
     return [
         obj for _, obj in inspect.getmembers(module) if isinstance(obj, PersonaElement)
     ]
-
-
-def _fail_if_not_exactly_one_source_of_elements(
-    path_to_persona_elements: Path | None,
-    elements: tuple[PersonaElement, ...],
-) -> None:
-    if (path_to_persona_elements is None) == (not elements):
-        msg = (
-            "Pass exactly one of 'path_to_persona_elements' and 'elements' when "
-            "creating an OrigPersonaOverTime."
-        )
-        raise ValueError(msg)
 
 
 def _fail_if_not_exactly_one_p_id_element(

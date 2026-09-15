@@ -1,7 +1,6 @@
 import datetime
 import inspect
 from dataclasses import dataclass
-from pathlib import Path
 
 import numpy as np
 import pytest
@@ -391,40 +390,6 @@ def test_persona_description_is_string_after_instantiation():
     assert isinstance(persona.description, str)
 
 
-@persona_description(description="A persona built from explicitly passed elements.")
-def explicit_description():
-    pass
-
-
-@persona_pid_element()
-def explicit_p_id() -> np.ndarray:
-    return np.array([0, 1])
-
-
-@persona_input_element(tt_qname="hh_id")
-def explicit_hh_id() -> np.ndarray:
-    return np.array([0, 0])
-
-
-@persona_input_element(tt_qname="einnahmen__bruttolohn_m")
-def explicit_bruttolohn_m() -> np.ndarray:
-    return np.array([100.0, 200.0])
-
-
-@persona_target_element()
-def einkommensteuer__betrag_y():
-    pass
-
-
-COMPLETE_ELEMENTS = (
-    explicit_description,
-    explicit_p_id,
-    explicit_hh_id,
-    explicit_bruttolohn_m,
-    einkommensteuer__betrag_y,
-)
-
-
 @persona_input_element()
 def einnahmen__bruttolohn_m() -> np.ndarray:
     return np.array([10.0, 20.0, 30.0])
@@ -458,64 +423,6 @@ def description_since_2010():
 @persona_pid_element()
 def p_id_with_two_members() -> np.ndarray:
     return np.array([0, 1])
-
-
-def test_persona_from_explicit_elements_has_expected_input_data():
-    """Explicitly passed input elements make up the persona's input data."""
-    persona = OrigPersonaOverTime(elements=COMPLETE_ELEMENTS)(
-        policy_date_str="2021-01-01"
-    )
-    assert_array_equal(
-        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
-        np.array([100.0, 200.0]),
-    )
-
-
-def test_persona_from_explicit_elements_has_expected_targets():
-    """Explicitly passed target elements make up the persona's targets."""
-    persona = OrigPersonaOverTime(elements=COMPLETE_ELEMENTS)(
-        policy_date_str="2021-01-01"
-    )
-    assert persona.tt_targets_tree == {"einkommensteuer": {"betrag_y": None}}
-
-
-def test_persona_from_explicit_elements_has_expected_description():
-    """The active description of the passed elements is the persona's description."""
-    persona = OrigPersonaOverTime(elements=COMPLETE_ELEMENTS)(
-        policy_date_str="2021-01-01"
-    )
-    assert persona.description == "A persona built from explicitly passed elements."
-
-
-def test_persona_from_explicit_elements_fails_without_description():
-    with pytest.raises(ValueError, match="No PersonaDescription found"):
-        OrigPersonaOverTime(
-            elements=(explicit_p_id, explicit_hh_id, explicit_bruttolohn_m)
-        )(policy_date_str="2021-01-01")
-
-
-def test_persona_from_explicit_elements_fails_without_p_id_element():
-    with pytest.raises(ValueError, match="Expected exactly one p_id array"):
-        OrigPersonaOverTime(elements=(explicit_description, explicit_hh_id))
-
-
-def test_persona_fails_if_both_path_and_elements_are_passed():
-    with pytest.raises(
-        ValueError,
-        match="Pass exactly one of 'path_to_persona_elements' and 'elements'",
-    ):
-        OrigPersonaOverTime(
-            path_to_persona_elements=Path("some_persona_elements.py"),
-            elements=COMPLETE_ELEMENTS,
-        )
-
-
-def test_persona_fails_if_neither_path_nor_elements_are_passed():
-    with pytest.raises(
-        ValueError,
-        match="Pass exactly one of 'path_to_persona_elements' and 'elements'",
-    ):
-        OrigPersonaOverTime()
 
 
 def test_passed_element_replaces_base_element_of_same_name():
