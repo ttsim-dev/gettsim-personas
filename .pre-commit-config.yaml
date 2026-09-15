@@ -68,16 +68,15 @@ repos:
           - pyi
           - python
   - repo: https://github.com/astral-sh/ty-pre-commit
-    # Pinned: from v0.0.78 on, the hook's uv points ty at the hook's own virtualenv
-    # instead of the pixi env named in `[tool.ty] environment.python`.
-    rev: v0.0.71
+    rev: v0.0.78
     hooks:
       - id: ty
-        # `--no-project` keeps uv from creating a `.venv`/`uv.lock` in this
-        # pixi-managed repo; ty resolves third-party imports from the env named
-        # in `[tool.ty] environment.python` (run `pixi install` once).
-        args:
-          - --no-project
+        # The hook's default entry (`uv check`) hands ty the hook's own virtualenv
+        # instead of the pixi env named in `[tool.ty] environment.python`, so run
+        # ty directly (run `pixi install` once).
+        entry: ty check
+        additional_dependencies:
+          - ty==0.0.78
   - repo: https://github.com/executablebooks/mdformat
     rev: 1.0.0
     hooks:

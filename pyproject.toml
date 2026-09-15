@@ -162,8 +162,8 @@ collapse_tables = [ "tool.hatch", "tool.pytask", "tool.pytest", "tool.ty" ]
 
 [tool.ty]
 # ty resolves third-party imports from this pixi env (the ty-pre-commit hook runs
-# `uv check --no-project`, so uv neither creates a `.venv` nor resolves deps). Run
-# `pixi install` once.
+# `ty check` directly, so uv neither creates a `.venv` nor picks the environment).
+# Run `pixi install` once.
 environment.python = ".pixi/envs/py314"
 rules.ambiguous-protocol-member = "error"
 rules.deprecated = "error"
