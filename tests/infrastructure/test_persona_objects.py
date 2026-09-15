@@ -1,6 +1,6 @@
 import datetime
+import inspect
 from dataclasses import dataclass
-from dataclasses import fields as dataclass_fields
 from pathlib import Path
 
 import numpy as np
@@ -519,14 +519,6 @@ def test_persona_fails_if_neither_path_nor_elements_are_passed():
         OrigPersonaOverTime()
 
 
-def test_persona_fails_if_base_is_passed_without_elements():
-    with pytest.raises(ValueError, match="Passing 'base' requires 'elements'"):
-        OrigPersonaOverTime(
-            path_to_persona_elements=Path("some_persona_elements.py"),
-            base=SamplePersona,
-        )
-
-
 def test_passed_element_overrides_base_element_when_active():
     derived = OrigPersonaOverTime(
         elements=(bruttolohn_m_since_2020,),
@@ -625,20 +617,11 @@ def test_passed_p_id_element_replaces_base_p_id_element_in_linspace_grid():
         elements=(p_id_with_two_members,),
         base=SamplePersona,
     )
-    grid = derived.LinspaceGrid(p0=1.0, p1=2.0, n_points=5)
-    field_names = [
-        f.name
-        for f in dataclass_fields(grid)  # ty: ignore[invalid-argument-type]
+    assert list(inspect.signature(derived.LinspaceGrid).parameters) == [
+        "p0",
+        "p1",
+        "n_points",
     ]
-    assert field_names == ["p0", "p1", "n_points"]
-
-
-def test_date_range_of_derived_persona_is_intersection_with_base():
-    derived = OrigPersonaOverTime(
-        elements=(some_new_input_element,),
-        base=SamplePersonaWithStartAndEndDate,
-    )
-    assert derived.start_date == datetime.date(2015, 1, 1)
 
 
 def test_derived_persona_raises_base_error_outside_base_date_range():
@@ -711,15 +694,17 @@ def test_chained_extension_uses_innermost_p_id_element_for_linspace_grid():
     """A p_id element replaces the one of a base that replaced another p_id element."""
     mid = OrigPersonaOverTime(elements=(p_id_with_two_members,), base=SamplePersona)
     leaf = OrigPersonaOverTime(elements=(p_id_with_four_members,), base=mid)
-    field_names = [
-        f.name
-        for f in dataclass_fields(leaf.LinspaceGrid)  # ty: ignore[invalid-argument-type]
+    assert list(inspect.signature(leaf.LinspaceGrid).parameters) == [
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "n_points",
     ]
-    assert field_names == ["p0", "p1", "p2", "p3", "n_points"]
 
 
 def test_persona_fails_if_more_than_one_p_id_element_is_passed_with_base():
-    with pytest.raises(ValueError, match="Expected at most one p_id array"):
+    with pytest.raises(ValueError, match="at most one when extending a base"):
         OrigPersonaOverTime(
             elements=(p_id_with_two_members, p_id_with_four_members),
             base=SamplePersona,

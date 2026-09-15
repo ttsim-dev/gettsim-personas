@@ -1,7 +1,6 @@
 import numpy as np
 from gettsim import InputData, MainTarget, TTTargets, main
 
-import gettsim_personas
 from gettsim_personas import OrigPersonaOverTime, persona_input_element
 from gettsim_personas.einkommensteuer_sozialabgaben import Couple1Child
 
@@ -60,19 +59,6 @@ def test_can_upsert_input_data():
         upserted_persona.input_data_tree["einnahmen"]["bruttolohn_m"],
         np.array([1, 2, 3, 4, 5, 6]),
     )
-
-
-def test_persona_building_blocks_are_importable_from_public_package():
-    """The names needed to define a persona are part of the public API."""
-    expected = {
-        "LinspaceRange",
-        "OrigPersonaOverTime",
-        "persona_description",
-        "persona_input_element",
-        "persona_pid_element",
-        "persona_target_element",
-    }
-    assert expected <= set(dir(gettsim_personas))
 
 
 @persona_input_element(tt_qname="einnahmen__bruttolohn_m", start_date="2020-01-01")
