@@ -132,12 +132,10 @@ class OrigPersonaOverTime:
 
     A persona is built either from a module of persona elements on disk
     (`path_to_persona_elements`) or from explicitly passed `elements`. In the latter
-    case, an existing persona may be passed as `base`: the passed elements are added to
-    the base's elements, and where a passed element and a base element share a
-    `tt_qname` and are active on the same policy date, the passed element replaces the
-    base element. The base's members are fixed: a persona with different members is a
-    new persona, not an extension. Without a `base`, the passed elements must form a
-    complete persona.
+    case, an existing persona may be passed as `base`: its elements and the passed
+    elements are merged by element name, a passed element replacing the base element
+    of the same name. Without a `base`, the passed elements must form a complete
+    persona.
     """
 
     path_to_persona_elements: Path | None = None
@@ -167,19 +165,27 @@ class OrigPersonaOverTime:
             object.__setattr__(
                 self, "elements", tuple(load_persona_elements_from_module(module))
             )
-        _fail_if_p_id_not_defined_exactly_once(
-            own_elements=self.elements,
-            has_base=self.base is not None,
-            persona_name=self.persona_name,
-        )
         if self.base is not None:
-            linspace_grid = self.base.LinspaceGrid
-        else:
-            p_id_element = next(
-                el for el in self.elements if isinstance(el, PersonaPIDElement)
+            merged = {el.orig_name: el for el in (*self.base.elements, *self.elements)}
+            object.__setattr__(self, "elements", tuple(merged.values()))
+            object.__setattr__(
+                self, "start_date", max(self.start_date, self.base.start_date)
             )
-            linspace_grid = _make_linspace_grid_class(p_id_element.persona_size)
-        object.__setattr__(self, "LinspaceGrid", linspace_grid)
+            object.__setattr__(self, "end_date", min(self.end_date, self.base.end_date))
+            object.__setattr__(
+                self,
+                "error_if_not_implemented",
+                self.error_if_not_implemented or self.base.error_if_not_implemented,
+            )
+        _fail_if_not_exactly_one_p_id_element(
+            elements=self.elements, persona_name=self.persona_name
+        )
+        p_id_element = next(
+            el for el in self.elements if isinstance(el, PersonaPIDElement)
+        )
+        object.__setattr__(
+            self, "LinspaceGrid", _make_linspace_grid_class(p_id_element.persona_size)
+        )
         object.__setattr__(self, "LinspaceRange", LinspaceRange)
 
     @property
@@ -187,8 +193,6 @@ class OrigPersonaOverTime:
         """Name of this persona, used in error messages."""
         if self.path_to_persona_elements is not None:
             return str(self.path_to_persona_elements)
-        if self.base is not None:
-            return f"persona extending {self.base.persona_name}"
         return "persona built from explicitly passed elements"
 
     @beartype(conf=PERSONA_CONF)
@@ -275,31 +279,12 @@ class OrigPersonaOverTime:
         )
 
     def active_elements(self, policy_date: datetime.date) -> list[PersonaElement]:
-        """Elements active at *policy_date*, excluding replaced base elements.
-
-        Input and target elements share one `tt_qname` namespace and replace a base
-        element with the same `tt_qname` regardless of kind. A description replaces
-        the base's description. The base's p_id element is never replaced.
-        """
-        own_active = _active_elements(list(self.elements), policy_date)
-        own_qnames = {getattr(el, "tt_qname", None) for el in own_active}
-        own_has_description = any(
-            isinstance(el, PersonaDescription) for el in own_active
-        )
-        base_active = (
-            self.base.active_elements(policy_date) if self.base is not None else []
-        )
+        """Elements active at *policy_date*; `PersonaPIDElement`s are always active."""
         active_elements = [
-            *(
-                el
-                for el in base_active
-                if not (
-                    own_has_description
-                    if isinstance(el, PersonaDescription)
-                    else getattr(el, "tt_qname", None) in own_qnames
-                )
-            ),
-            *own_active,
+            el
+            for el in self.elements
+            if not isinstance(el, TimeDependentPersonaElement)
+            or el.is_active(policy_date)
         ]
         _fail_if_active_tt_qnames_overlap(
             active_elements=active_elements,
@@ -315,12 +300,8 @@ class OrigPersonaOverTime:
         self,
         policy_date: datetime.date,
     ) -> None:
-        """Fail if this persona or any base is not implemented at *policy_date*."""
-        persona: OrigPersonaOverTime | None = self
-        while persona is not None:
-            if not (persona.start_date <= policy_date <= persona.end_date):
-                raise NotImplementedError(persona.error_if_not_implemented)
-            persona = persona.base
+        if not (self.start_date <= policy_date <= self.end_date):
+            raise NotImplementedError(self.error_if_not_implemented)
 
 
 def active_persona_input_elements(
@@ -346,24 +327,6 @@ def active_tt_targets(
 def active_description(active_elements: list[PersonaElement]) -> PersonaDescription:
     """Active description element of a persona."""
     return next(s for s in active_elements if isinstance(s, PersonaDescription))
-
-
-def _active_elements(
-    orig_elements: list[PersonaElement], policy_date: datetime.date
-) -> list[PersonaElement]:
-    """Elements that are active at *policy_date*.
-
-    `PersonaPIDElement`s do not depend on the policy date and are always active.
-    """
-    return [
-        el
-        for el in orig_elements
-        if (
-            el.is_active(policy_date)
-            if isinstance(el, TimeDependentPersonaElement)
-            else True
-        )
-    ]
 
 
 def _make_linspace_grid_class(n_members: int):
@@ -462,26 +425,10 @@ def _fail_if_not_exactly_one_source_of_elements(
         raise ValueError(msg)
 
 
-def _fail_if_p_id_not_defined_exactly_once(
-    *,
-    own_elements: tuple[PersonaElement, ...],
-    has_base: bool,
-    persona_name: str,
+def _fail_if_not_exactly_one_p_id_element(
+    elements: tuple[PersonaElement, ...], persona_name: str
 ) -> None:
-    """Fail unless exactly one element defines the p_id array.
-
-    Without a base, exactly one `PersonaPIDElement` must be passed. With a base, the
-    base's p_id element cannot be replaced, so no passed element may target `p_id`.
-    """
-    if has_base:
-        if any(getattr(el, "tt_qname", None) == "p_id" for el in own_elements):
-            msg = (
-                f"Elements of {persona_name} must not define p_id: the members of "
-                "the base persona are fixed. Define a new persona instead."
-            )
-            raise ValueError(msg)
-        return
-    n_p_id = sum(isinstance(el, PersonaPIDElement) for el in own_elements)
+    n_p_id = sum(isinstance(el, PersonaPIDElement) for el in elements)
     if n_p_id != 1:
         msg = f"Expected exactly one p_id array in {persona_name}. Found {n_p_id}."
         raise ValueError(msg)

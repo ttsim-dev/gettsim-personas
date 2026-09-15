@@ -61,18 +61,18 @@ def test_can_upsert_input_data():
     )
 
 
-@persona_input_element(tt_qname="einnahmen__bruttolohn_m", start_date="2020-01-01")
-def bruttolohn_m_since_2020() -> np.ndarray:
+@persona_input_element()
+def einnahmen__bruttolohn_m() -> np.ndarray:
     return np.array([1234.0, 2345.0, 0.0])
 
 
 ExtendedCouple1Child = OrigPersonaOverTime(
-    elements=(bruttolohn_m_since_2020,),
+    elements=(einnahmen__bruttolohn_m,),
     base=Couple1Child,
 )
 
 
-def test_extended_persona_uses_override_for_policy_date_in_its_active_range():
+def test_extended_persona_uses_passed_element_in_place_of_base_element():
     persona = ExtendedCouple1Child(policy_date_str="2021-01-01")
     main(
         main_target=MainTarget.results.tree,
@@ -84,12 +84,4 @@ def test_extended_persona_uses_override_for_policy_date_in_its_active_range():
     assert np.array_equal(
         persona.input_data_tree["einnahmen"]["bruttolohn_m"],
         np.array([1234.0, 2345.0, 0.0]),
-    )
-
-
-def test_extended_persona_uses_base_value_for_policy_date_before_override():
-    persona = ExtendedCouple1Child(policy_date_str="2019-01-01")
-    assert np.array_equal(
-        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
-        np.array([3000, 3000, 0]),
     )

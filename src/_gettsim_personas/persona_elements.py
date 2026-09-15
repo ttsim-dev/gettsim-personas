@@ -54,6 +54,7 @@ class TimeDependentPersonaElement:
 
     start_date: datetime.date
     end_date: datetime.date
+    orig_name: str
 
     def is_active(self, policy_date: datetime.date) -> bool:
         """Check if the function is active at a given date."""
@@ -64,7 +65,6 @@ class TimeDependentPersonaElement:
 class PersonaInputElement(TimeDependentPersonaElement):
     """An object that returns input data for one TT qname."""
 
-    orig_name: str
     tt_qname: str
     function: Callable[..., Any]
 
@@ -106,7 +106,6 @@ def persona_input_element(
 class PersonaTargetElement(TimeDependentPersonaElement):
     """An object that stores one TT qname to be used as a TT target."""
 
-    orig_name: str
     tt_qname: str
 
 
@@ -137,7 +136,6 @@ def persona_target_element(
 class PersonaDescription(TimeDependentPersonaElement):
     """An object that stores a description of a persona."""
 
-    orig_name: str
     description: str
 
 
