@@ -22,5 +22,48 @@ If no existing persona corresponds to your use case, feel free to open an
 [issue](https://github.com/ttsim-dev/gettsim-personas/issues) or
 [make a contribution](https://gettsim.readthedocs.io/en/stable/gettsim_developer/how-to-contribute.html)!
 
+## Defining your own personas
+
+You can build a persona of your own from persona elements, either from scratch or by
+extending an existing persona. Pass an existing persona as `base` and your own elements
+via `elements`. Where one of your elements and one of the base's elements target the
+same `tt_qname` and are active on the same policy date, yours wins:
+
+```python
+import numpy as np
+from gettsim_personas import (
+    OrigPersonaOverTime,
+    persona_input_element,
+    persona_target_element,
+)
+from gettsim_personas.einkommensteuer_sozialabgaben import Couple1Child
+
+
+@persona_input_element(
+    tt_qname="einnahmen__bruttolohn_m",
+    start_date="2020-01-01",
+    end_date="2029-12-31",
+)
+def bruttolohn_m_in_the_2020s() -> np.ndarray:
+    return np.array([4000, 2000, 0])
+
+
+@persona_target_element()
+def einkommensteuer__betrag_y_sn() -> None:
+    pass
+
+
+MyCouple1Child = OrigPersonaOverTime(
+    elements=(bruttolohn_m_in_the_2020s, einkommensteuer__betrag_y_sn),
+    base=Couple1Child,
+)
+
+persona = MyCouple1Child(policy_date_str="2025-01-01")
+```
+
+Without a `base`, your elements must form a complete persona: a `@persona_description`,
+a `@persona_pid_element` returning the `p_id` array, a `hh_id` input element, all other
+required input elements, and at least one `@persona_target_element`.
+
 You can find a tutorial on how to use the personas in
 [GETTSIM's documentation](https://gettsim.readthedocs.io/en/stable/tutorials/personas.html).

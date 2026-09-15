@@ -128,23 +128,79 @@ class Persona:
 
 @dataclass(frozen=True)
 class OrigPersonaOverTime:
-    """A persona containing inputs and targets to use with GETTSIM."""
+    """A persona containing inputs and targets to use with GETTSIM.
 
-    path_to_persona_elements: Path
+    A persona is built either from a module of persona elements on disk
+    (`path_to_persona_elements`) or from explicitly passed `elements`. In the latter
+    case, an existing persona may be passed as `base`: the passed elements are added to
+    the base's elements, and where a passed element and a base element share a
+    `tt_qname` and are active on the same policy date, the passed element wins. Without
+    a `base`, the passed elements must form a complete persona.
+    """
+
+    path_to_persona_elements: Path | None = None
+    """Module of persona elements to load. Mutually exclusive with `elements`."""
+    elements: tuple[PersonaElement, ...] | None = None
+    """Persona elements passed explicitly. Mutually exclusive with
+    `path_to_persona_elements`."""
+    base: OrigPersonaOverTime | None = None
+    """Persona whose elements are extended by `elements`."""
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
+    p_id_element: PersonaPIDElement = field(init=False)
+    """The p_id element of this persona: the base's unless `elements` replaces it."""
     LinspaceGrid: type[LinspaceGridProtocol] = field(init=False)
     LinspaceRange: Any = field(init=False)
 
     def __post_init__(self) -> None:
-        p_id = next(
-            el for el in self.orig_elements() if isinstance(el, PersonaPIDElement)
+        _fail_if_not_exactly_one_source_of_elements(
+            path_to_persona_elements=self.path_to_persona_elements,
+            elements=self.elements,
         )
+        _fail_if_base_without_elements(base=self.base, elements=self.elements)
+
+        if self.base is not None:
+            object.__setattr__(
+                self, "start_date", max(self.start_date, self.base.start_date)
+            )
+            object.__setattr__(self, "end_date", min(self.end_date, self.base.end_date))
+            if self.error_if_not_implemented is None:
+                object.__setattr__(
+                    self,
+                    "error_if_not_implemented",
+                    self.base.error_if_not_implemented,
+                )
+
+        own_p_id_elements = [
+            el for el in self._own_elements() if isinstance(el, PersonaPIDElement)
+        ]
+        _fail_if_invalid_number_of_own_p_id_elements(
+            n_own_p_id_elements=len(own_p_id_elements),
+            has_base=self.base is not None,
+            persona_name=self.persona_name,
+        )
+        p_id_element = (
+            own_p_id_elements[0]
+            if own_p_id_elements
+            else cast("OrigPersonaOverTime", self.base).p_id_element
+        )
+        object.__setattr__(self, "p_id_element", p_id_element)
         object.__setattr__(
-            self, "LinspaceGrid", _make_linspace_grid_class(p_id.persona_size)
+            self,
+            "LinspaceGrid",
+            _make_linspace_grid_class(p_id_element.persona_size),
         )
         object.__setattr__(self, "LinspaceRange", LinspaceRange)
+
+    @property
+    def persona_name(self) -> str:
+        """Name of this persona, used in error messages."""
+        if self.path_to_persona_elements is not None:
+            return str(self.path_to_persona_elements)
+        if self.base is not None:
+            return f"persona extending {self.base.persona_name}"
+        return "persona built from explicitly passed elements"
 
     @beartype(conf=PERSONA_CONF)
     def __call__(
@@ -230,34 +286,42 @@ class OrigPersonaOverTime:
         )
 
     def orig_elements(self) -> list[PersonaElement]:
-        module = load_module(
-            path=self.path_to_persona_elements,
-            root=Path(__file__).parent.parent.parent,
-        )
-        persona_elements = load_persona_elements_from_module(module)
-        _fail_if_not_exactly_one_p_id_array_in_persona_elements(
-            persona_elements=persona_elements,
-            path_to_persona_elements=self.path_to_persona_elements,
-        )
-        return persona_elements
+        """All elements of this persona, those of the base (if any) first."""
+        base_elements = self.base.orig_elements() if self.base is not None else []
+        return [*base_elements, *self._own_elements()]
 
     def active_elements(self, policy_date: datetime.date) -> list[PersonaElement]:
-        active_elements: list[PersonaElement] = []
-        for el in self.orig_elements():
-            if isinstance(el, TimeDependentPersonaElement):
-                if el.is_active(policy_date):
-                    active_elements.append(el)
-            elif isinstance(el, PersonaPIDElement):
-                active_elements.append(el)
+        """Elements active at *policy_date*, with the base's overridden ones dropped."""
+        own_active = _active_elements(self._own_elements(), policy_date)
+        if self.base is None:
+            active_elements = own_active
+        else:
+            active_elements = [
+                *_base_elements_not_overridden(
+                    base_active_elements=self.base.active_elements(policy_date),
+                    own_active_elements=own_active,
+                ),
+                *own_active,
+            ]
         _fail_if_active_tt_qnames_overlap(
             active_elements=active_elements,
-            path_to_persona_elements=self.path_to_persona_elements,
+            persona_name=self.persona_name,
         )
         _fail_if_not_exactly_one_description_is_active(
             active_elements=active_elements,
-            path_to_persona_elements=self.path_to_persona_elements,
+            persona_name=self.persona_name,
         )
         return active_elements
+
+    def _own_elements(self) -> list[PersonaElement]:
+        """The elements of this persona itself, excluding those of the base."""
+        if self.path_to_persona_elements is not None:
+            module = load_module(
+                path=self.path_to_persona_elements,
+                root=Path(__file__).parent.parent.parent,
+            )
+            return load_persona_elements_from_module(module)
+        return list(cast("tuple[PersonaElement, ...]", self.elements))
 
     def _fail_if_persona_not_implemented(
         self,
@@ -290,6 +354,55 @@ def active_tt_targets(
 def active_description(active_elements: list[PersonaElement]) -> PersonaDescription:
     """Active description element of a persona."""
     return next(s for s in active_elements if isinstance(s, PersonaDescription))
+
+
+def _active_elements(
+    orig_elements: list[PersonaElement], policy_date: datetime.date
+) -> list[PersonaElement]:
+    """Elements that are active at *policy_date*.
+
+    `PersonaPIDElement`s do not depend on the policy date and are always active.
+    """
+    return [
+        el
+        for el in orig_elements
+        if (
+            el.is_active(policy_date)
+            if isinstance(el, TimeDependentPersonaElement)
+            else isinstance(el, PersonaPIDElement)
+        )
+    ]
+
+
+def _base_elements_not_overridden(
+    base_active_elements: list[PersonaElement],
+    own_active_elements: list[PersonaElement],
+) -> list[PersonaElement]:
+    """Base elements that no active element of the derived persona overrides."""
+    overridden_keys = {
+        key for el in own_active_elements if (key := _override_key(el)) is not None
+    }
+    return [
+        el
+        for el in base_active_elements
+        if (key := _override_key(el)) is None or key not in overridden_keys
+    ]
+
+
+def _override_key(element: PersonaElement) -> tuple[str, str] | None:
+    """What *element* replaces in a base persona, `None` if it replaces nothing.
+
+    Input, target, and p_id elements live in one `tt_qname` namespace and replace a base
+    element with the same `tt_qname` regardless of kind. A description replaces the
+    base's description.
+    """
+    if isinstance(element, PersonaDescription):
+        return ("description", "")
+    if isinstance(
+        element, PersonaInputElement | PersonaTargetElement | PersonaPIDElement
+    ):
+        return ("tt_qname", element.tt_qname)
+    return None
 
 
 def _make_linspace_grid_class(n_members: int):
@@ -376,36 +489,71 @@ def load_persona_elements_from_module(
     ]
 
 
-def _fail_if_not_exactly_one_p_id_array_in_persona_elements(
-    persona_elements: list[PersonaElement],
-    path_to_persona_elements: Path,
+def _fail_if_not_exactly_one_source_of_elements(
+    path_to_persona_elements: Path | None,
+    elements: tuple[PersonaElement, ...] | None,
 ) -> None:
-    p_id_arrays = [el for el in persona_elements if isinstance(el, PersonaPIDElement)]
-    if len(p_id_arrays) != 1:
+    if (path_to_persona_elements is None) == (elements is None):
         msg = (
-            f"Expected exactly one p_id array in {path_to_persona_elements!s}. "
-            f"Found {len(p_id_arrays)}."
+            "Pass exactly one of 'path_to_persona_elements' and 'elements' when "
+            "creating an OrigPersonaOverTime."
+        )
+        raise ValueError(msg)
+
+
+def _fail_if_base_without_elements(
+    base: OrigPersonaOverTime | None,
+    elements: tuple[PersonaElement, ...] | None,
+) -> None:
+    if base is not None and elements is None:
+        msg = (
+            "Passing 'base' requires 'elements': the elements are what extends or "
+            "overrides the base persona."
+        )
+        raise ValueError(msg)
+
+
+def _fail_if_invalid_number_of_own_p_id_elements(
+    *,
+    n_own_p_id_elements: int,
+    has_base: bool,
+    persona_name: str,
+) -> None:
+    """Fail unless the persona resolves to exactly one p_id element.
+
+    A base persona provides exactly one p_id element, which a p_id element of the
+    derived persona replaces. So at most one p_id element may accompany a base, while
+    exactly one must be present without one.
+    """
+    if has_base:
+        if n_own_p_id_elements > 1:
+            msg = (
+                f"Expected at most one p_id array in {persona_name} because the base "
+                f"persona provides one. Found {n_own_p_id_elements}."
+            )
+            raise ValueError(msg)
+    elif n_own_p_id_elements != 1:
+        msg = (
+            f"Expected exactly one p_id array in {persona_name}. "
+            f"Found {n_own_p_id_elements}."
         )
         raise ValueError(msg)
 
 
 def _fail_if_not_exactly_one_description_is_active(
-    active_elements: list[PersonaElement], path_to_persona_elements: Path
+    active_elements: list[PersonaElement], persona_name: str
 ) -> None:
     descriptions = [s for s in active_elements if isinstance(s, PersonaDescription)]
     if len(descriptions) > 1:
-        msg = (
-            "More than one PersonaDescription is active at "
-            f"{path_to_persona_elements!s}."
-        )
+        msg = f"More than one PersonaDescription is active at {persona_name}."
         raise ValueError(msg)
     if len(descriptions) == 0:
-        msg = f"No PersonaDescription found at {path_to_persona_elements!s}."
+        msg = f"No PersonaDescription found at {persona_name}."
         raise ValueError(msg)
 
 
 def _fail_if_active_tt_qnames_overlap(
-    active_elements: list[PersonaElement], path_to_persona_elements: Path
+    active_elements: list[PersonaElement], persona_name: str
 ) -> None:
     all_qnames: set[str] = set()
     overlapping_qnames: set[str] = set()
@@ -423,7 +571,7 @@ def _fail_if_active_tt_qnames_overlap(
 
     if overlapping_qnames:
         msg = (
-            f"Active qnames overlap at {path_to_persona_elements!s}. "
+            f"Active qnames overlap at {persona_name}. "
             f"Overlapping qnames: {overlapping_qnames}"
         )
         raise ValueError(msg)

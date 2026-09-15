@@ -1,6 +1,8 @@
 import numpy as np
 from gettsim import InputData, MainTarget, TTTargets, main
 
+import gettsim_personas
+from gettsim_personas import OrigPersonaOverTime, persona_input_element
 from gettsim_personas.einkommensteuer_sozialabgaben import Couple1Child
 
 
@@ -57,4 +59,51 @@ def test_can_upsert_input_data():
     assert np.array_equal(
         upserted_persona.input_data_tree["einnahmen"]["bruttolohn_m"],
         np.array([1, 2, 3, 4, 5, 6]),
+    )
+
+
+def test_persona_building_blocks_are_importable_from_public_package():
+    """The names needed to define a persona are part of the public API."""
+    expected = {
+        "LinspaceRange",
+        "OrigPersonaOverTime",
+        "persona_description",
+        "persona_input_element",
+        "persona_pid_element",
+        "persona_target_element",
+    }
+    assert expected <= set(dir(gettsim_personas))
+
+
+@persona_input_element(tt_qname="einnahmen__bruttolohn_m", start_date="2020-01-01")
+def bruttolohn_m_since_2020() -> np.ndarray:
+    return np.array([1234.0, 2345.0, 0.0])
+
+
+ExtendedCouple1Child = OrigPersonaOverTime(
+    elements=(bruttolohn_m_since_2020,),
+    base=Couple1Child,
+)
+
+
+def test_extended_persona_uses_override_for_policy_date_in_its_active_range():
+    persona = ExtendedCouple1Child(policy_date_str="2021-01-01")
+    main(
+        main_target=MainTarget.results.tree,
+        input_data=InputData.tree(persona.input_data_tree),
+        tt_targets=TTTargets.tree(persona.tt_targets_tree),
+        policy_date=persona.policy_date,
+        include_warn_nodes=False,
+    )
+    assert np.array_equal(
+        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+        np.array([1234.0, 2345.0, 0.0]),
+    )
+
+
+def test_extended_persona_uses_base_value_for_policy_date_before_override():
+    persona = ExtendedCouple1Child(policy_date_str="2019-01-01")
+    assert np.array_equal(
+        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+        np.array([3000, 3000, 0]),
     )

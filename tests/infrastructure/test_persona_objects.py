@@ -1,5 +1,6 @@
 import datetime
 from dataclasses import dataclass
+from dataclasses import fields as dataclass_fields
 from pathlib import Path
 
 import numpy as np
@@ -9,6 +10,8 @@ from numpy.testing import assert_array_equal
 from _gettsim_personas.persona_elements import (
     persona_description,
     persona_input_element,
+    persona_pid_element,
+    persona_target_element,
 )
 from _gettsim_personas.persona_objects import (
     LinspaceGridProtocol,
@@ -155,7 +158,7 @@ def test_fail_if_active_tt_qnames_overlap():
                 another_input_element_always_active,
                 time_dependent_persona_input_element_active_since_2010,
             ],
-            path_to_persona_elements=Path(),
+            persona_name="some persona",
         )
 
 
@@ -170,7 +173,7 @@ def test_do_not_fail_if_active_qnames_do_not_overlap():
             input_element_always_active,
             time_dependent_persona_input_element_active_since_2010,
         ],
-        path_to_persona_elements=Path(),
+        persona_name="some persona",
     )
 
 
@@ -182,7 +185,7 @@ def test_fail_if_multiple_descriptions_are_active():
                 another_active_description,
                 input_element_always_active,
             ],
-            path_to_persona_elements=Path(),
+            persona_name="some persona",
         )
 
 
@@ -192,7 +195,7 @@ def test_do_not_fail_if_only_one_description_is_active():
             active_description,
             input_element_always_active,
         ],
-        path_to_persona_elements=Path(),
+        persona_name="some persona",
     )
 
 
@@ -387,3 +390,347 @@ def test_persona_description_is_string_after_instantiation():
         evaluation_date_str="2015-01-01",
     )
     assert isinstance(persona.description, str)
+
+
+@persona_description(description="A persona built from explicitly passed elements.")
+def explicit_description():
+    pass
+
+
+@persona_pid_element()
+def explicit_p_id() -> np.ndarray:
+    return np.array([0, 1])
+
+
+@persona_input_element(tt_qname="hh_id")
+def explicit_hh_id() -> np.ndarray:
+    return np.array([0, 0])
+
+
+@persona_input_element(tt_qname="einnahmen__bruttolohn_m")
+def explicit_bruttolohn_m() -> np.ndarray:
+    return np.array([100.0, 200.0])
+
+
+@persona_target_element()
+def einkommensteuer__betrag_y():
+    pass
+
+
+COMPLETE_ELEMENTS = (
+    explicit_description,
+    explicit_p_id,
+    explicit_hh_id,
+    explicit_bruttolohn_m,
+    einkommensteuer__betrag_y,
+)
+
+
+@persona_input_element(tt_qname="einnahmen__bruttolohn_m", start_date="2020-01-01")
+def bruttolohn_m_since_2020() -> np.ndarray:
+    return np.array([10.0, 20.0, 30.0])
+
+
+@persona_input_element()
+def some_new_input_element() -> np.ndarray:
+    return np.array([7, 8, 9])
+
+
+@persona_target_element()
+def some_new_target_qname():
+    pass
+
+
+@persona_input_element()
+def double_of_base_input_element(
+    some_time_dependent_persona_input_element: np.ndarray,
+) -> np.ndarray:
+    return 2 * some_time_dependent_persona_input_element
+
+
+@persona_description(
+    description="Derived description since 2010.",
+    start_date="2010-01-01",
+)
+def derived_description_since_2010():
+    pass
+
+
+@persona_pid_element()
+def p_id_with_two_members() -> np.ndarray:
+    return np.array([0, 1])
+
+
+def test_persona_from_explicit_elements_has_expected_input_data():
+    """Explicitly passed input elements make up the persona's input data."""
+    persona = OrigPersonaOverTime(elements=COMPLETE_ELEMENTS)(
+        policy_date_str="2021-01-01"
+    )
+    assert_array_equal(
+        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+        np.array([100.0, 200.0]),
+    )
+
+
+def test_persona_from_explicit_elements_has_expected_targets():
+    """Explicitly passed target elements make up the persona's targets."""
+    persona = OrigPersonaOverTime(elements=COMPLETE_ELEMENTS)(
+        policy_date_str="2021-01-01"
+    )
+    assert persona.tt_targets_tree == {"einkommensteuer": {"betrag_y": None}}
+
+
+def test_persona_from_explicit_elements_has_expected_description():
+    """The active description of the passed elements is the persona's description."""
+    persona = OrigPersonaOverTime(elements=COMPLETE_ELEMENTS)(
+        policy_date_str="2021-01-01"
+    )
+    assert persona.description == "A persona built from explicitly passed elements."
+
+
+def test_persona_from_explicit_elements_fails_without_description():
+    with pytest.raises(ValueError, match="No PersonaDescription found"):
+        OrigPersonaOverTime(
+            elements=(explicit_p_id, explicit_hh_id, explicit_bruttolohn_m)
+        )(policy_date_str="2021-01-01")
+
+
+def test_persona_from_explicit_elements_fails_without_p_id_element():
+    with pytest.raises(ValueError, match="Expected exactly one p_id array"):
+        OrigPersonaOverTime(elements=(explicit_description, explicit_hh_id))
+
+
+def test_persona_fails_if_both_path_and_elements_are_passed():
+    with pytest.raises(
+        ValueError,
+        match="Pass exactly one of 'path_to_persona_elements' and 'elements'",
+    ):
+        OrigPersonaOverTime(
+            path_to_persona_elements=Path("some_persona_elements.py"),
+            elements=COMPLETE_ELEMENTS,
+        )
+
+
+def test_persona_fails_if_neither_path_nor_elements_are_passed():
+    with pytest.raises(
+        ValueError,
+        match="Pass exactly one of 'path_to_persona_elements' and 'elements'",
+    ):
+        OrigPersonaOverTime()
+
+
+def test_persona_fails_if_base_is_passed_without_elements():
+    with pytest.raises(ValueError, match="Passing 'base' requires 'elements'"):
+        OrigPersonaOverTime(
+            path_to_persona_elements=Path("some_persona_elements.py"),
+            base=SamplePersona,
+        )
+
+
+def test_passed_element_overrides_base_element_when_active():
+    derived = OrigPersonaOverTime(
+        elements=(bruttolohn_m_since_2020,),
+        base=SamplePersona,
+    )
+    assert_array_equal(
+        derived(policy_date_str="2021-01-01").input_data_tree["einnahmen"][
+            "bruttolohn_m"
+        ],
+        np.array([10.0, 20.0, 30.0]),
+    )
+
+
+def test_passed_element_does_not_override_base_element_when_inactive():
+    derived = OrigPersonaOverTime(
+        elements=(bruttolohn_m_since_2020,),
+        base=SamplePersona,
+    )
+    assert_array_equal(
+        derived(policy_date_str="2015-01-01").input_data_tree["einnahmen"][
+            "bruttolohn_m"
+        ],
+        np.array([1, 2, 3]),
+    )
+
+
+def test_passed_input_element_is_added_to_base_input_data():
+    derived = OrigPersonaOverTime(
+        elements=(some_new_input_element,),
+        base=SamplePersona,
+    )
+    assert_array_equal(
+        derived(policy_date_str="2021-01-01").input_data_tree["some_new_input_element"],
+        np.array([7, 8, 9]),
+    )
+
+
+def test_passed_target_element_is_added_to_base_targets():
+    derived = OrigPersonaOverTime(
+        elements=(some_new_target_qname,),
+        base=SamplePersona,
+    )
+    assert (
+        "some_new_target_qname" in derived(policy_date_str="2021-01-01").tt_targets_tree
+    )
+
+
+def test_passed_element_may_depend_on_base_element():
+    derived = OrigPersonaOverTime(
+        elements=(double_of_base_input_element,),
+        base=SamplePersona,
+    )
+    assert_array_equal(
+        derived(policy_date_str="2021-01-01").input_data_tree[
+            "double_of_base_input_element"
+        ],
+        np.array([2, 4, 6]),
+    )
+
+
+def test_passed_description_overrides_base_description_when_active():
+    derived = OrigPersonaOverTime(
+        elements=(derived_description_since_2010,),
+        base=SamplePersona,
+    )
+    assert (
+        derived(policy_date_str="2021-01-01").description
+        == "Derived description since 2010."
+    )
+
+
+def test_base_description_applies_when_passed_description_is_inactive():
+    derived = OrigPersonaOverTime(
+        elements=(derived_description_since_2010,),
+        base=SamplePersona,
+    )
+    assert (
+        derived(policy_date_str="2005-01-01").description
+        == "Test description valid until 2009."
+    )
+
+
+def test_overlap_among_passed_elements_raises():
+    derived = OrigPersonaOverTime(
+        elements=(input_element_always_active, another_input_element_always_active),
+        base=SamplePersona,
+    )
+    with pytest.raises(
+        ValueError, match=r"Overlapping qnames: \{'input_element_always_active'\}"
+    ):
+        derived(policy_date_str="2021-01-01")
+
+
+def test_passed_p_id_element_replaces_base_p_id_element_in_linspace_grid():
+    derived = OrigPersonaOverTime(
+        elements=(p_id_with_two_members,),
+        base=SamplePersona,
+    )
+    grid = derived.LinspaceGrid(p0=1.0, p1=2.0, n_points=5)
+    field_names = [
+        f.name
+        for f in dataclass_fields(grid)  # ty: ignore[invalid-argument-type]
+    ]
+    assert field_names == ["p0", "p1", "n_points"]
+
+
+def test_date_range_of_derived_persona_is_intersection_with_base():
+    derived = OrigPersonaOverTime(
+        elements=(some_new_input_element,),
+        base=SamplePersonaWithStartAndEndDate,
+    )
+    assert derived.start_date == datetime.date(2015, 1, 1)
+
+
+def test_derived_persona_raises_base_error_outside_base_date_range():
+    derived = OrigPersonaOverTime(
+        elements=(some_new_input_element,),
+        base=SamplePersonaWithStartAndEndDate,
+    )
+    with pytest.raises(
+        NotImplementedError, match=r"This Persona is not implemented before 2015\."
+    ):
+        derived(policy_date_str="2014-01-01")
+
+
+def test_bruttolohn_m_linspace_grid_works_on_derived_persona():
+    derived = OrigPersonaOverTime(
+        elements=(some_new_input_element,),
+        base=SamplePersona,
+    )
+    persona = derived(
+        policy_date_str="2015-01-01",
+        bruttolohn_m_linspace_grid=derived.LinspaceGrid(
+            p0=derived.LinspaceRange(bottom=0, top=1),
+            p1=derived.LinspaceRange(bottom=0, top=1),
+            p2=0,
+            n_points=2,
+        ),
+    )
+    assert_array_equal(
+        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+        np.array([0, 0, 0, 1, 1, 0]),
+    )
+
+
+@persona_pid_element()
+def p_id_with_four_members() -> np.ndarray:
+    return np.array([0, 1, 2, 3])
+
+
+@persona_input_element()
+def another_new_input_element() -> np.ndarray:
+    return np.array([4, 5, 6])
+
+
+@persona_input_element(tt_qname="some_target_qname")
+def input_element_overriding_a_base_target() -> np.ndarray:
+    return np.array([1, 1, 1])
+
+
+def test_chained_extension_merges_elements_of_all_levels():
+    """A persona extending a derived persona sees the elements of every level."""
+    mid = OrigPersonaOverTime(elements=(some_new_input_element,), base=SamplePersona)
+    leaf = OrigPersonaOverTime(elements=(another_new_input_element,), base=mid)
+    input_data_tree = leaf(policy_date_str="2021-01-01").input_data_tree
+    assert {
+        "some_time_dependent_persona_input_element": input_data_tree[
+            "some_time_dependent_persona_input_element"
+        ].tolist(),
+        "some_new_input_element": input_data_tree["some_new_input_element"].tolist(),
+        "another_new_input_element": input_data_tree[
+            "another_new_input_element"
+        ].tolist(),
+    } == {
+        "some_time_dependent_persona_input_element": [1, 2, 3],
+        "some_new_input_element": [7, 8, 9],
+        "another_new_input_element": [4, 5, 6],
+    }
+
+
+def test_chained_extension_uses_innermost_p_id_element_for_linspace_grid():
+    """A p_id element replaces the one of a base that replaced another p_id element."""
+    mid = OrigPersonaOverTime(elements=(p_id_with_two_members,), base=SamplePersona)
+    leaf = OrigPersonaOverTime(elements=(p_id_with_four_members,), base=mid)
+    field_names = [
+        f.name
+        for f in dataclass_fields(leaf.LinspaceGrid)  # ty: ignore[invalid-argument-type]
+    ]
+    assert field_names == ["p0", "p1", "p2", "p3", "n_points"]
+
+
+def test_persona_fails_if_more_than_one_p_id_element_is_passed_with_base():
+    with pytest.raises(ValueError, match="Expected at most one p_id array"):
+        OrigPersonaOverTime(
+            elements=(p_id_with_two_members, p_id_with_four_members),
+            base=SamplePersona,
+        )
+
+
+def test_passed_input_element_replaces_base_target_with_same_tt_qname():
+    """Input, target, and p_id elements share one tt_qname namespace."""
+    derived = OrigPersonaOverTime(
+        elements=(input_element_overriding_a_base_target,),
+        base=SamplePersona,
+    )
+    persona = derived(policy_date_str="2021-01-01")
+    assert "some_target_qname" not in persona.tt_targets_tree
