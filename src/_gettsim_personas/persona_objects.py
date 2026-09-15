@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 from beartype import beartype
 from ttsim.interface_dag_elements.data_converters import (
-    nested_data_to_df_with_nested_columns,
+    nested_data_to_df_with_qname_columns,
 )
 from ttsim.interface_dag_elements.orig_policy_objects import load_module
 from ttsim.interface_dag_elements.shared import to_datetime
@@ -67,8 +67,8 @@ class Persona:
 
     @property
     def input_data_df(self) -> pd.DataFrame:
-        """The input data as a DataFrame with nested columns, indexed by `p_id`."""
-        return nested_data_to_df_with_nested_columns(
+        """The input data as a DataFrame with qname columns, indexed by `p_id`."""
+        return nested_data_to_df_with_qname_columns(
             self.input_data_tree,
             index=pd.Index(self.input_data_tree["p_id"], name="p_id"),
         )
