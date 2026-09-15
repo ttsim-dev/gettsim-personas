@@ -68,7 +68,9 @@ repos:
           - pyi
           - python
   - repo: https://github.com/astral-sh/ty-pre-commit
-    rev: v0.0.78
+    # Pinned: from v0.0.78 on, the hook's uv points ty at the hook's own virtualenv
+    # instead of the pixi env named in `[tool.ty] environment.python`.
+    rev: v0.0.71
     hooks:
       - id: ty
         # `--no-project` keeps uv from creating a `.venv`/`uv.lock` in this
