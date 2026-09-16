@@ -297,9 +297,19 @@ def sozialversicherung__arbeitslosen__monate_sozialversicherungspflichtiger_besc
     return np.array([0])
 
 
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__bezieht_rente() -> np.ndarray:
+@persona_input_element()
+def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit() -> np.ndarray:
     return np.array([False])
+
+
+@persona_input_element()
+def sozialversicherung__rente__altersrente__betrag_m() -> np.ndarray:
+    return np.array([0.0])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__erwerbsminderung__betrag_m() -> np.ndarray:
+    return np.array([0.0])
 
 
 @persona_input_element(start_date="2021-01-01")

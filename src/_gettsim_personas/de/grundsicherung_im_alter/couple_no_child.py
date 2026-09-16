@@ -209,9 +209,9 @@ def kindergeld__p_id_empfänger() -> np.ndarray:
     return np.array([-1, -1])
 
 
-@persona_input_element(start_date="2021-01-01")
-def sozialversicherung__rente__bezieht_rente() -> np.ndarray:
-    return np.array([True, True])
+@persona_input_element()
+def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit() -> np.ndarray:
+    return np.array([False, False])
 
 
 @persona_input_element()
