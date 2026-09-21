@@ -71,9 +71,8 @@ repos:
     rev: v0.0.78
     hooks:
       - id: ty
-        # The hook's default entry (`uv check`) hands ty the hook's own virtualenv
-        # instead of the pixi env named in `[tool.ty] environment.python`, so run
-        # ty directly (run `pixi install` once).
+        # Run ty directly so import resolution uses `[tool.ty] environment.python`.
+        # Keep this dependency pin aligned with the hook revision above.
         entry: ty check
         additional_dependencies:
           - ty==0.0.78

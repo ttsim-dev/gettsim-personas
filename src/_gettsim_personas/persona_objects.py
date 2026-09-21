@@ -11,9 +11,6 @@ import dags.tree as dt
 import numpy as np
 import pandas as pd
 from beartype import beartype
-from ttsim.interface_dag_elements.data_converters import (
-    nested_data_to_df_with_qname_columns,
-)
 from ttsim.interface_dag_elements.orig_policy_objects import load_module
 from ttsim.interface_dag_elements.shared import to_datetime
 from ttsim.typing import (
@@ -67,11 +64,8 @@ class Persona:
 
     @property
     def input_data_df(self) -> pd.DataFrame:
-        """The input data as a DataFrame with qname columns, indexed by `p_id`."""
-        return nested_data_to_df_with_qname_columns(
-            self.input_data_tree,
-            index=pd.Index(self.input_data_tree["p_id"], name="p_id"),
-        )
+        """The input data as a DataFrame with one column per input qname."""
+        return pd.DataFrame(dt.flatten_to_qnames(self.input_data_tree))
 
     @beartype(conf=PERSONA_CONF)
     def upsert_input_data(self, input_data_to_upsert: NestedData) -> Persona:
@@ -137,6 +131,7 @@ class Persona:
         )
 
 
+@beartype(conf=PERSONA_CONF)
 @dataclass(frozen=True)
 class OrigPersonaOverTime:
     """A persona containing inputs and targets to use with GETTSIM.
@@ -146,7 +141,7 @@ class OrigPersonaOverTime:
     an existing one.
     """
 
-    elements: tuple[PersonaElement, ...]
+    elements: tuple[PersonaElement, ...] = field(repr=False)
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
@@ -163,10 +158,28 @@ class OrigPersonaOverTime:
         )
         object.__setattr__(self, "LinspaceRange", LinspaceRange)
 
+    @beartype(conf=PERSONA_CONF)
     def upsert_elements(self, *elements: PersonaElement) -> OrigPersonaOverTime:
-        """A new persona with *elements* added, replacing elements of the same name."""
-        merged = {el.orig_name: el for el in (*self.elements, *elements)}
-        return replace(self, elements=tuple(merged.values()))
+        """Create a new persona with *elements* added.
+
+        Each passed element replaces the existing elements with the same TT qname
+        within its own date range; a passed description replaces the existing
+        descriptions. Outside that range, the existing elements stay active. Where
+        passed elements overlap, later ones take precedence over earlier ones.
+
+        Args:
+            elements: Persona elements to add.
+
+        Returns:
+            A new persona with the passed elements added.
+        """
+        merged = self.elements
+        for new in elements:
+            merged = (
+                *(part for el in merged for part in _parts_not_replaced_by(el, new)),
+                new,
+            )
+        return replace(self, elements=merged)
 
     @beartype(conf=PERSONA_CONF)
     def __call__(
@@ -294,6 +307,29 @@ def active_tt_targets(
 def active_description(active_elements: list[PersonaElement]) -> PersonaDescription:
     """Active description element of a persona."""
     return next(s for s in active_elements if isinstance(s, PersonaDescription))
+
+
+def _parts_not_replaced_by(
+    el: PersonaElement, new: PersonaElement
+) -> tuple[PersonaElement, ...]:
+    """The parts of *el*'s date range in which *new* does not replace it."""
+    if _replacement_key(el) != _replacement_key(new):
+        return (el,)
+    if isinstance(el, PersonaPIDElement) or isinstance(new, PersonaPIDElement):
+        return ()
+    one_day = datetime.timedelta(days=1)
+    parts: list[PersonaElement] = []
+    if el.start_date < new.start_date:
+        parts.append(replace(el, end_date=min(el.end_date, new.start_date - one_day)))
+    if el.end_date > new.end_date:
+        parts.append(replace(el, start_date=max(el.start_date, new.end_date + one_day)))
+    return tuple(parts)
+
+
+def _replacement_key(el: PersonaElement) -> str | type[PersonaDescription]:
+    if isinstance(el, PersonaInputElement | PersonaTargetElement | PersonaPIDElement):
+        return el.tt_qname
+    return PersonaDescription
 
 
 def _make_linspace_grid_class(n_members: int):
