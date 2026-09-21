@@ -297,8 +297,17 @@ def sozialversicherung__arbeitslosen__monate_sozialversicherungspflichtiger_besc
     return np.array([0])
 
 
+@persona_input_element(start_date="2017-01-01")
+def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit_wegen_alters() -> (
+    np.ndarray
+):
+    return np.array([False])
+
+
 @persona_input_element()
-def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit() -> np.ndarray:
+def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit_wegen_geringfügiger_beschäftigung() -> (
+    np.ndarray
+):
     return np.array([False])
 
 

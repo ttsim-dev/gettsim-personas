@@ -267,8 +267,17 @@ def sozialversicherung__pflege__beitrag__hat_kinder() -> np.ndarray:
     return np.array([True, True, False])
 
 
+@persona_input_element(start_date="2017-01-01")
+def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit_wegen_alters() -> (
+    np.ndarray
+):
+    return np.array([False, False, False])
+
+
 @persona_input_element()
-def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit() -> np.ndarray:
+def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit_wegen_geringfügiger_beschäftigung() -> (
+    np.ndarray
+):
     return np.array([False, False, False])
 
 
