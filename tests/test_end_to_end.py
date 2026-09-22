@@ -1,6 +1,8 @@
 import numpy as np
 from gettsim import InputData, MainTarget, TTTargets, main
+from numpy.testing import assert_array_equal
 
+from gettsim_personas import persona_input_element
 from gettsim_personas.einkommensteuer_sozialabgaben import Couple1Child
 
 
@@ -58,3 +60,23 @@ def test_can_upsert_input_data():
         upserted_persona.input_data_tree["einnahmen"]["bruttolohn_m"],
         np.array([1, 2, 3, 4, 5, 6]),
     )
+
+
+@persona_input_element()
+def einnahmen__bruttolohn_m() -> np.ndarray:
+    return np.array([0.0, 0.0, 0.0])
+
+
+CoupleWithoutEarnings = Couple1Child.upsert_elements(einnahmen__bruttolohn_m)
+
+
+def test_persona_with_upserted_element_has_no_income_tax_without_earnings():
+    persona = CoupleWithoutEarnings(policy_date_str="2021-01-01")
+    results = main(
+        main_target=MainTarget.results.tree,
+        input_data=InputData.tree(persona.input_data_tree),
+        tt_targets=TTTargets.tree(persona.tt_targets_tree),
+        policy_date=persona.policy_date,
+        include_warn_nodes=False,
+    )
+    assert_array_equal(results["einkommensteuer"]["betrag_m_sn"], np.zeros(3))

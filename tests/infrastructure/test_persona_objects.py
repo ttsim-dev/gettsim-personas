@@ -1,14 +1,17 @@
 import datetime
+import inspect
 from dataclasses import dataclass
-from pathlib import Path
 
+import dags.tree as dt
 import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
+from _gettsim_personas.exceptions import PersonaDefinitionError
 from _gettsim_personas.persona_elements import (
     persona_description,
     persona_input_element,
+    persona_pid_element,
 )
 from _gettsim_personas.persona_objects import (
     LinspaceGridProtocol,
@@ -68,7 +71,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "hh_id",
         "einnahmen__bruttolohn_m",
     }
-    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}  # ty: ignore[unresolved-attribute]
+    orig_names = {el.orig_name for el in SamplePersona.elements}
     assert expected_orig_names == orig_names
 
     expected_tt_qnames = {
@@ -87,7 +90,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "einnahmen__bruttolohn_m",
     }
     tt_qnames = {
-        el.tt_qname for el in SamplePersona.orig_elements() if hasattr(el, "tt_qname")
+        el.tt_qname for el in SamplePersona.elements if hasattr(el, "tt_qname")
     }
     assert expected_tt_qnames == tt_qnames
 
@@ -138,8 +141,7 @@ def test_sample_persona_has_expected_active_persona_elements(
     policy_date, expected_tt_qnames
 ):
     active_tt_qnames = {
-        el.orig_name  # ty: ignore[unresolved-attribute]
-        for el in SamplePersona.active_elements(policy_date)
+        el.orig_name for el in SamplePersona.active_elements(policy_date)
     }
     assert active_tt_qnames == expected_tt_qnames
 
@@ -155,7 +157,6 @@ def test_fail_if_active_tt_qnames_overlap():
                 another_input_element_always_active,
                 time_dependent_persona_input_element_active_since_2010,
             ],
-            path_to_persona_elements=Path(),
         )
 
 
@@ -170,7 +171,6 @@ def test_do_not_fail_if_active_qnames_do_not_overlap():
             input_element_always_active,
             time_dependent_persona_input_element_active_since_2010,
         ],
-        path_to_persona_elements=Path(),
     )
 
 
@@ -182,7 +182,6 @@ def test_fail_if_multiple_descriptions_are_active():
                 another_active_description,
                 input_element_always_active,
             ],
-            path_to_persona_elements=Path(),
         )
 
 
@@ -192,7 +191,6 @@ def test_do_not_fail_if_only_one_description_is_active():
             active_description,
             input_element_always_active,
         ],
-        path_to_persona_elements=Path(),
     )
 
 
@@ -387,3 +385,147 @@ def test_persona_description_is_string_after_instantiation():
         evaluation_date_str="2015-01-01",
     )
     assert isinstance(persona.description, str)
+
+
+def test_input_data_df_has_one_column_per_input_qname():
+    persona = SamplePersona(policy_date_str="2015-01-01")
+    assert set(persona.input_data_df.columns) == set(dt.qnames(persona.input_data_tree))
+
+
+def test_input_data_df_holds_input_data_in_qname_column():
+    persona = SamplePersona(policy_date_str="2015-01-01")
+    assert_array_equal(
+        persona.input_data_df.loc[:, "einnahmen__bruttolohn_m"].to_numpy(),
+        persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+    )
+
+
+def test_input_data_df_can_be_sorted_by_p_id_column():
+    persona = SamplePersona(policy_date_str="2015-01-01")
+    assert_array_equal(
+        persona.input_data_df.sort_values("p_id").loc[:, "p_id"].to_numpy(),
+        persona.input_data_tree["p_id"],
+    )
+
+
+@persona_input_element()
+def einnahmen__bruttolohn_m() -> np.ndarray:
+    return np.array([10.0, 20.0, 30.0])
+
+
+@persona_input_element()
+def some_new_input_element() -> np.ndarray:
+    return np.array([7, 8, 9])
+
+
+@persona_pid_element()
+def p_id_with_two_members() -> np.ndarray:
+    return np.array([0, 1])
+
+
+def test_persona_fails_without_p_id_element():
+    with pytest.raises(ValueError, match="Expected exactly one p_id array"):
+        OrigPersonaOverTime(elements=(input_element_always_active,))
+
+
+def test_persona_fails_without_active_description():
+    persona = OrigPersonaOverTime(
+        elements=(p_id_with_two_members, input_element_always_active)
+    )
+    with pytest.raises(ValueError, match="No PersonaDescription found"):
+        persona(policy_date_str="2021-01-01")
+
+
+def test_passed_element_replaces_base_element_of_same_name():
+    derived = SamplePersona.upsert_elements(einnahmen__bruttolohn_m)
+    assert_array_equal(
+        derived(policy_date_str="2021-01-01").input_data_tree["einnahmen"][
+            "bruttolohn_m"
+        ],
+        np.array([10.0, 20.0, 30.0]),
+    )
+
+
+def test_passed_input_element_is_added_to_base_input_data():
+    derived = SamplePersona.upsert_elements(some_new_input_element)
+    assert_array_equal(
+        derived(policy_date_str="2021-01-01").input_data_tree["some_new_input_element"],
+        np.array([7, 8, 9]),
+    )
+
+
+def test_passed_p_id_element_replaces_base_p_id_element_in_linspace_grid():
+    derived = SamplePersona.upsert_elements(p_id_with_two_members)
+    assert list(inspect.signature(derived.LinspaceGrid).parameters) == [
+        "p0",
+        "p1",
+        "n_points",
+    ]
+
+
+def test_elements_with_same_function_name_are_all_added():
+    derived = SamplePersona.upsert_elements(
+        persona_input_element(tt_qname="aaa")(lambda: np.array([1, 2, 3])),
+        persona_input_element(tt_qname="bbb")(lambda: np.array([4, 5, 6])),
+    )
+    input_data = derived(policy_date_str="2021-01-01").input_data_tree
+    assert {"aaa", "bbb"} <= input_data.keys()
+
+
+@persona_input_element(tt_qname="einnahmen__bruttolohn_m")
+def high_wage() -> np.ndarray:
+    return np.array([100.0, 200.0, 300.0])
+
+
+def test_passed_element_replaces_base_element_of_same_tt_qname():
+    derived = SamplePersona.upsert_elements(high_wage)
+    assert_array_equal(
+        derived(policy_date_str="2021-01-01").input_data_tree["einnahmen"][
+            "bruttolohn_m"
+        ],
+        np.array([100.0, 200.0, 300.0]),
+    )
+
+
+@persona_input_element(tt_qname="einnahmen__bruttolohn_m", start_date="2020-01-01")
+def high_wage_since_2020() -> np.ndarray:
+    return np.array([100.0, 200.0, 300.0])
+
+
+@pytest.mark.parametrize(
+    ("policy_date_str", "expected"),
+    [
+        ("2019-12-31", np.array([1, 2, 3])),
+        ("2020-01-01", np.array([100.0, 200.0, 300.0])),
+    ],
+)
+def test_date_bounded_element_replaces_base_element_only_within_its_dates(
+    policy_date_str, expected
+):
+    derived = SamplePersona.upsert_elements(high_wage_since_2020)
+    assert_array_equal(
+        derived(policy_date_str=policy_date_str).input_data_tree["einnahmen"][
+            "bruttolohn_m"
+        ],
+        expected,
+    )
+
+
+@persona_description(description="A new description.")
+def new_description() -> None:
+    pass
+
+
+def test_passed_description_replaces_base_descriptions():
+    derived = SamplePersona.upsert_elements(new_description)
+    assert derived(policy_date_str="2021-01-01").description == "A new description."
+
+
+def test_upsert_elements_fails_on_undecorated_function():
+    with pytest.raises(PersonaDefinitionError):
+        SamplePersona.upsert_elements(lambda: np.array([1, 2, 3]))  # ty: ignore[invalid-argument-type]
+
+
+def test_persona_fails_on_undecorated_function():
+    with pytest.raises(PersonaDefinitionError):
+        OrigPersonaOverTime(elements=(lambda: np.array([0, 1]),))  # ty: ignore[invalid-argument-type]

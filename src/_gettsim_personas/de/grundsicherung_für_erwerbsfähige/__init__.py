@@ -1,10 +1,13 @@
 import datetime
 from pathlib import Path
 
-from _gettsim_personas.persona_objects import OrigPersonaOverTime
+from _gettsim_personas.persona_objects import (
+    OrigPersonaOverTime,
+    load_persona_elements,
+)
 
 Couple1Child = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "couple_1_child.py",
+    elements=load_persona_elements(Path(__file__).parent / "couple_1_child.py"),
     start_date=datetime.date(2005, 1, 1),
     error_if_not_implemented=(
         "These personas are available from 2005 because basic income support is not "
@@ -14,7 +17,9 @@ Couple1Child = OrigPersonaOverTime(
 
 
 Couple1ChildInKarenzzeit = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "couple_1_child_in_karenzzeit.py",
+    elements=load_persona_elements(
+        Path(__file__).parent / "couple_1_child_in_karenzzeit.py"
+    ),
     start_date=datetime.date(2023, 1, 1),
     error_if_not_implemented=(
         "Karenzzeit for Bürgergeld is not relevant before 2023. Use the "
@@ -23,7 +28,7 @@ Couple1ChildInKarenzzeit = OrigPersonaOverTime(
 )
 
 Couple2Children = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "couple_2_children.py",
+    elements=load_persona_elements(Path(__file__).parent / "couple_2_children.py"),
     start_date=datetime.date(2005, 1, 1),
     error_if_not_implemented=(
         "These personas are available from 2005 because basic income support is not "
@@ -32,7 +37,7 @@ Couple2Children = OrigPersonaOverTime(
 )
 
 CoupleNoChildren = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "couple_no_children.py",
+    elements=load_persona_elements(Path(__file__).parent / "couple_no_children.py"),
     start_date=datetime.date(2005, 1, 1),
     error_if_not_implemented=(
         "These personas are available from 2005 because basic income support is not "
@@ -41,7 +46,7 @@ CoupleNoChildren = OrigPersonaOverTime(
 )
 
 Single1Child = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "single_1_child.py",
+    elements=load_persona_elements(Path(__file__).parent / "single_1_child.py"),
     start_date=datetime.date(2005, 1, 1),
     error_if_not_implemented=(
         "These personas are available from 2005 because basic income support is not "
@@ -50,7 +55,7 @@ Single1Child = OrigPersonaOverTime(
 )
 
 SingleAdult = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "single_adult.py",
+    elements=load_persona_elements(Path(__file__).parent / "single_adult.py"),
     start_date=datetime.date(2005, 1, 1),
     error_if_not_implemented=(
         "These personas are available from 2005 because basic income support is not "

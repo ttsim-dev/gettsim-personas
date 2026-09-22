@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import datetime
 import inspect
-from dataclasses import dataclass, field, fields, make_dataclass
+from dataclasses import dataclass, field, fields, make_dataclass, replace
 from pathlib import Path
-from types import ModuleType
 from typing import Any, Protocol, cast, runtime_checkable
 
 import dags
 import dags.tree as dt
 import numpy as np
+import pandas as pd
 from beartype import beartype
 from ttsim.interface_dag_elements.orig_policy_objects import load_module
 from ttsim.interface_dag_elements.shared import to_datetime
@@ -61,6 +61,11 @@ class Persona:
     evaluation_date: datetime.date
     input_data_tree: NestedData
     tt_targets_tree: NestedTargetDict
+
+    @property
+    def input_data_df(self) -> pd.DataFrame:
+        """The input data as a DataFrame with one column per input qname."""
+        return pd.DataFrame(dt.flatten_to_qnames(self.input_data_tree))
 
     @beartype(conf=PERSONA_CONF)
     def upsert_input_data(self, input_data_to_upsert: NestedData) -> Persona:
@@ -126,11 +131,17 @@ class Persona:
         )
 
 
+@beartype(conf=PERSONA_CONF)
 @dataclass(frozen=True)
 class OrigPersonaOverTime:
-    """A persona containing inputs and targets to use with GETTSIM."""
+    """A persona containing inputs and targets to use with GETTSIM.
 
-    path_to_persona_elements: Path
+    A persona is built from a collection of persona elements; `load_persona_elements`
+    collects them from a module on disk. `upsert_elements` derives a new persona from
+    an existing one.
+    """
+
+    elements: tuple[PersonaElement, ...] = field(repr=False)
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
@@ -138,13 +149,37 @@ class OrigPersonaOverTime:
     LinspaceRange: Any = field(init=False)
 
     def __post_init__(self) -> None:
-        p_id = next(
-            el for el in self.orig_elements() if isinstance(el, PersonaPIDElement)
+        _fail_if_not_exactly_one_p_id_element(self.elements)
+        p_id_element = next(
+            el for el in self.elements if isinstance(el, PersonaPIDElement)
         )
         object.__setattr__(
-            self, "LinspaceGrid", _make_linspace_grid_class(p_id.persona_size)
+            self, "LinspaceGrid", _make_linspace_grid_class(p_id_element.persona_size)
         )
         object.__setattr__(self, "LinspaceRange", LinspaceRange)
+
+    @beartype(conf=PERSONA_CONF)
+    def upsert_elements(self, *elements: PersonaElement) -> OrigPersonaOverTime:
+        """Create a new persona with *elements* added.
+
+        Each passed element replaces the existing elements with the same TT qname
+        within its own date range; a passed description replaces the existing
+        descriptions. Outside that range, the existing elements stay active. Where
+        passed elements overlap, later ones take precedence over earlier ones.
+
+        Args:
+            elements: Persona elements to add.
+
+        Returns:
+            A new persona with the passed elements added.
+        """
+        merged = self.elements
+        for new in elements:
+            merged = (
+                *(part for el in merged for part in _parts_not_replaced_by(el, new)),
+                new,
+            )
+        return replace(self, elements=merged)
 
     @beartype(conf=PERSONA_CONF)
     def __call__(
@@ -229,34 +264,16 @@ class OrigPersonaOverTime:
             else dt.unflatten_from_qnames(active_tt_targets(active_elements)),
         )
 
-    def orig_elements(self) -> list[PersonaElement]:
-        module = load_module(
-            path=self.path_to_persona_elements,
-            root=Path(__file__).parent.parent.parent,
-        )
-        persona_elements = load_persona_elements_from_module(module)
-        _fail_if_not_exactly_one_p_id_array_in_persona_elements(
-            persona_elements=persona_elements,
-            path_to_persona_elements=self.path_to_persona_elements,
-        )
-        return persona_elements
-
     def active_elements(self, policy_date: datetime.date) -> list[PersonaElement]:
-        active_elements: list[PersonaElement] = []
-        for el in self.orig_elements():
-            if isinstance(el, TimeDependentPersonaElement):
-                if el.is_active(policy_date):
-                    active_elements.append(el)
-            elif isinstance(el, PersonaPIDElement):
-                active_elements.append(el)
-        _fail_if_active_tt_qnames_overlap(
-            active_elements=active_elements,
-            path_to_persona_elements=self.path_to_persona_elements,
-        )
-        _fail_if_not_exactly_one_description_is_active(
-            active_elements=active_elements,
-            path_to_persona_elements=self.path_to_persona_elements,
-        )
+        """Elements active at *policy_date*; `PersonaPIDElement`s are always active."""
+        active_elements = [
+            el
+            for el in self.elements
+            if not isinstance(el, TimeDependentPersonaElement)
+            or el.is_active(policy_date)
+        ]
+        _fail_if_active_tt_qnames_overlap(active_elements)
+        _fail_if_not_exactly_one_description_is_active(active_elements)
         return active_elements
 
     def _fail_if_persona_not_implemented(
@@ -290,6 +307,29 @@ def active_tt_targets(
 def active_description(active_elements: list[PersonaElement]) -> PersonaDescription:
     """Active description element of a persona."""
     return next(s for s in active_elements if isinstance(s, PersonaDescription))
+
+
+def _parts_not_replaced_by(
+    el: PersonaElement, new: PersonaElement
+) -> tuple[PersonaElement, ...]:
+    """The parts of *el*'s date range in which *new* does not replace it."""
+    if _replacement_key(el) != _replacement_key(new):
+        return (el,)
+    if isinstance(el, PersonaPIDElement) or isinstance(new, PersonaPIDElement):
+        return ()
+    one_day = datetime.timedelta(days=1)
+    parts: list[PersonaElement] = []
+    if el.start_date < new.start_date:
+        parts.append(replace(el, end_date=min(el.end_date, new.start_date - one_day)))
+    if el.end_date > new.end_date:
+        parts.append(replace(el, start_date=max(el.start_date, new.end_date + one_day)))
+    return tuple(parts)
+
+
+def _replacement_key(el: PersonaElement) -> str | type[PersonaDescription]:
+    if isinstance(el, PersonaInputElement | PersonaTargetElement | PersonaPIDElement):
+        return el.tt_qname
+    return PersonaDescription
 
 
 def _make_linspace_grid_class(n_members: int):
@@ -368,45 +408,34 @@ def _get_qname_input_data(
     return f()
 
 
-def load_persona_elements_from_module(
-    module: ModuleType,
-) -> list[PersonaElement]:
-    return [
+def load_persona_elements(path: Path) -> tuple[PersonaElement, ...]:
+    """Collect the persona elements defined in the module at *path*."""
+    module = load_module(path=path, root=Path(__file__).parent.parent.parent)
+    return tuple(
         obj for _, obj in inspect.getmembers(module) if isinstance(obj, PersonaElement)
-    ]
+    )
 
 
-def _fail_if_not_exactly_one_p_id_array_in_persona_elements(
-    persona_elements: list[PersonaElement],
-    path_to_persona_elements: Path,
-) -> None:
-    p_id_arrays = [el for el in persona_elements if isinstance(el, PersonaPIDElement)]
-    if len(p_id_arrays) != 1:
-        msg = (
-            f"Expected exactly one p_id array in {path_to_persona_elements!s}. "
-            f"Found {len(p_id_arrays)}."
-        )
+def _fail_if_not_exactly_one_p_id_element(elements: tuple[PersonaElement, ...]) -> None:
+    n_p_id = sum(isinstance(el, PersonaPIDElement) for el in elements)
+    if n_p_id != 1:
+        msg = f"Expected exactly one p_id array. Found {n_p_id}."
         raise ValueError(msg)
 
 
 def _fail_if_not_exactly_one_description_is_active(
-    active_elements: list[PersonaElement], path_to_persona_elements: Path
+    active_elements: list[PersonaElement],
 ) -> None:
     descriptions = [s for s in active_elements if isinstance(s, PersonaDescription)]
     if len(descriptions) > 1:
-        msg = (
-            "More than one PersonaDescription is active at "
-            f"{path_to_persona_elements!s}."
-        )
+        msg = "More than one PersonaDescription is active."
         raise ValueError(msg)
     if len(descriptions) == 0:
-        msg = f"No PersonaDescription found at {path_to_persona_elements!s}."
+        msg = "No PersonaDescription found."
         raise ValueError(msg)
 
 
-def _fail_if_active_tt_qnames_overlap(
-    active_elements: list[PersonaElement], path_to_persona_elements: Path
-) -> None:
+def _fail_if_active_tt_qnames_overlap(active_elements: list[PersonaElement]) -> None:
     all_qnames: set[str] = set()
     overlapping_qnames: set[str] = set()
     for el in active_elements:
@@ -422,10 +451,7 @@ def _fail_if_active_tt_qnames_overlap(
                 all_qnames.add(el.tt_qname)
 
     if overlapping_qnames:
-        msg = (
-            f"Active qnames overlap at {path_to_persona_elements!s}. "
-            f"Overlapping qnames: {overlapping_qnames}"
-        )
+        msg = f"Active qnames overlap. Overlapping qnames: {overlapping_qnames}"
         raise ValueError(msg)
 
 
