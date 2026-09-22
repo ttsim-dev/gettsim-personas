@@ -100,9 +100,7 @@ tests-with-cov = "pytest --cov-report=xml --cov=./"
 [tool.pixi.pypi-dependencies]
 gettsim_personas = { path = ".", editable = true }
 # ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim.git", branch = "main" }
-# TODO(@MImmesberger): Point back at the released gettsim once #1233 has been
-# merged and released. https://github.com/ttsim-dev/gettsim/pull/1233
-gettsim = { git = "https://github.com/ttsim-dev/gettsim.git", branch = "versicherungsfreiheit-regelaltersgrenze" }
+gettsim = { git = "https://github.com/ttsim-dev/gettsim.git", branch = "main" }
 kaleido = ">=1.0.0"
 pdbp = "*"
 [tool.pixi.workspace]
