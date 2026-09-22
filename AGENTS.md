@@ -9,9 +9,10 @@ and Transfers Simulator. Personas define specific household structures with inpu
 and tax-transfer targets for a given policy date, enabling exploration and testing of
 the tax-transfer system without real data.
 
-Part of the [dev-gettsim workspace](../CLAUDE.md) alongside **ttsim** (computation
-engine), **gettsim** (German policy implementations), and **soep-preparation** (SOEP
-data pipeline). This project depends on both `ttsim-backend` and `gettsim`.
+Part of the [dev-gettsim workspace](https://github.com/ttsim-dev/dev-gettsim) alongside
+**ttsim** (computation engine), **gettsim** (German policy implementations), and
+**soep-preparation** (SOEP data pipeline). This project depends on both `ttsim-backend`
+and `gettsim`.
 
 ## Commands
 

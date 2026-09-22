@@ -1,3 +1,5 @@
+from typing import cast
+
 import numpy as np
 from gettsim import InputData, MainTarget, TTTargets, main
 
@@ -24,15 +26,12 @@ def test_end_to_end():
     )
 
     assert len(persona.input_data_tree["p_id"]) == 30
-    assert len(persona.input_data_tree["einnahmen"]["bruttolohn_m"]) == 30
-    assert np.array_equal(
-        persona.input_data_tree["einnahmen"]["bruttolohn_m"][:3],
-        np.array([0, 0, 0]),
+    bruttolohn_m = cast(
+        "np.ndarray", persona.input_data_tree["einnahmen"]["bruttolohn_m"]
     )
-    assert np.array_equal(
-        persona.input_data_tree["einnahmen"]["bruttolohn_m"][-3:],
-        np.array([5000, 5000, 0]),
-    )
+    assert len(bruttolohn_m) == 30
+    assert np.array_equal(bruttolohn_m[:3], np.array([0, 0, 0]))
+    assert np.array_equal(bruttolohn_m[-3:], np.array([5000, 5000, 0]))
 
 
 def test_can_create_persona_with_default_bruttolohn():
