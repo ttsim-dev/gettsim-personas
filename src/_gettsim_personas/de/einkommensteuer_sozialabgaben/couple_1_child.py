@@ -48,6 +48,11 @@ def behinderungsgrad() -> np.ndarray:
 
 
 @persona_input_element()
+def alter_monate(alter: np.ndarray) -> np.ndarray:
+    return alter * 12
+
+
+@persona_input_element()
 def geburtsjahr(
     evaluation_date: datetime.date,
     alter: np.ndarray,
@@ -179,6 +184,25 @@ def kindergeld__in_ausbildung() -> np.ndarray:
 @persona_input_element()
 def kindergeld__p_id_empfänger() -> np.ndarray:
     return np.array([-1, -1, 0])
+
+
+@persona_input_element(start_date="2017-01-01")
+def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit_wegen_alters() -> (
+    np.ndarray
+):
+    return np.array([False, False, False])
+
+
+@persona_input_element()
+def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit_wegen_geringfügiger_beschäftigung() -> (
+    np.ndarray
+):
+    return np.array([False, False, False])
+
+
+@persona_input_element()
+def sozialversicherung__rente__altersrente__betrag_m() -> np.ndarray:
+    return np.array([0.0, 0.0, 0.0])
 
 
 # Target columns
