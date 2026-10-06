@@ -320,6 +320,43 @@ def sozialversicherung__arbeitslosen__betrag_m() -> np.ndarray:
     return np.array([0])
 
 
+@persona_input_element()
+def sozialversicherung__arbeitslosen__kurzarbeitergeld_m() -> np.ndarray:
+    return np.array([0.0])
+
+
+@persona_input_element()
+def sozialversicherung__arbeitslosen__insolvenzgeld_m() -> np.ndarray:
+    return np.array([0.0])
+
+
+@persona_input_element()
+def sozialversicherung__kranken__krankengeld_m() -> np.ndarray:
+    return np.array([0.0])
+
+
+@persona_input_element()
+def sozialversicherung__kranken__mutterschaftsgeld_m() -> np.ndarray:
+    return np.array([0.0])
+
+
+@persona_input_element()
+def sozialversicherung__unfall__verletztengeld_m() -> np.ndarray:
+    return np.array([0.0])
+
+
+@persona_input_element()
+def einkommensteuer__einkünfte__aus_nichtselbstständiger_arbeit__aufstockungsbeträge_altersteilzeit_y() -> (
+    np.ndarray
+):
+    return np.array([0.0])
+
+
+@persona_input_element()
+def einkommensteuer__progressionsvorbehalt__sonstige_leistungen_y() -> np.ndarray:
+    return np.array([0.0])
+
+
 @persona_target_element()
 def einkommensteuer__betrag_m_sn() -> None:
     pass
