@@ -341,14 +341,7 @@ def sozialversicherung__unfall__verletztengeld_m() -> np.ndarray:
 
 
 @persona_input_element()
-def einkommensteuer__einkünfte__aus_nichtselbstständiger_arbeit__aufstockungsbeträge_altersteilzeit_y() -> (
-    np.ndarray
-):
-    return np.array([0.0, 0.0])
-
-
-@persona_input_element()
-def einkommensteuer__progressionsvorbehalt__sonstige_leistungen_y() -> np.ndarray:
+def einkommensteuer__progressionsvorbehalt__zurückgezahlte_leistungen_y() -> np.ndarray:
     return np.array([0.0, 0.0])
 
 
