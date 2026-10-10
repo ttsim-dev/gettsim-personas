@@ -372,7 +372,7 @@ def sozialversicherung__unfall__verletztengeld_m() -> np.ndarray:
 
 
 @persona_input_element()
-def einkommensteuer__progressionsvorbehalt__zurückgezahlte_leistungen_y() -> np.ndarray:
+def einnahmen__zurückgezahlte_lohn_und_einkommensersatzleistungen_m() -> np.ndarray:
     return np.array([0.0, 0.0, 0.0])
 
 
