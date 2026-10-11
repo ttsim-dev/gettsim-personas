@@ -312,32 +312,7 @@ def kindergeld__betrag_m() -> np.ndarray:
 
 
 @persona_input_element()
-def sozialversicherung__arbeitslosen__betrag_m() -> np.ndarray:
-    return np.array([0, 0, 0])
-
-
-@persona_input_element()
-def sozialversicherung__arbeitslosen__kurzarbeitergeld_m() -> np.ndarray:
-    return np.array([0.0, 0.0, 0.0])
-
-
-@persona_input_element()
-def sozialversicherung__arbeitslosen__insolvenzgeld_m() -> np.ndarray:
-    return np.array([0.0, 0.0, 0.0])
-
-
-@persona_input_element()
-def sozialversicherung__kranken__krankengeld_m() -> np.ndarray:
-    return np.array([0.0, 0.0, 0.0])
-
-
-@persona_input_element()
-def sozialversicherung__kranken__mutterschaftsgeld_m() -> np.ndarray:
-    return np.array([0.0, 0.0, 0.0])
-
-
-@persona_input_element()
-def sozialversicherung__unfall__verletztengeld_m() -> np.ndarray:
+def einnahmen__lohn_und_einkommensersatzleistungen_ohne_elterngeld_m() -> np.ndarray:
     return np.array([0.0, 0.0, 0.0])
 
 

@@ -225,39 +225,6 @@ def kindergeld__p_id_empfänger() -> np.ndarray:
 
 
 @persona_input_element(start_date="2005-01-01")
-def sozialversicherung__arbeitslosen__arbeitssuchend() -> np.ndarray:
-    return np.array([False, False])
-
-
-@persona_input_element(start_date="2005-01-01")
-def sozialversicherung__arbeitslosen__mean_nettoeinkommen_in_12_monaten_vor_arbeitslosigkeit_m() -> (
-    np.ndarray
-):
-    return np.array([0, 0])
-
-
-@persona_input_element(start_date="2005-01-01")
-def sozialversicherung__arbeitslosen__monate_beitragspflichtig_versichert_in_letzten_30_monaten() -> (
-    np.ndarray
-):
-    return np.array([0, 0])
-
-
-@persona_input_element(start_date="2005-01-01")
-def sozialversicherung__arbeitslosen__monate_durchgängigen_bezugs_von_arbeitslosengeld() -> (
-    np.ndarray
-):
-    return np.array([0, 0])
-
-
-@persona_input_element(start_date="2005-01-01")
-def sozialversicherung__arbeitslosen__monate_sozialversicherungspflichtiger_beschäftigung_in_letzten_5_jahren() -> (
-    np.ndarray
-):
-    return np.array([0, 0])
-
-
-@persona_input_element(start_date="2005-01-01")
 def sozialversicherung__kranken__beitrag__privat_versichert() -> np.ndarray:
     return np.array([False, False])
 
@@ -342,27 +309,7 @@ def wohnort_ost_hh() -> np.ndarray:
 
 
 @persona_input_element()
-def sozialversicherung__arbeitslosen__kurzarbeitergeld_m() -> np.ndarray:
-    return np.array([0.0, 0.0])
-
-
-@persona_input_element()
-def sozialversicherung__arbeitslosen__insolvenzgeld_m() -> np.ndarray:
-    return np.array([0.0, 0.0])
-
-
-@persona_input_element()
-def sozialversicherung__kranken__krankengeld_m() -> np.ndarray:
-    return np.array([0.0, 0.0])
-
-
-@persona_input_element()
-def sozialversicherung__kranken__mutterschaftsgeld_m() -> np.ndarray:
-    return np.array([0.0, 0.0])
-
-
-@persona_input_element()
-def sozialversicherung__unfall__verletztengeld_m() -> np.ndarray:
+def einnahmen__lohn_und_einkommensersatzleistungen_ohne_elterngeld_m() -> np.ndarray:
     return np.array([0.0, 0.0])
 
 
