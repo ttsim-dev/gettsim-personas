@@ -211,6 +211,16 @@ def geburtsjahr(
 
 
 @persona_input_element()
+def geburtsmonat() -> np.ndarray:
+    return np.array([3, 7, 11])
+
+
+@persona_input_element()
+def geburtstag() -> np.ndarray:
+    return np.array([14, 2, 23])
+
+
+@persona_input_element()
 def kindergeld__in_ausbildung() -> np.ndarray:
     return np.array([False, False, False])
 
