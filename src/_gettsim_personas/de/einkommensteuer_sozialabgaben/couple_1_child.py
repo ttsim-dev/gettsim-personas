@@ -60,6 +60,16 @@ def geburtsjahr(
     return evaluation_date.year - alter
 
 
+@persona_input_element()
+def geburtsmonat() -> np.ndarray:
+    return np.array([3, 7, 11])
+
+
+@persona_input_element()
+def geburtstag() -> np.ndarray:
+    return np.array([14, 2, 23])
+
+
 @persona_input_element(end_date="2024-12-31")
 def wohnort_ost_hh() -> np.ndarray:
     return np.array([False, False, False])
@@ -73,6 +83,16 @@ def einnahmen__bruttolohn_m() -> np.ndarray:
 @persona_input_element()
 def einnahmen__kapitalerträge_y() -> np.ndarray:
     return np.array([500.0, 0.0, 0])
+
+
+@persona_input_element()
+def einnahmen__renten__geförderte_private_vorsorge_m() -> np.ndarray:
+    return np.array([0.0, 0.0, 0.0])
+
+
+@persona_input_element()
+def einnahmen__renten__betriebliche_altersvorsorge_m() -> np.ndarray:
+    return np.array([0.0, 0.0, 0.0])
 
 
 @persona_input_element()

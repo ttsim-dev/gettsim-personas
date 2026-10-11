@@ -211,6 +211,16 @@ def geburtsjahr(
 
 
 @persona_input_element(start_date="2005-01-01")
+def geburtsmonat() -> np.ndarray:
+    return np.array([3, 7])
+
+
+@persona_input_element(start_date="2005-01-01")
+def geburtstag() -> np.ndarray:
+    return np.array([14, 2])
+
+
+@persona_input_element(start_date="2005-01-01")
 def grundsicherung__im_alter__überschusseinkommen_m_eg() -> np.ndarray:
     return np.array([0, 0])
 
