@@ -187,7 +187,7 @@ def elterngeld__angerechnete_mutterschaftsleistungen_m() -> np.ndarray:
 
 
 @persona_input_element(start_date="2017-07-01")
-def elterngeld__anrechenbarer_betrag_paragraph_10_abs_5_beeg_m() -> np.ndarray:
+def elterngeld__freibetrag_paragraph_10_abs_5_beeg_m() -> np.ndarray:
     return np.array([0, 0])
 
 
