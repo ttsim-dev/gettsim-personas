@@ -182,6 +182,11 @@ def elterngeld__betrag_m() -> np.ndarray:
 
 
 @persona_input_element(start_date="2005-01-01")
+def elterngeld__angerechnete_mutterschaftsleistungen_m() -> np.ndarray:
+    return np.array([0, 0, 0])
+
+
+@persona_input_element(start_date="2005-01-01")
 def familie__alleinerziehend() -> np.ndarray:
     return np.array([False, False, False])
 
@@ -315,6 +320,16 @@ def wohnort_ost_hh() -> np.ndarray:
 
 @persona_input_element()
 def einnahmen__lohn_und_einkommensersatzleistungen_ohne_elterngeld_m() -> np.ndarray:
+    return np.array([0.0, 0.0, 0.0])
+
+
+@persona_input_element()
+def sozialversicherung__arbeitslosen__kurzarbeitergeld_m() -> np.ndarray:
+    return np.array([0.0, 0.0, 0.0])
+
+
+@persona_input_element()
+def sozialversicherung__arbeitslosen__insolvenzgeld_m() -> np.ndarray:
     return np.array([0.0, 0.0, 0.0])
 
 

@@ -290,6 +290,11 @@ def elterngeld__betrag_m() -> np.ndarray:
     return np.array([0, 0])
 
 
+@persona_input_element()
+def elterngeld__angerechnete_mutterschaftsleistungen_m() -> np.ndarray:
+    return np.array([0, 0])
+
+
 @persona_input_element(end_date="2022-12-31")
 def arbeitslosengeld_2__p_id_einstandspartner() -> np.ndarray:
     return np.array([1, 0])
@@ -312,6 +317,16 @@ def kindergeld__betrag_m() -> np.ndarray:
 
 @persona_input_element()
 def einnahmen__lohn_und_einkommensersatzleistungen_ohne_elterngeld_m() -> np.ndarray:
+    return np.array([0.0, 0.0])
+
+
+@persona_input_element()
+def sozialversicherung__arbeitslosen__kurzarbeitergeld_m() -> np.ndarray:
+    return np.array([0.0, 0.0])
+
+
+@persona_input_element()
+def sozialversicherung__arbeitslosen__insolvenzgeld_m() -> np.ndarray:
     return np.array([0.0, 0.0])
 
 
