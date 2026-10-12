@@ -235,6 +235,16 @@ def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit_wegen_gering
     return np.array([False, False])
 
 
+@persona_input_element()
+def einnahmen__lohn_und_einkommensersatzleistungen_m() -> np.ndarray:
+    return np.array([0.0, 0.0])
+
+
+@persona_input_element()
+def einnahmen__zurückgezahlte_lohn_und_einkommensersatzleistungen_m() -> np.ndarray:
+    return np.array([0.0, 0.0])
+
+
 @persona_target_element()
 def einkommensteuer__betrag_m_sn() -> None:
     pass

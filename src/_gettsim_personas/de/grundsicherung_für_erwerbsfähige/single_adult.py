@@ -264,39 +264,6 @@ def unterhaltsvorschuss__betrag_m() -> np.ndarray:
     return np.array([0])
 
 
-@persona_input_element()
-def sozialversicherung__arbeitslosen__arbeitssuchend() -> np.ndarray:
-    return np.array([False])
-
-
-@persona_input_element()
-def sozialversicherung__arbeitslosen__mean_nettoeinkommen_in_12_monaten_vor_arbeitslosigkeit_m() -> (
-    np.ndarray
-):
-    return np.array([0])
-
-
-@persona_input_element()
-def sozialversicherung__arbeitslosen__monate_beitragspflichtig_versichert_in_letzten_30_monaten() -> (
-    np.ndarray
-):
-    return np.array([0])
-
-
-@persona_input_element()
-def sozialversicherung__arbeitslosen__monate_durchgängigen_bezugs_von_arbeitslosengeld() -> (
-    np.ndarray
-):
-    return np.array([0])
-
-
-@persona_input_element()
-def sozialversicherung__arbeitslosen__monate_sozialversicherungspflichtiger_beschäftigung_in_letzten_5_jahren() -> (
-    np.ndarray
-):
-    return np.array([0])
-
-
 @persona_input_element(start_date="2017-01-01")
 def sozialversicherung__rente__verzichtet_auf_versicherungsfreiheit_wegen_alters() -> (
     np.ndarray
@@ -332,6 +299,11 @@ def elterngeld__betrag_m() -> np.ndarray:
 
 
 @persona_input_element()
+def elterngeld__angerechnete_mutterschaftsleistungen_m() -> np.ndarray:
+    return np.array([0])
+
+
+@persona_input_element()
 def grundsicherung__im_alter__überschusseinkommen_m_eg() -> np.ndarray:
     return np.array([0])
 
@@ -344,6 +316,26 @@ def kindergeld__in_ausbildung() -> np.ndarray:
 @persona_input_element()
 def kindergeld__p_id_empfänger() -> np.ndarray:
     return np.array([-1])
+
+
+@persona_input_element()
+def einnahmen__lohn_und_einkommensersatzleistungen_ohne_elterngeld_m() -> np.ndarray:
+    return np.array([0.0])
+
+
+@persona_input_element()
+def sozialversicherung__arbeitslosen__kurzarbeitergeld_m() -> np.ndarray:
+    return np.array([0.0])
+
+
+@persona_input_element()
+def sozialversicherung__arbeitslosen__insolvenzgeld_m() -> np.ndarray:
+    return np.array([0.0])
+
+
+@persona_input_element()
+def einnahmen__zurückgezahlte_lohn_und_einkommensersatzleistungen_m() -> np.ndarray:
+    return np.array([0.0])
 
 
 @persona_target_element()
