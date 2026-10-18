@@ -234,6 +234,16 @@ def sozialversicherung__rente__altersrente__betrag_m() -> np.ndarray:
     return np.array([500.0, 200.0, 0.0])
 
 
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__bezieht_altersrente() -> np.ndarray:
+    return np.array([True, True, False])
+
+
+@persona_input_element(start_date="2021-01-01")
+def sozialversicherung__rente__grundrente__betrag_m() -> np.ndarray:
+    return np.array([0.0, 0.0, 0.0])
+
+
 @persona_input_element()
 def sozialversicherung__rente__jahr_renteneintritt(
     evaluation_date: datetime.date,
