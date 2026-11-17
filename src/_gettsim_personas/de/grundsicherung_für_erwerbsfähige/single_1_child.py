@@ -186,6 +186,11 @@ def elterngeld__angerechnete_mutterschaftsleistungen_m() -> np.ndarray:
     return np.array([0, 0])
 
 
+@persona_input_element(start_date="2023-01-01")
+def sozialversicherung__kranken__mutterschaftsgeld_m() -> np.ndarray:
+    return np.array([0, 0])
+
+
 @persona_input_element(start_date="2017-07-01")
 def elterngeld__freibetrag_paragraph_10_abs_5_beeg_m() -> np.ndarray:
     return np.array([0, 0])
