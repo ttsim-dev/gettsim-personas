@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime
 import inspect
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field, fields, make_dataclass, replace
 from pathlib import Path
 from typing import Any, Protocol, cast, runtime_checkable
@@ -139,7 +139,7 @@ class OrigPersonaOverTime:
     an existing one.
     """
 
-    elements: tuple[PersonaElement, ...] = field(repr=False)
+    elements: Sequence[PersonaElement] = field(repr=False)
     start_date: datetime.date = DEFAULT_START_DATE
     end_date: datetime.date = DEFAULT_END_DATE
     error_if_not_implemented: str | None = None
@@ -147,6 +147,7 @@ class OrigPersonaOverTime:
     LinspaceRange: Any = field(init=False)
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "elements", tuple(self.elements))
         _fail_if_not_exactly_one_p_id_element(self.elements)
         p_id_element = next(
             el for el in self.elements if isinstance(el, PersonaPIDElement)
@@ -161,9 +162,10 @@ class OrigPersonaOverTime:
         """Create a new persona with *elements* added.
 
         Each passed element replaces the existing elements with the same TT qname
-        within its own date range; a passed description replaces the existing
-        descriptions. Outside that range, the existing elements stay active. Where
-        passed elements overlap, later ones take precedence over earlier ones.
+        within its own date range, whatever their kind: an input element removes a
+        target of the same TT qname and vice versa. A passed description replaces the
+        existing descriptions. Outside that range, the existing elements stay active.
+        Where passed elements overlap, later ones take precedence over earlier ones.
 
         Args:
             elements: Persona elements to add.
@@ -421,7 +423,7 @@ def load_persona_elements(path: Path) -> tuple[PersonaElement, ...]:
     )
 
 
-def _fail_if_not_exactly_one_p_id_element(elements: tuple[PersonaElement, ...]) -> None:
+def _fail_if_not_exactly_one_p_id_element(elements: Sequence[PersonaElement]) -> None:
     n_p_id = sum(isinstance(el, PersonaPIDElement) for el in elements)
     if n_p_id != 1:
         msg = f"Expected exactly one p_id array. Found {n_p_id}."

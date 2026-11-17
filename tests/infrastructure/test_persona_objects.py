@@ -12,6 +12,7 @@ from _gettsim_personas.persona_elements import (
     persona_description,
     persona_input_element,
     persona_pid_element,
+    persona_target_element,
 )
 from _gettsim_personas.persona_objects import (
     LinspaceGridProtocol,
@@ -530,3 +531,34 @@ def test_upsert_elements_fails_on_undecorated_function():
 def test_persona_fails_on_undecorated_function():
     with pytest.raises(PersonaDefinitionError):
         OrigPersonaOverTime(elements=(lambda: np.array([0, 1]),))  # ty: ignore[invalid-argument-type]
+
+
+@persona_input_element(tt_qname="some_target_qname")
+def input_named_like_target() -> np.ndarray:
+    return np.array([4, 5, 6])
+
+
+@persona_target_element()
+def input_qname_via_decorator():
+    pass
+
+
+def test_passed_input_element_replaces_base_target_of_same_tt_qname():
+    derived = SamplePersona.upsert_elements(input_named_like_target)
+    targets = derived(policy_date_str="2021-01-01").tt_targets_tree
+    assert "some_target_qname" not in targets
+
+
+def test_passed_target_element_replaces_base_input_of_same_tt_qname():
+    derived = SamplePersona.upsert_elements(input_qname_via_decorator)
+    assert (
+        "input_qname_via_decorator"
+        not in derived(policy_date_str="2021-01-01").input_data_tree
+    )
+
+
+def test_persona_accepts_list_of_elements():
+    persona = OrigPersonaOverTime(
+        elements=[p_id_with_two_members, input_element_always_active]
+    )
+    assert persona.elements == (p_id_with_two_members, input_element_always_active)

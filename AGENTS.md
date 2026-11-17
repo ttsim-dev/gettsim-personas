@@ -61,12 +61,12 @@ decorators, used to define persona data:
 - `@persona_target_element(start_date=..., end_date=...)` -- Declares a TT target qname
 - `@persona_description(description=...)` -- Human-readable description
 
-**`OrigPersonaOverTime`** (`persona_objects.py`) -- Built from a tuple of persona
-elements (`elements=`). Filters them by policy date and produces a `Persona` instance.
-Supports `LinspaceGrid` for evaluating over a range of earnings.
+**`OrigPersonaOverTime`** (`persona_objects.py`) -- Built from a sequence of persona
+elements (`elements=`), stored as a tuple. Filters them by policy date and produces a
+`Persona` instance. Supports `LinspaceGrid` for evaluating over a range of earnings.
 `upsert_elements(*elements)` derives a new persona: each passed element replaces the
-existing elements with the same `tt_qname` (descriptions: the existing descriptions)
-only within its own date range; later elements take precedence.
+existing elements with the same `tt_qname`, whatever their kind (descriptions: the
+existing descriptions), only within its own date range; later elements take precedence.
 
 **`load_persona_elements`** (`persona_objects.py`, private) -- Collects the persona
 elements defined in an elements module on disk.
