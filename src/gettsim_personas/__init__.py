@@ -23,6 +23,13 @@ if os.environ.get("GETTSIM_BEARTYPE_CLAW", "1") != "0":
     beartype_package("gettsim_personas", conf=INTERNAL_CONF)
     beartype_package("_gettsim_personas", conf=INTERNAL_CONF)
 
+from _gettsim_personas.persona_elements import (
+    persona_description,
+    persona_input_element,
+    persona_pid_element,
+    persona_target_element,
+)
+from _gettsim_personas.persona_objects import LinspaceRange, OrigPersonaOverTime
 from gettsim_personas import (
     einkommensteuer_sozialabgaben,
     gesetzliche_altersrente,
@@ -31,8 +38,14 @@ from gettsim_personas import (
 )
 
 __all__ = [
+    "LinspaceRange",
+    "OrigPersonaOverTime",
     "einkommensteuer_sozialabgaben",
     "gesetzliche_altersrente",
     "grundsicherung_für_erwerbsfähige",
     "grundsicherung_im_alter",
+    "persona_description",
+    "persona_input_element",
+    "persona_pid_element",
+    "persona_target_element",
 ]

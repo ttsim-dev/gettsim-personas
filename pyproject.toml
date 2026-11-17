@@ -200,3 +200,12 @@ consumers = [ "src", "docs" ]
 internal = [ "src/_gettsim_personas/" ]
 public = [ "src/gettsim_personas/" ]
 registering-decorators = [ "@persona_*" ]
+[[tool.dead-code.allow]]
+path = "src/_gettsim_personas/persona_objects.py"
+name = "upsert_elements"
+reason = "Public API: users extend personas with it."
+
+[[tool.dead-code.allow]]
+path = "src/_gettsim_personas/persona_objects.py"
+name = "input_data_df"
+reason = "Public API: users inspect persona input data with it."
