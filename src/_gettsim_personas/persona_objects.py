@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 import inspect
+from collections.abc import Mapping
 from dataclasses import dataclass, field, fields, make_dataclass, replace
 from pathlib import Path
 from typing import Any, Protocol, cast, runtime_checkable
@@ -112,10 +113,7 @@ class Persona:
             data_to_upsert=input_data_to_upsert,
         )
 
-        hh_id_array = upserted_input_data.get("hh_id")
-        multiple_households_in_persona = (
-            hh_id_array is not None and len(np.unique(hh_id_array)) > 1
-        )
+        multiple_households_in_persona = _has_multiple_households(upserted_input_data)
 
         return Persona(
             description=self.description,
@@ -244,10 +242,7 @@ class OrigPersonaOverTime:
                 bruttolohn_m_linspace_grid=bruttolohn_m_linspace_grid,
             )
 
-        hh_id_array = qname_input_data.get("hh_id")
-        multiple_households_in_persona = (
-            hh_id_array is not None and len(np.unique(hh_id_array)) > 1
-        )
+        multiple_households_in_persona = _has_multiple_households(qname_input_data)
 
         return Persona(
             description=active_description(active_elements).description,
@@ -302,6 +297,16 @@ def active_tt_targets(
     return {
         s.tt_qname: None for s in active_elements if isinstance(s, PersonaTargetElement)
     }
+
+
+def _has_multiple_households(input_data: NestedData) -> bool:
+    """Return whether `input_data` has an `hh_id` column with several households."""
+    hh_id_array = input_data.get("hh_id")
+    return (
+        hh_id_array is not None
+        and not isinstance(hh_id_array, Mapping)
+        and len(np.unique(hh_id_array)) > 1
+    )
 
 
 def active_description(active_elements: list[PersonaElement]) -> PersonaDescription:

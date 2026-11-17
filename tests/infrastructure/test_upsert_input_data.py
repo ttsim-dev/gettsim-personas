@@ -1,3 +1,5 @@
+from typing import Any
+
 import dags.tree as dt
 import numpy as np
 import pytest
@@ -190,7 +192,8 @@ def test_upsert_input_data_fails_if_data_to_upsert_is_not_dict_with_array_leafs(
         "p_id": np.array([0, 1, 2]),
         "a": np.array([0, 1, 2]),
     }
-    data_to_upsert = {"a": "not a array"}
+    # Deliberately ill-typed leaf; `Any` keeps both backends from flagging the call.
+    data_to_upsert: dict[str, Any] = {"a": "not a array"}
     match = "All leafs in data_to_upsert must be numpy Arrays or lists."
     with pytest.raises(TypeError, match=match):
         upsert_input_data(input_data=data_from_persona, data_to_upsert=data_to_upsert)

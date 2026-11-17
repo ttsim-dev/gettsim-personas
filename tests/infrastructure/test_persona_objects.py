@@ -15,6 +15,7 @@ from _gettsim_personas.persona_elements import (
 )
 from _gettsim_personas.persona_objects import (
     LinspaceGridProtocol,
+    LinspaceRange,
     OrigPersonaOverTime,
     _fail_if_active_tt_qnames_overlap,
     _fail_if_bruttolohn_m_linspace_grid_is_invalid,
@@ -235,9 +236,9 @@ def test_bruttolohn_m_linspace_grid_invalid_wrong_type():
 
 
 def test_bruttolohn_m_linspace_grid_invalid_wrong_number_of_p_ids():
-    @dataclass(frozen=True)
+    @dataclass
     class InvalidLinspaceGrid(LinspaceGridProtocol):
-        p0: int
+        p0: LinspaceRange | float | int
         p1: int
         n_points: int
 
