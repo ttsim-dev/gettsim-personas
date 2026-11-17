@@ -54,6 +54,8 @@ def test_can_upsert_input_data():
     )
     assert len(upserted_persona.input_data_tree["einnahmen"]["bruttolohn_m"]) == 6
     assert np.array_equal(
-        upserted_persona.input_data_tree["einnahmen"]["bruttolohn_m"],
+        cast(
+            "np.ndarray", upserted_persona.input_data_tree["einnahmen"]["bruttolohn_m"]
+        ),
         np.array([1, 2, 3, 4, 5, 6]),
     )

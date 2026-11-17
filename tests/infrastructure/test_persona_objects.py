@@ -12,6 +12,7 @@ from _gettsim_personas.persona_elements import (
 )
 from _gettsim_personas.persona_objects import (
     LinspaceGridProtocol,
+    LinspaceRange,
     OrigPersonaOverTime,
     _fail_if_active_tt_qnames_overlap,
     _fail_if_bruttolohn_m_linspace_grid_is_invalid,
@@ -68,7 +69,7 @@ def test_sample_personas_have_expected_orig_persona_elements():
         "hh_id",
         "einnahmen__bruttolohn_m",
     }
-    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}  # ty: ignore[unresolved-attribute]
+    orig_names = {el.orig_name for el in SamplePersona.orig_elements()}
     assert expected_orig_names == orig_names
 
     expected_tt_qnames = {
@@ -138,8 +139,7 @@ def test_sample_persona_has_expected_active_persona_elements(
     policy_date, expected_tt_qnames
 ):
     active_tt_qnames = {
-        el.orig_name  # ty: ignore[unresolved-attribute]
-        for el in SamplePersona.active_elements(policy_date)
+        el.orig_name for el in SamplePersona.active_elements(policy_date)
     }
     assert active_tt_qnames == expected_tt_qnames
 
@@ -237,9 +237,9 @@ def test_bruttolohn_m_linspace_grid_invalid_wrong_type():
 
 
 def test_bruttolohn_m_linspace_grid_invalid_wrong_number_of_p_ids():
-    @dataclass(frozen=True)
+    @dataclass
     class InvalidLinspaceGrid(LinspaceGridProtocol):
-        p0: int
+        p0: LinspaceRange | float | int
         p1: int
         n_points: int
 
