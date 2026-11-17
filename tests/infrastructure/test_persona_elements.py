@@ -29,6 +29,7 @@ from tests.personas_for_testing.persona_elements import (
 some_time_dependent_persona_element = TimeDependentPersonaElement(
     start_date=datetime.date(2000, 1, 1),
     end_date=datetime.date(2010, 1, 1),
+    orig_name="some_time_dependent_persona_element",
 )
 
 

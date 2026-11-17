@@ -1,7 +1,10 @@
 import datetime
 from pathlib import Path
 
-from _gettsim_personas.persona_objects import OrigPersonaOverTime
+from _gettsim_personas.persona_objects import (
+    OrigPersonaOverTime,
+    load_persona_elements,
+)
 
 _START_DATE = datetime.date(2011, 1, 1)
 _ERROR = (
@@ -10,25 +13,25 @@ _ERROR = (
 )
 
 Couple1Child = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "couple_1_child.py",
+    elements=load_persona_elements(Path(__file__).parent / "couple_1_child.py"),
     start_date=_START_DATE,
     error_if_not_implemented=_ERROR,
 )
 
 CoupleNoChild = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "couple_no_child.py",
+    elements=load_persona_elements(Path(__file__).parent / "couple_no_child.py"),
     start_date=_START_DATE,
     error_if_not_implemented=_ERROR,
 )
 
 Single1Child = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "single_1_child.py",
+    elements=load_persona_elements(Path(__file__).parent / "single_1_child.py"),
     start_date=_START_DATE,
     error_if_not_implemented=_ERROR,
 )
 
 SingleNoChild = OrigPersonaOverTime(
-    path_to_persona_elements=Path(__file__).parent / "single_no_child.py",
+    elements=load_persona_elements(Path(__file__).parent / "single_no_child.py"),
     start_date=_START_DATE,
     error_if_not_implemented=_ERROR,
 )
