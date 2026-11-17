@@ -301,7 +301,7 @@ def sozialversicherung__kranken__mutterschaftsgeld_m() -> np.ndarray:
 
 
 @persona_input_element(start_date="2011-01-01")
-def elterngeld__freibetrag_paragraph_10_abs_5_beeg_m() -> np.ndarray:
+def elterngeld__mean_nettoeinkommen_in_12_monaten_vor_geburt_m() -> np.ndarray:
     return np.array([0, 0])
 
 
