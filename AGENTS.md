@@ -31,7 +31,7 @@ prek run ty --all-files
 # Quality checks
 pixi run prek run --all-files
 
-# Available environments: py311, py312, py313, py314
+# Available environments: py312, py313, py314
 ```
 
 Before finishing any task that modifies code, always run these two verification steps in
