@@ -14,7 +14,7 @@ keywords = [
   "Taxes",
   "Transfers",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 classifiers = [
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: GNU Affero General Public License v3",
@@ -24,7 +24,6 @@ classifiers = [
   "Operating System :: POSIX",
   "Operating System :: Unix",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
@@ -82,8 +81,6 @@ gettsim_personas = { path = ".", editable = true }
 gettsim = { git = "https://github.com/ttsim-dev/gettsim.git", branch = "grundrente-einkommen-zve" }
 kaleido = ">=1.0.0"
 pdbp = "*"
-[tool.pixi.feature.py311.dependencies]
-python = "~=3.11.0"
 [tool.pixi.feature.py312.dependencies]
 python = "~=3.12.0"
 [tool.pixi.feature.py313.dependencies]
@@ -106,7 +103,6 @@ types-pytz = "*"
 tests = "pytest"
 tests-with-cov = "pytest --cov-report=xml --cov=./"
 [tool.pixi.environments]
-py311 = [ "tests", "py311" ]
 py312 = [ "tests", "py312" ]
 py313 = [ "tests", "py313" ]
 py314 = [ "tests", "py314" ]
