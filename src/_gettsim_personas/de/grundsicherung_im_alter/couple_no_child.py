@@ -60,6 +60,11 @@ def geburtsjahr(
     evaluation_date: datetime.date,
     alter: np.ndarray,
 ) -> np.ndarray:
+    """Birth year.
+
+    `alter` is the age reached during the evaluation year; the exact birth date
+    follows from `geburtsmonat` and `geburtstag` (see ttsim-dev/gettsim#1257).
+    """
     return evaluation_date.year - alter
 
 
