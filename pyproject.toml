@@ -14,7 +14,7 @@ keywords = [
   "Taxes",
   "Transfers",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 classifiers = [
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: GNU Affero General Public License v3",
@@ -24,7 +24,6 @@ classifiers = [
   "Operating System :: POSIX",
   "Operating System :: Unix",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
@@ -70,7 +69,9 @@ channels = [ "conda-forge" ]
 platforms = [ "linux-64", "osx-64", "osx-arm64", "win-64" ]
 [tool.pixi.dependencies]
 jupyterlab = "*"
-prek = "*"
+# `pixi lock` keeps a locked version while it satisfies the spec, so `"*"` never
+# upgrades. prek below 0.5.9 installs a uv that cannot build ty-pre-commit.
+prek = ">=0.5.9"
 pygraphviz = "*"
 [tool.pixi.pypi-dependencies]
 gettsim_personas = { path = ".", editable = true }
@@ -80,8 +81,6 @@ ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim.git", branch = "main
 gettsim = { git = "https://github.com/ttsim-dev/gettsim.git", branch = "altersentlastungsbetrag" }
 kaleido = ">=1.0.0"
 pdbp = "*"
-[tool.pixi.feature.py311.dependencies]
-python = "~=3.11.0"
 [tool.pixi.feature.py312.dependencies]
 python = "~=3.12.0"
 [tool.pixi.feature.py313.dependencies]
@@ -104,7 +103,6 @@ types-pytz = "*"
 tests = "pytest"
 tests-with-cov = "pytest --cov-report=xml --cov=./"
 [tool.pixi.environments]
-py311 = [ "tests", "py311" ]
 py312 = [ "tests", "py312" ]
 py313 = [ "tests", "py313" ]
 py314 = [ "tests", "py314" ]
@@ -122,6 +120,7 @@ extend-ignore = [
   "EM101",   # Exception must not use a string literal
   "EM102",   # Exception must not use an f-string literal
   "FIX002",  # Line contains TODO
+  "ICN001",  # Unconventional import alias; `dt` is `dags.tree` here, not `datetime`
   "ISC001",  # Conflict with ruff-format
   "PLC2403", # Modules may contain non-ASCII characters
   "PLR0913", # Too many arguments in function definition
@@ -167,6 +166,9 @@ expand_tables = [
 collapse_tables = [ "tool.hatch", "tool.pytask", "tool.pytest", "tool.ty" ]
 
 [tool.ty]
+# The `.ai-instructions` hook scripts import tools that exist only in their
+# pre-commit environments (vulture), so ty cannot resolve them.
+src.exclude = [ ".ai-instructions" ]
 # ty resolves third-party imports from this pixi env. The pre-commit hook runs
 # ty directly; pixi owns the project environment. Run `pixi install` once.
 environment.python = ".pixi/envs/py314"
@@ -190,3 +192,18 @@ ini_options.addopts = [ "--pdbcls=pdbp:Pdb" ]
 line_length = 88
 sequence_style = "block_style"
 none_representation = "null"
+
+[tool.dead-code]
+consumers = [ "src", "docs" ]
+internal = [ "src/_gettsim_personas/" ]
+public = [ "src/gettsim_personas/" ]
+registering-decorators = [ "@persona_*" ]
+[[tool.dead-code.allow]]
+path = "src/_gettsim_personas/persona_objects.py"
+name = "upsert_elements"
+reason = "Public API: users extend personas with it."
+
+[[tool.dead-code.allow]]
+path = "src/_gettsim_personas/persona_objects.py"
+name = "input_data_df"
+reason = "Public API: users inspect persona input data with it."
