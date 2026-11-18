@@ -205,6 +205,16 @@ def sozialversicherung__rente__altersrente__betrag_m() -> np.ndarray:
     return np.array([0.0, 0.0, 0.0])
 
 
+@persona_input_element()
+def einnahmen__lohn_und_einkommensersatzleistungen_m() -> np.ndarray:
+    return np.array([0.0, 0.0, 0.0])
+
+
+@persona_input_element()
+def einnahmen__zurückgezahlte_lohn_und_einkommensersatzleistungen_m() -> np.ndarray:
+    return np.array([0.0, 0.0, 0.0])
+
+
 # Target columns
 @persona_target_element()
 def einkommensteuer__betrag_m_sn() -> None:
