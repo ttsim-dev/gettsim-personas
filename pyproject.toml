@@ -76,6 +76,8 @@ pygraphviz = "*"
 [tool.pixi.pypi-dependencies]
 gettsim_personas = { path = ".", editable = true }
 # ttsim-backend = { git = "https://github.com/ttsim-dev/ttsim.git", branch = "main" }
+# TODO(@MImmesberger): Point back at gettsim main once #1237 has been merged.
+# https://github.com/ttsim-dev/gettsim/pull/1237
 gettsim = { git = "https://github.com/ttsim-dev/gettsim.git", branch = "main" }
 kaleido = ">=1.0.0"
 pdbp = "*"
@@ -196,3 +198,12 @@ consumers = [ "src", "docs" ]
 internal = [ "src/_gettsim_personas/" ]
 public = [ "src/gettsim_personas/" ]
 registering-decorators = [ "@persona_*" ]
+[[tool.dead-code.allow]]
+path = "src/_gettsim_personas/persona_objects.py"
+name = "upsert_elements"
+reason = "Public API: users extend personas with it."
+
+[[tool.dead-code.allow]]
+path = "src/_gettsim_personas/persona_objects.py"
+name = "input_data_df"
+reason = "Public API: users inspect persona input data with it."
