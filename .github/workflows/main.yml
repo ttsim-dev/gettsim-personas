@@ -53,6 +53,11 @@ jobs:
           - py314
     steps:
       - uses: actions/checkout@v7.0.1
+      # gettsim is installed from git, and some of its test-case paths exceed
+      # Windows' default 260-character limit once nested in pixi's cache.
+      - name: Enable long paths for git on Windows
+        if: runner.os == 'Windows'
+        run: git config --system core.longpaths true
       - uses: prefix-dev/setup-pixi@v0.11.3
         with:
           pixi-version: v0.84.2
